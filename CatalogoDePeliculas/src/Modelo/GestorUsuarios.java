@@ -9,6 +9,7 @@ public class GestorUsuarios extends Observable{
 	
 	private static GestorUsuarios gestorUsuarios;
 	private List<Usuario> usuarios;
+	private String usuarioSesion;
 	
 	private GestorUsuarios() {
 		usuarios = new ArrayList<Usuario>();
@@ -23,7 +24,8 @@ public class GestorUsuarios extends Observable{
 	}
 	
 	private void cargarDatos() {
-		//TODO: Cargar los datos de la base de datos
+		usuarios.add(new Usuario("a","a","a",false));
+		usuarioSesion = "a";
 	}
 	
 	public void addUsuario(Usuario pUsuario) {
@@ -32,6 +34,20 @@ public class GestorUsuarios extends Observable{
 	
 	public void deleteUsuario(Usuario pUsuario) {
 		usuarios.remove(pUsuario);
+	}
+	
+	public Usuario buscarUsuario(String pNombre) {
+		return usuarios.stream().filter(p -> p.equals(pNombre)).findFirst().orElse(null);
+	}
+	
+	public void addSolicitud(Pelicula p) {
+		Usuario u;
+		if((u = buscarUsuario(usuarioSesion)) != null)
+			u.addSolicitud(p);
+	}
+	
+	public boolean getRolSesion() {
+		return buscarUsuario(usuarioSesion).isAdmin();
 	}
 	
 }
