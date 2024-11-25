@@ -41,6 +41,15 @@ public class Usuario {
 		return Objects.equals(nombreUsuario, other.nombreUsuario);
 	}
 	
+	public boolean equals(String pNombre) {
+		return (nombreUsuario.equals(pNombre));
+	}
+	
+	public boolean isAdmin() {
+		return esAdmin;
+	}
+
+	
 	
 
 }

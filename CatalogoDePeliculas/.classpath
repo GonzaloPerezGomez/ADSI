@@ -10,5 +10,6 @@
 	<classpathentry kind="lib" path="com.jgoodies.common_1.8.1.v20240327-0800.jar"/>
 	<classpathentry kind="lib" path="com.miglayout.swing_11.4.0.jar"/>
 	<classpathentry kind="lib" path="com.miglayout.core_11.4.0.jar"/>
+	<classpathentry kind="lib" path="json-20240303.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
