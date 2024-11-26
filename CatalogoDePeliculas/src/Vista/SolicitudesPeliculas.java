@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import org.json.JSONObject;
+
 import Modelo.GestorPeliculas;
 import Modelo.GestorUsuarios;
 import Modelo.Pelicula;
@@ -36,7 +38,8 @@ public class SolicitudesPeliculas extends JFrame implements Observer{
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textBuscador;
+	private JList<Pelicula> listSolicitudesPeliculas;
+	private JScrollPane scrollPane;
 
 	/**
 	 * Launch the application.
@@ -45,7 +48,7 @@ public class SolicitudesPeliculas extends JFrame implements Observer{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					SolicitudesPeliculas frame = new SolicitudesPeliculas();
+					new SolicitudesPeliculas();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -68,9 +71,61 @@ public class SolicitudesPeliculas extends JFrame implements Observer{
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblOpcionesUsuario = new JLabel("Opciones de Usuario");
-		lblOpcionesUsuario.setHorizontalAlignment(SwingConstants.CENTER);
-		contentPane.add(lblOpcionesUsuario, BorderLayout.NORTH);
+		JLabel lblSolicitudesDePeliculas = new JLabel("Solicitudes de Peliculas");
+		lblSolicitudesDePeliculas.setHorizontalAlignment(SwingConstants.CENTER);
+		contentPane.add(lblSolicitudesDePeliculas, BorderLayout.NORTH);
+		
+		JPanel panel = new JPanel();
+		contentPane.add(panel, BorderLayout.CENTER);
+		panel.setLayout(null);
+		
+		JButton btnVolver = new JButton("Volver");
+		btnVolver.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				new Catalogo();
+				dispose();
+			}
+		});
+		btnVolver.setBounds(323, 234, 105, 27);
+		panel.add(btnVolver);
+		
+		JButton btnAceptar = new JButton("Aceptar");
+		btnAceptar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(listSolicitudesPeliculas.getSelectedValue() != null) {
+					JSONObject info = new JSONObject(listSolicitudesPeliculas.getSelectedValue().toJSON());
+					String titulo = info.getString("Titulo");
+			        String director = info.getString("Director");
+			        String fecha = info.getString("Fecha");
+					GestorUsuarios.getGestorUsuarios().aceptarSolicitud(titulo, director, fecha);
+					
+					genPanel(panel);
+				}
+			}
+		});
+		btnAceptar.setBounds(323, 81, 105, 27);
+		panel.add(btnAceptar);
+		
+		JButton btnRechazar = new JButton("Rechazar");
+		btnRechazar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(listSolicitudesPeliculas.getSelectedValue() != null) {
+					JSONObject info = new JSONObject(listSolicitudesPeliculas.getSelectedValue().toJSON());
+					String titulo = info.getString("Titulo");
+			        String fecha = info.getString("Fecha");
+					GestorUsuarios.getGestorUsuarios().rechazarSolicitud(titulo, fecha);
+					
+					genPanel(panel);
+				}
+			}
+		});
+		btnRechazar.setBounds(323, 120, 105, 27);
+		panel.add(btnRechazar);
+		
+		genPanel(panel);
 		
 		setVisible(true);
 	}
@@ -79,5 +134,26 @@ public class SolicitudesPeliculas extends JFrame implements Observer{
 	public void update(Observable o, Object arg) {
 		// TODO Esbozo de método generado automáticamente
 		
+	}
+	
+	private void genPanel(JPanel panel) {
+		Pelicula[] p = GestorUsuarios.getGestorUsuarios().getSolicitudes();
+		
+		listSolicitudesPeliculas = new JList<Pelicula>(p);
+		listSolicitudesPeliculas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		scrollPane = new JScrollPane(listSolicitudesPeliculas);
+		scrollPane.setBounds(0, 55, 320, 220);
+		
+		for (Component comp : panel.getComponents()) {
+            if (comp instanceof JScrollPane) {
+                panel.remove(comp);
+            }
+        }
+
+        panel.add(scrollPane);
+        
+        panel.revalidate();
+        panel.repaint();
 	}
 }
