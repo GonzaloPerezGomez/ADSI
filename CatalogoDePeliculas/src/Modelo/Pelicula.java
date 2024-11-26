@@ -1,5 +1,8 @@
 package Modelo;
 
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -10,24 +13,32 @@ public class Pelicula {
 	private String titulo;
 	private String director;
 	private LocalDate fecha;
-	private Usuario aceptadoPor;
+	private String aceptadoPor;
+	private static final String[] FORMATS = {
+	        "dd MMM yyyy",
+	        "yyyy-MM-dd"
+	        };
 	
 	public Pelicula(String pTitulo, String pDirector, String pFecha) {
 		titulo = pTitulo;
 		director = pDirector;
 		
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.ENGLISH);
-		fecha = LocalDate.parse(pFecha, formatter);
+		if ("N/A".equalsIgnoreCase(pFecha)) 
+			pFecha = "01 Jan 1000";
+		
+		fecha = formatFecha(pFecha);
 	}
 	
-	public Pelicula(String pTitulo, String pDirector, String pFecha, String pNombreUsuario ) {
+	public Pelicula(String pTitulo, String pDirector, String pFecha, String pAceptadoPor) {
 		titulo = pTitulo;
 		director = pDirector;
 		
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.ENGLISH);
-		fecha = LocalDate.parse(pFecha, formatter);
+		if ("N/A".equalsIgnoreCase(pFecha)) 
+			pFecha = "01 Jan 1000";
 		
-		aceptadoPor = GestorUsuarios.getGestorUsuarios().buscarUsuario(pNombreUsuario);
+		fecha = formatFecha(pFecha);
+		
+		aceptadoPor = pAceptadoPor;
 	}
 
 	@Override
@@ -51,6 +62,25 @@ public class Pelicula {
 		return "<html>Titulo: " + titulo + "<br>Director: " + director + "<br>Fecha: " + fecha + "<html>";
 	}
 	
+	public String toJSON() {
+		return "{\"Titulo\":\"" + titulo + "\",\"Director\":\"" + director + "\",\"Fecha\":\"" + fecha + "\"}";
+	}
+	
+	public void setAceptadoPor(String pNombreAdmin) {
+		aceptadoPor = pNombreAdmin;
+	}
+	
+	public static LocalDate formatFecha(String fecha) {
+        for (String formato : FORMATS) {
+            try {
+            	DateTimeFormatter df = DateTimeFormatter.ofPattern(formato, Locale.ENGLISH);
+                return LocalDate.parse(fecha, df);
+            } catch (Exception e) {
+                // Ignora el error y prueba el siguiente formato
+            }
+        }
+        return null;
+    }
 	
 	
 	

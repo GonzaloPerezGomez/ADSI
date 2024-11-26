@@ -26,7 +26,10 @@ public class Usuario {
 	}
 	
 	public void deleteSolicitud(Pelicula pPelicula) {
-		solicitudes.remove(pPelicula);
+		boolean quedan = true;
+		while(quedan) {
+			quedan = solicitudes.remove(pPelicula);
+		}
 	}
 
 	@Override
@@ -47,6 +50,10 @@ public class Usuario {
 	
 	public boolean isAdmin() {
 		return esAdmin;
+	}
+	
+	public List<Pelicula> getPeliculasSolicitadas(){
+		return solicitudes;
 	}
 
 	

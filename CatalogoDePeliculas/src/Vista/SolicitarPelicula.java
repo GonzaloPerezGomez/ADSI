@@ -142,6 +142,17 @@ public class SolicitarPelicula extends JFrame implements Observer{
 		btnAñadir.setBounds(323, 140, 105, 27);
 		panel.add(btnAñadir);
 		
+		JButton btnVolver = new JButton("Volver");
+		btnVolver.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				new Catalogo();
+				dispose();
+			}
+		});
+		btnVolver.setBounds(323, 234, 105, 27);
+		panel.add(btnVolver);
+		
 		setVisible(true);
 	}
 
