@@ -19,6 +19,7 @@ public class Pelicula {
 	        "yyyy-MM-dd"
 	        };
 	
+	
 	public Pelicula(String pTitulo, String pDirector, String pFecha) {
 		titulo = pTitulo;
 		director = pDirector;
@@ -54,7 +55,7 @@ public class Pelicula {
 	}
 	
 	public boolean equals(String pTitulo, String pFecha) {
-		return (titulo.equals(pTitulo) && fecha.equals(pFecha));
+		return (titulo.equals(pTitulo) && fecha.equals(formatFecha(pFecha)));
 	}
 
 	@Override
