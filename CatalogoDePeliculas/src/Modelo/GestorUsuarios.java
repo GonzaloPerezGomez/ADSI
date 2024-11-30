@@ -87,4 +87,5 @@ public class GestorUsuarios extends Observable{
 		deleteSolicitudes(titulo, fecha);
 	}
 	
+	
 }

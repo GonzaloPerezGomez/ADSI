@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import org.json.JSONObject;
@@ -82,6 +83,23 @@ public class GestorPeliculas extends Observable{
 		
 		return null;
 	}
-
 	
+	public Iterator<Pelicula> getIteratorPelicula() {
+		return peliculas.iterator();
+	}
+	
+	public Pelicula buscarPelicula(String titulo, String fecha ) {
+		
+		Iterator<Pelicula> iterador= getIteratorPelicula();
+		while (iterador.hasNext()) {
+            Pelicula pelicula = iterador.next();            
+            if (pelicula.equals(titulo, fecha)) {
+                return pelicula; // Retorna la película si coincide
+            }
+		
+	}
+	return null;
 }
+	
+}	
+	
