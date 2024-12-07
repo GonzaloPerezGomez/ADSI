@@ -1,6 +1,7 @@
 package Vista;
 import java.awt.EventQueue;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -12,6 +13,9 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Observable;
@@ -93,6 +97,21 @@ public class InicioDeSesion extends JFrame implements Observer{
 			}
 		});
 		contentPane.add(lblNoRegistro, BorderLayout.SOUTH);
+		
+		JButton buttonConfirmar = new JButton("Confirmar");
+		buttonConfirmar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (GestorUsuarios.getGestorUsuarios().iniciarSesion( textField.getText(), passwordField.getPassword())) {
+					Catalogo frame = new Catalogo();
+					dispose();
+				};
+				
+				
+			}
+		});
+		buttonConfirmar.setBounds(154, 158, 95, 27);
+		panel.add(buttonConfirmar);
+		
 		setVisible(true);
 	}
 
