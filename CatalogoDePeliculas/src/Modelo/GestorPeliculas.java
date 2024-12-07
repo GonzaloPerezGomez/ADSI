@@ -100,6 +100,6 @@ public class GestorPeliculas extends Observable{
 	}
 	return null;
 }
-	
+
 }	
 	

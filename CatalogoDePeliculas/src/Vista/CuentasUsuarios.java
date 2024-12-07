@@ -18,6 +18,8 @@ import javax.swing.ListModel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -29,7 +31,10 @@ import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.ListSelectionModel;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import java.awt.FlowLayout;
+
 
 @SuppressWarnings("deprecation")
 public class CuentasUsuarios extends JFrame implements Observer{
@@ -70,6 +75,67 @@ public class CuentasUsuarios extends JFrame implements Observer{
 		JLabel lblCuentasDeUsuarios = new JLabel("Cuentas de Usuarios");
 		lblCuentasDeUsuarios.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(lblCuentasDeUsuarios, BorderLayout.NORTH);
+		
+		GestorUsuarios gestUsuario = GestorUsuarios.getGestorUsuarios();
+		gestUsuario.addObserver(this);
+		List<String> listaUsuarios = gestUsuario.mostrarUsuarios();
+		
+		
+		
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		contentPane.add(panel, BorderLayout.CENTER);
+		for (String usuario : listaUsuarios ) {
+			JPanel subPanel = new JPanel();
+			subPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+			
+			JLabel lblUsuario = new JLabel(usuario);
+		    JButton btnEditar = new JButton("Editar");
+		    JButton btnEliminar = new JButton("Eliminar");
+		    
+		    subPanel.add(lblUsuario);
+		    subPanel.add(btnEditar);
+		    subPanel.add(btnEliminar);
+		    
+		    
+		    btnEditar.addActionListener(e -> {
+		    	ModificarUsuarioA modificarUsuario = new ModificarUsuarioA(usuario);
+				dispose();
+		    });
+		    
+		    
+		    
+		    btnEliminar.addActionListener(new ActionListener() {
+		    	public void actionPerformed(ActionEvent e) {
+		    		gestUsuario.deleteUsuario(usuario);
+		    		System.out.println("Eliminar " + usuario);
+		    		InicioDeSesion inicio = new InicioDeSesion();
+		    		GestorUsuarios.getGestorUsuarios().deleteObservers();
+					dispose();
+		    	}
+		    	
+		    });
+		    
+		    panel.add(subPanel);
+		    
+			panel.revalidate();
+	        panel.repaint();		
+		}
+		
+		
+		JPanel panel2 = new JPanel(); 
+		contentPane.add(panel2, BorderLayout.EAST);
+		
+		JButton volver= new JButton("Volver");
+		panel2.add(volver,BorderLayout.EAST);
+		volver.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Catalogo catalogo = new Catalogo();
+				GestorUsuarios.getGestorUsuarios().deleteObservers();
+				dispose();
+			}
+		});
+		
 		
 		setVisible(true);
 	}
