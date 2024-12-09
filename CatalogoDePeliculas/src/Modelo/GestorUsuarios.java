@@ -181,38 +181,36 @@ public class GestorUsuarios extends Observable{
 	}
 	
 	public boolean modificarUsuariosAdmin(String pNombreUsuario, String pNombre, String pAdmin) {
-		if(pNombreUsuario != " " || pNombre != " " || pAdmin.length() != 0 ) {
+		if(!pNombreUsuario.trim().isEmpty() && !pNombre.trim().isEmpty() && !pAdmin.trim().isEmpty()) {
 			Usuario usu = buscarUsuario(pNombreUsuario);
-			if (usuarioSesion != pNombreUsuario) {
-				if (usu == null){
-					usuarioSesion=pNombreUsuario;
-					usu.setNombreContraseña(usuarioSesion, pNombre, pAdmin);}
-					return true;}
+			if (!usuarioSesion.equals(pNombreUsuario)) {
+				usu=buscarUsuario(usuarioSesion);
+				usuarioSesion=pNombreUsuario;
+				usu.setNombreContraseña(usuarioSesion, pNombre, pAdmin);}
 			else {
-				usu.setNombreContraseña(usuarioSesion, pNombre, pAdmin);
-				return true;}
-			}
-		else{System.out.println("uno de los campos no esta completado");}
-		return false;
+				usu.setNombreContraseña(usuarioSesion, pNombre, pAdmin);}
+			return true;}
+		else{
+			System.out.println("uno de los campos no esta completado");
+			return false;}
 	}
 	
 	public boolean modificarUsuariosUsuario(String pNombreUsuario, String pNombre, String pContraseña) {
-		if(pNombreUsuario != " " || pNombre != " " || pContraseña.length() != 0 ) {
+		if(!pNombreUsuario.trim().isEmpty() && !pNombre.trim().isEmpty() && !pContraseña.trim().isEmpty() ) {
 			Usuario usu = buscarUsuario(pNombreUsuario);
-			if (usuarioSesion != pNombreUsuario) {
-				if (usu == null){
-					usuarioSesion=pNombreUsuario;
+			if (!usuarioSesion.equals(pNombreUsuario)) {
 					if(esContraseñaValida(pContraseña)) {
-						usu.setNombreContraseña(usuarioSesion, pNombre, pContraseña);}
+						usu=buscarUsuario(usuarioSesion);
+						usuarioSesion=pNombreUsuario;
+						usu.setNombreContraseña(usuarioSesion, pNombre, pContraseña);
 						return true;}
-				else {System.out.println("el nombre ya esta cogido");}}
+					else {System.out.println("contraseña no valida");}}
 			else {
 				if(esContraseñaValida(pContraseña)) {
-				usu.setNombreContraseña(usuarioSesion, pNombre, pContraseña);}
-				return true;}
-			}
-		else{
-			System.out.println("uno de los campos no esta completado");}
+					usu.setNombreContraseña(usuarioSesion, pNombre, pContraseña);
+					return true;}
+				else {System.out.println("contraseña no valida");}}}
+		else{System.out.println("uno de los campos no esta completado");}
 		return false;
 	}
 	

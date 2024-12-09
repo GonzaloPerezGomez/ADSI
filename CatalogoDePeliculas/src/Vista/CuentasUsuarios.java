@@ -109,8 +109,7 @@ public class CuentasUsuarios extends JFrame implements Observer{
 		    	public void actionPerformed(ActionEvent e) {
 		    		gestUsuario.deleteUsuario(usuario);
 		    		System.out.println("Eliminar " + usuario);
-		    		InicioDeSesion inicio = new InicioDeSesion();
-		    		GestorUsuarios.getGestorUsuarios().deleteObservers();
+		    		CuentasUsuarios cuentasUsuarios = new CuentasUsuarios();
 					dispose();
 		    	}
 		    	

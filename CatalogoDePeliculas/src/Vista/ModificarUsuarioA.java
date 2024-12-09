@@ -59,7 +59,7 @@ public class ModificarUsuarioA extends JFrame implements Observer{
 		panel.add(lblNombre);
 		lblNombre.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		textNombre = new JTextField(info.getString("Nombre"));
+		textNombre = new JTextField(info.getString("NombreUsuario"));
 		textNombre.setBounds(154, 45, 105, 17);
 		textNombre.setHorizontalAlignment(SwingConstants.CENTER);
 		textNombre.setColumns(10);
@@ -71,7 +71,7 @@ public class ModificarUsuarioA extends JFrame implements Observer{
 		lblUsuario.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblUsuario);
 		
-		textUsuario = new JTextField(info.getString("NombreUsuario"));
+		textUsuario = new JTextField(info.getString("Nombre"));
 		textUsuario.setBounds(154, 81, 105, 17);
 		textUsuario.setHorizontalAlignment(SwingConstants.CENTER);
 		textUsuario.setColumns(10);
@@ -98,16 +98,18 @@ public class ModificarUsuarioA extends JFrame implements Observer{
 		buttonVolver.setBounds(261, 158, 82, 27);
 		panel.add(buttonVolver);
 		
-		JButton buttonConfirmar = new JButton("Confirmar");
-		buttonConfirmar.addActionListener(new ActionListener() {
+		
+		JButton buttonCorfirmar = new JButton("Confirmar");
+		buttonCorfirmar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (GestorUsuarios.getGestorUsuarios().modificarUsuariosAdmin( textNombre.getText(), textUsuario.getText(),(String) textAdmin.getSelectedItem())) {
-					CuentasUsuarios cuentaUsuario = new CuentasUsuarios();
+					ModificarUsuarioA modificarUsuarios = new ModificarUsuarioA(textNombre.getText());
 					dispose();
 				}
 			}
 		});
-		panel.add(buttonConfirmar);
+		buttonCorfirmar.setBounds(154, 158, 93, 27);
+		panel.add(buttonCorfirmar);
 		
 		setVisible(true);
 	}
