@@ -86,8 +86,8 @@ public class Usuario {
 	
 	public JSONObject getInfoAdministrador() {
 		JSONObject datosUsuario = new JSONObject();
-		datosUsuario.put("NombreUsuario", nombreUsuario);
 		datosUsuario.put("Nombre", nombre);
+		datosUsuario.put("NombreUsuario", nombreUsuario);
 		datosUsuario.put("Administrador", String.valueOf(esAdmin));
 		return datosUsuario;
 	}
