@@ -1,8 +1,11 @@
 package Modelo;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
+import org.json.JSONObject;
+import java.util.Iterator;
 
 @SuppressWarnings("deprecation")
 public class GestorUsuarios extends Observable{
@@ -28,15 +31,79 @@ public class GestorUsuarios extends Observable{
 		usuarioSesion = "a";
 	}
 	
-	public void addUsuario(Usuario pUsuario) {
-		usuarios.add(pUsuario);
+	public boolean addUsuario(String nombre, String nombreUsuario, char[] contraseña) {
+		if (buscarUsuario(nombreUsuario) == null) {
+			if(nombre == " " || nombreUsuario == " " || contraseña.length==0 ) {
+				System.out.println("uno de los campos no esta completado");
+				return false;
+			}
+			else {
+				String contraseñaString =  new String(contraseña);
+				if (esContraseñaValida(contraseñaString)) {
+					Usuario pUsuario = new Usuario(nombre, nombreUsuario, contraseñaString, false);
+					usuarios.add(pUsuario);
+					usuarioSesion = nombreUsuario;
+					System.out.println("iniciado correctamente");
+					return true;}
+				
+				else {
+					System.out.println("La contraseña no es valida");
+					return false;}
+			}	
+		}
+		else {
+			System.out.println("Ya existe un usuario con ese nombre de usuario");
+			return false;}
 	}
 	
-	public void deleteUsuario(Usuario pUsuario) {
-		usuarios.remove(pUsuario);
+	private boolean esContraseñaValida(String contraseña) {
+		if (contraseña.length() < 8) {
+			System.out.println("Su tamaño tiene que ser minimo de ocho caracteres");
+			return false;}
+        if (!contraseña.matches(".*[A-Z].*")) {
+	        System.out.println("Tiene que tener al menos una letras en mayuscula");
+	        return false;}
+        if (!contraseña.matches(".*[a-z].*")) {
+	        System.out.println("Tiene que tener al menos una letras en minusculas");
+	        return false;}
+        if (!contraseña.matches(".*\\d.*")) {
+        	System.out.println("Tiene que tener al menos un número");
+        	return false;}
+        if (!contraseña.matches(".*[!@#$%^&*(),.?\":{}|<>].*")) {
+	        System.out.println("Tiene que contener caracteres especiales");
+	        return false;}
+        if (contraseña.contains(" ")) {
+        	System.out.println("No puede contener espacios");
+        	return false;}
+        return true;
+    }
+	
+	public boolean iniciarSesion(String nombreUsuario, char[] contraseña) {
+		Usuario pUsuario = buscarUsuario(nombreUsuario);
+		if (pUsuario != null) {
+			if (pUsuario.esCorrectaLaContraseña(new String(contraseña))) {
+				usuarioSesion = nombreUsuario;
+				System.out.println("Sesión iniciada correctamente");
+				return true;}
+			else {
+				System.out.println("La contraseña no es correcta");
+				return false;}}
+		else {
+			System.out.println("No existe un usuario con ese nombre de usuario");
+			return false;}
 	}
 	
-	public Usuario buscarUsuario(String pNombre) {
+	public void deleteUsuario(String pUsuario) {
+		if (pUsuario != usuarioSesion){
+			Usuario pUsu = buscarUsuario(pUsuario);
+			usuarios.remove(pUsu);
+		}
+		else {
+			System.out.println("no te puedes eliminar a ti mismo");
+		}
+	}
+	
+	private Usuario buscarUsuario(String pNombre) {
 		return usuarios.stream().filter(p -> p.equals(pNombre)).findFirst().orElse(null);
 	}
 	
@@ -73,19 +140,88 @@ public class GestorUsuarios extends Observable{
 
 	public void aceptarSolicitud(String titulo, String director, String fecha) {
 		GestorPeliculas.getGestorPeliculas().addPelicula(new Pelicula(titulo, director, fecha, usuarioSesion));
-		deleteSolicitudes(titulo, fecha);
-		
+		deleteSolicitudes(titulo, fecha);	
 	}
 	
 	private void deleteSolicitudes(String titulo, String fecha) {
 		for (Usuario u : usuarios) {
-			u.deleteSolicitud(new Pelicula(titulo, null, fecha));
-		}
+			u.deleteSolicitud(new Pelicula(titulo, null, fecha));}
 	}
 
 	public void rechazarSolicitud(String titulo, String fecha) {
 		deleteSolicitudes(titulo, fecha);
 	}
 	
+	public List<String> mostrarUsuariosNoAceptados(){
+		List<String> listaUsuario = new ArrayList<String>();
+		Iterator<Usuario> iterador= getIteratorUsuario();
+		while (iterador.hasNext()) {
+            Usuario usuario = iterador.next();            
+            if (!usuario.estaAceptada()) {
+            	listaUsuario.add(usuario.getNombreUsuario());}}
+		return listaUsuario;	
+	}
 	
+	private Iterator<Usuario> getIteratorUsuario() {
+		return usuarios.iterator();
+	}
+	
+	public void aceptarUsuario(String pUsuario) {
+		Usuario aceptado = buscarUsuario(pUsuario);
+		Usuario administrador = buscarUsuario(usuarioSesion);
+		aceptado.aceptar(administrador);
+		
+	}
+	
+	public List<String> mostrarUsuarios(){
+		List<String> lista = new ArrayList<String>();
+		for(Usuario pUs: usuarios) {
+			lista.add(pUs.getNombreUsuario());}
+		return lista;
+	}
+	
+	public boolean modificarUsuariosAdmin(String pNombreUsuario, String pNombre, String pAdmin) {
+		if(!pNombreUsuario.trim().isEmpty() && !pNombre.trim().isEmpty() && !pAdmin.trim().isEmpty()) {
+			Usuario usu = buscarUsuario(pNombreUsuario);
+			if (!usuarioSesion.equals(pNombreUsuario)) {
+				usu=buscarUsuario(usuarioSesion);
+				usuarioSesion=pNombreUsuario;
+				usu.setNombreContraseña(usuarioSesion, pNombre, pAdmin);}
+			else {
+				usu.setNombreContraseña(usuarioSesion, pNombre, pAdmin);}
+			return true;}
+		else{
+			System.out.println("uno de los campos no esta completado");
+			return false;}
+	}
+	
+	public boolean modificarUsuariosUsuario(String pNombreUsuario, String pNombre, String pContraseña) {
+		if(!pNombreUsuario.trim().isEmpty() && !pNombre.trim().isEmpty() && !pContraseña.trim().isEmpty() ) {
+			Usuario usu = buscarUsuario(pNombreUsuario);
+			if (!usuarioSesion.equals(pNombreUsuario)) {
+					if(esContraseñaValida(pContraseña)) {
+						usu=buscarUsuario(usuarioSesion);
+						usuarioSesion=pNombreUsuario;
+						usu.setNombreContraseña(usuarioSesion, pNombre, pContraseña);
+						return true;}
+					else {System.out.println("contraseña no valida");}}
+			else {
+				if(esContraseñaValida(pContraseña)) {
+					usu.setNombreContraseña(usuarioSesion, pNombre, pContraseña);
+					return true;}
+				else {System.out.println("contraseña no valida");}}}
+		else{System.out.println("uno de los campos no esta completado");}
+		return false;
+	}
+	
+	public JSONObject obtenerInfoAdministrador(String pUsuarioInfor) {
+		System.out.println(pUsuarioInfor);
+		Usuario usuario = buscarUsuario(pUsuarioInfor);
+		return  usuario.getInfoAdministrador();
+	}
+	
+	public JSONObject obtenerInfoUsuario() {
+		Usuario usuario = buscarUsuario(usuarioSesion);
+		return  usuario.getInfoUsuario();
+	}
 }

@@ -61,13 +61,36 @@ public class PeliculasAPuntuar extends JFrame implements Observer{
 	        txtComentario = new JTextField();
 	        getContentPane().add(txtComentario);
 
-	        getContentPane().add(new JLabel("Puntuación: 10 max - 1 min"));
+	        getContentPane().add(new JLabel("Puntuación: 5 max - 1 min"));
 	        txtPuntuacion = new JTextField();
 	        getContentPane().add(txtPuntuacion);
 
 	        btnValorar = new JButton("Valorar");
 	        getContentPane().add(btnValorar);
-	        btnValorar.addActionListener(getControler());
+	        btnValorar.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e) {
+					try {
+						// Validar los campos
+						int puntuacion = getPuntuacion();
+						if (puntuacion < 1 || puntuacion > 5) {
+							JOptionPane.showMessageDialog(PeliculasAPuntuar.this, "La puntuación debe estar entre 1 y 5", "Error", JOptionPane.ERROR_MESSAGE);
+							return;
+						}
+			
+						// Crear/actualizar la puntuación en el gestor
+						String comentario = getComentario();
+						Pelicula pelicula = GestorPuntuacion.getGestorPuntuacion().getPeliculaActual();
+						Usuario usuario = GestorUsuarios.getUsuarioActual();
+			
+						GestorPuntuacion.getGestorPuntuacion().guardarPuntuacion(usuario, pelicula, puntuacion, comentario);
+						JOptionPane.showMessageDialog(PeliculasAPuntuar.this, "¡Puntuación guardada con éxito!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+					} catch (NumberFormatException ex) {
+						JOptionPane.showMessageDialog(PeliculasAPuntuar.this, "Debe ingresar una puntuación válida.", "Error", JOptionPane.ERROR_MESSAGE);
+					} catch (Exception ex) {
+						JOptionPane.showMessageDialog(PeliculasAPuntuar.this, "Ocurrió un error al guardar la puntuación: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			});
 	    }
 
 	    public String getTitulo() {
@@ -87,33 +110,31 @@ public class PeliculasAPuntuar extends JFrame implements Observer{
 	    }
 	   
 	    
-	    public void update(Observable o, Object arg) {
-			// TODO Esbozo de método generado automáticamente
-			
-		}
-
-
-//CONTROLER -------------------------------------------------------------------------------
-
-		private Controler getControler() {
-			if (miControler == null) {
-				miControler = new Controler();
+		@Override
+		public void update(Observable o, Object arg) {
+			// Suponemos que el arg es un objeto de tipo Pelicula (del modelo)
+			if (arg instanceof Pelicula) {
+				Pelicula pelicula = (Pelicula) arg;
+				txtTitulo.setText(pelicula.getTitulo());
+				txtAño.setText(String.valueOf(pelicula.getAño()));
 				
+				// Verificar si la película ya tiene valoración previa
+				Puntuacion puntuacion = GestorPuntuacion.getGestorPuntuacion().getPuntuacionPorUsuarioYPelicula(GestorUsuarios.getUsuarioActual(), pelicula);
+				if (puntuacion != null) {
+					txtComentario.setText(puntuacion.getComentario());
+					txtPuntuacion.setText(String.valueOf(puntuacion.getPuntuacion()));
+				} else {
+					txtComentario.setText("");
+					txtPuntuacion.setText("");
+				}
 			}
-			return miControler;
 		}
+	}
+	
 		
 
-		private class Controler implements ActionListener {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}}
-			
 		
-}
+
 
        
 

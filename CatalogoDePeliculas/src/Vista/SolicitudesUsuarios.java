@@ -18,6 +18,8 @@ import javax.swing.ListModel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -30,6 +32,10 @@ import java.awt.Component;
 
 import javax.swing.ListSelectionModel;
 import javax.swing.ImageIcon;
+
+import javax.swing.BoxLayout; 
+
+
 
 @SuppressWarnings("deprecation")
 public class SolicitudesUsuarios extends JFrame implements Observer{
@@ -57,7 +63,6 @@ public class SolicitudesUsuarios extends JFrame implements Observer{
 	 */
 	public SolicitudesUsuarios() {
 		
-		GestorUsuarios.getGestorUsuarios().addObserver(this);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -71,12 +76,49 @@ public class SolicitudesUsuarios extends JFrame implements Observer{
 		lblSolicitudesDeUsuarios.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(lblSolicitudesDeUsuarios, BorderLayout.NORTH);
 		
+		GestorUsuarios gestUsuario = GestorUsuarios.getGestorUsuarios();
+		gestUsuario.addObserver(this);
+		List<String> listaUsuarios = gestUsuario.mostrarUsuariosNoAceptados();
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		contentPane.add(panel, BorderLayout.CENTER);
+		for (String usuario : listaUsuarios ) {
+			
+			
+			JLabel lblUsuario = new JLabel(usuario);
+			panel.add(lblUsuario);
+			lblUsuario.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e)  {
+					gestUsuario.aceptarUsuario(usuario); 
+					SolicitudesUsuarios frame = new SolicitudesUsuarios();
+					dispose();
+				}
+			});			
+			panel.revalidate();
+	        panel.repaint();		
+		}
+		
+		JPanel panel2 = new JPanel(); 
+		contentPane.add(panel2, BorderLayout.EAST);
+		
+		JButton volver= new JButton("Volver");
+		panel2.add(volver,BorderLayout.EAST);
+		volver.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Catalogo catalogo = new Catalogo();
+				dispose();
+			}
+		});
+		
 		setVisible(true);
 	}
+	
 
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Esbozo de método generado automáticamente
+		//for ( JLabel usuario : panel.getComponents()) 
+			
 		
 	}
 }

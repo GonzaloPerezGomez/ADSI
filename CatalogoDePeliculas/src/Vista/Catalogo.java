@@ -178,7 +178,7 @@ public class Catalogo extends JFrame implements Observer{
 			op1.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
-					new SolicitudesUsuarios();
+					new ModificarUsuario(GestorUsuarios.getGestorUsuarios().getUsuarioSesion().getNombreUsuario());
 					dispose();
 				}
 			});
@@ -186,7 +186,7 @@ public class Catalogo extends JFrame implements Observer{
 			op2.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
-					new SolicitudesPeliculas();
+					new PeliculasAlquiladas();
 					dispose();
 				}
 			});
