@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import Modelo.GestorGeneral;
 import Modelo.GestorUsuarios;
 
 import java.awt.BorderLayout;
@@ -24,7 +25,7 @@ import javax.swing.SpinnerListModel;
 import org.json.JSONObject;
 
 @SuppressWarnings("deprecation")
-public class ModificarUsuarioA extends JFrame implements Observer{
+public class ModificarUsuarioA extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textUsuario;
@@ -36,7 +37,7 @@ public class ModificarUsuarioA extends JFrame implements Observer{
 	 */
 	public ModificarUsuarioA(String pUsuario) {
 		
-		JSONObject info = GestorUsuarios.getGestorUsuarios().obtenerInfoAdministrador(pUsuario);
+		JSONObject info = GestorGeneral.getGestorGeneral().obtenerInfoAdministrador(pUsuario);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -102,7 +103,7 @@ public class ModificarUsuarioA extends JFrame implements Observer{
 		JButton buttonCorfirmar = new JButton("Confirmar");
 		buttonCorfirmar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (GestorUsuarios.getGestorUsuarios().modificarUsuariosAdmin( textNombre.getText(), textUsuario.getText(),(String) textAdmin.getSelectedItem())) {
+				if (GestorGeneral.getGestorGeneral().modificarUsuariosAdmin( textNombre.getText(), textUsuario.getText(),(String) textAdmin.getSelectedItem())) {
 					ModificarUsuarioA modificarUsuarios = new ModificarUsuarioA(textNombre.getText());
 					dispose();
 				}
@@ -112,11 +113,5 @@ public class ModificarUsuarioA extends JFrame implements Observer{
 		panel.add(buttonCorfirmar);
 		
 		setVisible(true);
-	}
-
-	@Override
-	public void update(Observable o, Object arg) {
-		// TODO Esbozo de método generado automáticamente
-		
 	}
 }

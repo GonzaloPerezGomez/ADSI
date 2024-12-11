@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 
 import org.json.JSONObject;
 
+import Modelo.GestorGeneral;
 import Modelo.GestorPeliculas;
 import Modelo.GestorUsuarios;
 import Modelo.Pelicula;
@@ -34,7 +35,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ImageIcon;
 
 @SuppressWarnings("deprecation")
-public class SolicitarPelicula extends JFrame implements Observer{
+public class SolicitarPelicula extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -63,8 +64,6 @@ public class SolicitarPelicula extends JFrame implements Observer{
 	 */
 	public SolicitarPelicula() {
 		
-		GestorUsuarios.getGestorUsuarios().addObserver(this);
-		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -92,7 +91,7 @@ public class SolicitarPelicula extends JFrame implements Observer{
 		lblBuscar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				info = GestorPeliculas.getGestorPeliculas().solicitarAPI(textBuscador.getText());
+				info = GestorGeneral.getGestorGeneral().solicitarAPI(textBuscador.getText());
 				
 				if(info != null) {
 			        String titulo = info.getString("Title");
@@ -133,7 +132,7 @@ public class SolicitarPelicula extends JFrame implements Observer{
 					        String titulo = info.getString("Title");
 					        String director = info.getString("Director");
 					        String fecha = info.getString("Released");
-					        GestorPeliculas.getGestorPeliculas().gestionarSolicitud(titulo, director, fecha);
+					        GestorGeneral.getGestorGeneral().gestionarSolicitud(titulo, director, fecha);
 						}
 					}
 				}
@@ -156,9 +155,4 @@ public class SolicitarPelicula extends JFrame implements Observer{
 		setVisible(true);
 	}
 
-	@Override
-	public void update(Observable o, Object arg) {
-		// TODO Esbozo de método generado automáticamente
-		
-	}
 }
