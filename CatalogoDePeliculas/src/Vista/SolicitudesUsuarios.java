@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import Modelo.GestorGeneral;
 import Modelo.GestorPeliculas;
 import Modelo.GestorUsuarios;
 import Modelo.Pelicula;
@@ -38,7 +39,7 @@ import javax.swing.BoxLayout;
 
 
 @SuppressWarnings("deprecation")
-public class SolicitudesUsuarios extends JFrame implements Observer{
+public class SolicitudesUsuarios extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -76,9 +77,8 @@ public class SolicitudesUsuarios extends JFrame implements Observer{
 		lblSolicitudesDeUsuarios.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(lblSolicitudesDeUsuarios, BorderLayout.NORTH);
 		
-		GestorUsuarios gestUsuario = GestorUsuarios.getGestorUsuarios();
-		gestUsuario.addObserver(this);
-		List<String> listaUsuarios = gestUsuario.mostrarUsuariosNoAceptados();
+		GestorGeneral gestorGeneral = GestorGeneral.getGestorGeneral();
+		List<String> listaUsuarios = gestorGeneral.mostrarUsuariosNoAceptados();
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		contentPane.add(panel, BorderLayout.CENTER);
@@ -90,7 +90,7 @@ public class SolicitudesUsuarios extends JFrame implements Observer{
 			lblUsuario.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e)  {
-					gestUsuario.aceptarUsuario(usuario); 
+					gestorGeneral.aceptarUsuario(usuario); 
 					SolicitudesUsuarios frame = new SolicitudesUsuarios();
 					dispose();
 				}
@@ -114,11 +114,4 @@ public class SolicitudesUsuarios extends JFrame implements Observer{
 		setVisible(true);
 	}
 	
-
-	@Override
-	public void update(Observable o, Object arg) {
-		//for ( JLabel usuario : panel.getComponents()) 
-			
-		
-	}
 }

@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import Modelo.GestorGeneral;
 import Modelo.GestorUsuarios;
 
 import java.awt.BorderLayout;
@@ -22,7 +23,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 @SuppressWarnings("deprecation")
-public class InicioDeSesion extends JFrame implements Observer{
+public class InicioDeSesion extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -48,8 +49,6 @@ public class InicioDeSesion extends JFrame implements Observer{
 	 * Create the frame.
 	 */
 	public InicioDeSesion() {
-		
-		GestorUsuarios.getGestorUsuarios().addObserver(this);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -101,7 +100,7 @@ public class InicioDeSesion extends JFrame implements Observer{
 		JButton buttonConfirmar = new JButton("Confirmar");
 		buttonConfirmar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (GestorUsuarios.getGestorUsuarios().iniciarSesion( textField.getText(), passwordField.getPassword())) {
+				if ( GestorGeneral.getGestorGeneral().seInicia(textField.getText(), passwordField.getPassword())) {
 					Catalogo frame = new Catalogo();
 					dispose();
 				};
@@ -115,9 +114,4 @@ public class InicioDeSesion extends JFrame implements Observer{
 		setVisible(true);
 	}
 
-	@Override
-	public void update(Observable o, Object arg) {
-		// TODO Esbozo de método generado automáticamente
-		
-	}
 }

@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import Modelo.GestorGeneral;
 import Modelo.GestorPeliculas;
 import Modelo.GestorUsuarios;
 import Modelo.Pelicula;
@@ -37,7 +38,7 @@ import java.awt.FlowLayout;
 
 
 @SuppressWarnings("deprecation")
-public class CuentasUsuarios extends JFrame implements Observer{
+public class CuentasUsuarios extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -61,8 +62,7 @@ public class CuentasUsuarios extends JFrame implements Observer{
 	 * Create the frame.
 	 */
 	public CuentasUsuarios() {
-		
-		GestorUsuarios.getGestorUsuarios().addObserver(this);
+
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -75,10 +75,8 @@ public class CuentasUsuarios extends JFrame implements Observer{
 		JLabel lblCuentasDeUsuarios = new JLabel("Cuentas de Usuarios");
 		lblCuentasDeUsuarios.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(lblCuentasDeUsuarios, BorderLayout.NORTH);
-		
-		GestorUsuarios gestUsuario = GestorUsuarios.getGestorUsuarios();
-		gestUsuario.addObserver(this);
-		List<String> listaUsuarios = gestUsuario.mostrarUsuarios();
+		GestorGeneral gestGeneral = GestorGeneral.getGestorGeneral();
+		List<String> listaUsuarios = gestGeneral.mostrarUsuarios();
 		
 		
 		
@@ -107,7 +105,7 @@ public class CuentasUsuarios extends JFrame implements Observer{
 		    
 		    btnEliminar.addActionListener(new ActionListener() {
 		    	public void actionPerformed(ActionEvent e) {
-		    		gestUsuario.deleteUsuario(usuario);
+		    		gestGeneral.deleteUsuario(usuario);
 		    		System.out.println("Eliminar " + usuario);
 		    		CuentasUsuarios cuentasUsuarios = new CuentasUsuarios();
 					dispose();
@@ -130,7 +128,6 @@ public class CuentasUsuarios extends JFrame implements Observer{
 		volver.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Catalogo catalogo = new Catalogo();
-				GestorUsuarios.getGestorUsuarios().deleteObservers();
 				dispose();
 			}
 		});
@@ -139,9 +136,4 @@ public class CuentasUsuarios extends JFrame implements Observer{
 		setVisible(true);
 	}
 
-	@Override
-	public void update(Observable o, Object arg) {
-		// TODO Esbozo de método generado automáticamente
-		
-	}
 }
