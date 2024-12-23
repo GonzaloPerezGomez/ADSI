@@ -9,10 +9,8 @@ public class Iniciador {
 		SQLite.getBaseDeDatos();
 		
 		GestorGeneral.getGestorGeneral().cargarBD();
+		
 		new InicioDeSesion();
-
-		GestorUsuarios.getGestorUsuarios();
-		GestorPeliculas.getGestorPeliculas();
 	}
 
 }

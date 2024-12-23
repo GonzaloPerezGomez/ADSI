@@ -21,7 +21,7 @@ public class GestorPeliculas extends Observable{
 	
 	private GestorPeliculas() throws SQLException {
 		peliculas = new ArrayList<Pelicula>();
-		System.out.print(peliculas);
+		
 	}
 	
 	public static GestorPeliculas getGestorPeliculas(){
@@ -37,6 +37,7 @@ public class GestorPeliculas extends Observable{
 	
 	public void cargarPeliculas() throws SQLException {
 		peliculas.addAll(SQLite.getBaseDeDatos().getAllPeliculas());
+		System.out.print(peliculas);
 	}
 	
 	public void addPelicula(Pelicula pPelicula) {

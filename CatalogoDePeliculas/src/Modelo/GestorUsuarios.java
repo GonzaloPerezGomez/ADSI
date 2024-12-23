@@ -20,7 +20,7 @@ public class GestorUsuarios{
 	
 	private GestorUsuarios() throws SQLException {
 		usuarios = new ArrayList<Usuario>();
-		System.out.print(usuarios);
+		
 	}
 	
 	public static GestorUsuarios getGestorUsuarios() {
@@ -39,6 +39,7 @@ public class GestorUsuarios{
 		usuarioSesion = "a";
 		
 		usuarios.addAll(SQLite.getBaseDeDatos().getAllUsuarios());
+		System.out.print(usuarios);
 	}
 	
 	public boolean addUsuario(String nombre, String nombreUsuario, char[] contraseña) {
