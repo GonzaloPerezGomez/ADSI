@@ -37,7 +37,7 @@ public class InicioDeSesion extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					InicioDeSesion frame = new InicioDeSesion();
+					new InicioDeSesion();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

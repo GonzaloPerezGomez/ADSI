@@ -25,7 +25,7 @@ public class Pelicula {
 		director = pDirector;
 		
 		if ("N/A".equalsIgnoreCase(pFecha)) 
-			pFecha = "01 Jan 1000";
+			pFecha = "1000 01 01";
 		
 		fecha = formatFecha(pFecha);
 	}
@@ -35,7 +35,7 @@ public class Pelicula {
 		director = pDirector;
 		
 		if ("N/A".equalsIgnoreCase(pFecha)) 
-			pFecha = "01 Jan 1000";
+			pFecha = "1000 01 01";
 		
 		fecha = formatFecha(pFecha);
 		
