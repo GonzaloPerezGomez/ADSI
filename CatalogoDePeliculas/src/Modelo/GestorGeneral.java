@@ -1,5 +1,6 @@
 package Modelo;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONObject;
@@ -15,6 +16,15 @@ public class GestorGeneral {
 			gestorGeneral = new GestorGeneral();
 		}
 		return gestorGeneral;
+	}
+	
+	public void cargarBD() {
+		try {
+			GestorUsuarios.getGestorUsuarios().cargarUsuarios();
+			GestorPeliculas.getGestorPeliculas().cargarPeliculas();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public boolean getRolSesion() {

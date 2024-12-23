@@ -1,5 +1,6 @@
 package Modelo;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +13,7 @@ public class Usuario {
 	private String nombreUsuario;
 	private String contraseña;
 	private boolean esAdmin;
-	private Usuario aceptadoPor;
+	private String aceptadoPor;
 	private List<Pelicula> solicitudes;
 	
 	public Usuario(String nombre, String nombreUsuario, String contraseña, boolean esAdmin) {
@@ -24,8 +25,19 @@ public class Usuario {
 		solicitudes = new ArrayList<Pelicula>();
 	}
 	
+	public Usuario(String nombre, String nombreUsuario, String contraseña, boolean esAdmin, String aceptadoPor) throws SQLException {
+		this.nombre = nombre;
+		this.nombreUsuario = nombreUsuario;
+		this.contraseña = new String(contraseña);
+		this.esAdmin = esAdmin;
+		this.aceptadoPor = aceptadoPor;
+		
+		solicitudes = new ArrayList<Pelicula>();
+	}
+	
 	public void addSolicitud(Pelicula pPelicula) {
-		solicitudes.add(pPelicula);
+		if(!solicitudes.contains(pPelicula))
+			solicitudes.add(pPelicula);
 	}
 	
 	public void deleteSolicitud(Pelicula pPelicula) {
@@ -74,8 +86,8 @@ public class Usuario {
 		return this.nombreUsuario;
 	}
 
-	public void aceptar(Usuario pUsuario) {
-		this.aceptadoPor=pUsuario;
+	public void aceptar(String pUsuario) {
+		this.aceptadoPor = pUsuario;
 	}
 	
 	public void setNombreContraseña(String pNombreUsuario, String pNombre, String pAdministrador) {
@@ -98,6 +110,12 @@ public class Usuario {
 		datosUsuario.put("Nombre", nombre);
 		datosUsuario.put("Contraseña", contraseña);
 		return datosUsuario;
+	}
+
+	@Override
+	public String toString() {
+		return "Usuario [nombre=" + nombre + ", nombreUsuario=" + nombreUsuario + ", contraseña=" + contraseña
+				+ ", esAdmin=" + esAdmin + ", aceptadoPor=" + aceptadoPor + "]";
 	}
 	
 }
