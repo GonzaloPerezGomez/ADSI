@@ -23,6 +23,7 @@ import javax.swing.JScrollPane;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -98,7 +99,11 @@ public class SolicitudesPeliculas extends JFrame {
 					String titulo = info.getString("Titulo");
 			        String director = info.getString("Director");
 			        String fecha = info.getString("Fecha");
-					GestorGeneral.getGestorGeneral().aceptarSolicitud(titulo, director, fecha);
+					try {
+						GestorGeneral.getGestorGeneral().aceptarSolicitud(titulo, director, fecha);
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
 					genPanel(panel);
 				}
 			}
@@ -114,7 +119,11 @@ public class SolicitudesPeliculas extends JFrame {
 					JSONObject info = new JSONObject(listSolicitudesPeliculas.getSelectedValue().toJSON());
 					String titulo = info.getString("Titulo");
 			        String fecha = info.getString("Fecha");
-					GestorGeneral.getGestorGeneral().rechazarSolicitud(titulo, fecha);
+					try {
+						GestorGeneral.getGestorGeneral().rechazarSolicitud(titulo, fecha);
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
 					
 					genPanel(panel);
 				}

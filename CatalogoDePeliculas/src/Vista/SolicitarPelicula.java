@@ -23,6 +23,7 @@ import javax.swing.JScrollPane;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -132,7 +133,11 @@ public class SolicitarPelicula extends JFrame {
 					        String titulo = info.getString("Title");
 					        String director = info.getString("Director");
 					        String fecha = info.getString("Released");
-					        GestorGeneral.getGestorGeneral().gestionarSolicitud(titulo, director, fecha);
+					        try {
+								GestorGeneral.getGestorGeneral().gestionarSolicitud(titulo, director, fecha);
+							} catch (SQLException e1) {
+								e1.printStackTrace();
+							}
 						}
 					}
 				}

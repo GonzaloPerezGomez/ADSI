@@ -189,5 +189,18 @@ public class SQLite {
         
         return listaPeliculas;
     }
+    
+	public static void insertUpdate(String sql) throws SQLException {
+		String url = "jdbc:sqlite:src/db/database.db";
+
+        // Conexión y operaciones
+        try (Connection conn = DriverManager.getConnection(url)) {
+            if (conn != null) {
+            	// Crear un Statement para ejecutar SQL
+                Statement stmt = conn.createStatement();
+                stmt.execute(sql);
+            }
+        }
+	}
 }
 

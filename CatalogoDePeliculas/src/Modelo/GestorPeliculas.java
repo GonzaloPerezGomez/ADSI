@@ -48,7 +48,7 @@ public class GestorPeliculas extends Observable{
 		peliculas.remove(pPelicula);
 	}
 	
-	public void gestionarSolicitud(String titulo, String director, String fecha) {
+	public void gestionarSolicitud(String titulo, String director, String fecha) throws SQLException {
 		if(!existe(titulo, fecha)) {
 			Pelicula p = new Pelicula(titulo, director, fecha);
 			GestorUsuarios.getGestorUsuarios().addSolicitud(p);
@@ -108,6 +108,12 @@ public class GestorPeliculas extends Observable{
 	}
 	return null;
 }
+
+	public void aceptarPelicula(String titulo, String fecha, String usuarioSesion) throws SQLException {
+		buscarPelicula(titulo, fecha).setAceptadoPor(usuarioSesion);
+		String sql = "UPDATE Pelicula SET aceptadoPor = '" +  usuarioSesion + "' WHERE titulo = '" +  titulo + "' AND fecha = '" +  fecha + "'";
+		SQLite.insertUpdate(sql);
+	}
 
 }	
 	

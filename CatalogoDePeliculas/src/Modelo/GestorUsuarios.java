@@ -122,10 +122,12 @@ public class GestorUsuarios{
 		return usuarios.stream().filter(p -> p.equals(usuarioSesion)).findFirst().orElse(null);
 	}
 	
-	public void addSolicitud(Pelicula p) {
+	public void addSolicitud(Pelicula p) throws SQLException {
 		Usuario u;
 		if((u = buscarUsuario(usuarioSesion)) != null)
 			u.addSolicitud(p);
+		
+		GestorPeliculas.getGestorPeliculas().addPelicula(p);
 	}
 	
 	public boolean getRolSesion() {
@@ -149,17 +151,20 @@ public class GestorUsuarios{
 		return l;
 	}
 
-	public void aceptarSolicitud(String titulo, String director, String fecha) {
-		GestorPeliculas.getGestorPeliculas().addPelicula(new Pelicula(titulo, director, fecha, usuarioSesion));
+	public void aceptarSolicitud(String titulo, String fecha) throws SQLException {
+		GestorPeliculas.getGestorPeliculas().aceptarPelicula(titulo, fecha, usuarioSesion);
 		deleteSolicitudes(titulo, fecha);	
 	}
 	
-	private void deleteSolicitudes(String titulo, String fecha) {
+	private void deleteSolicitudes(String titulo, String fecha) throws SQLException {
 		for (Usuario u : usuarios) {
 			u.deleteSolicitud(new Pelicula(titulo, null, fecha));}
+		
+		String sql = "DELETE FROM Solicitud WHERE titulo = '" +  titulo + "' AND fecha = '" +  fecha + "'";
+		SQLite.insertUpdate(sql);
 	}
 
-	public void rechazarSolicitud(String titulo, String fecha) {
+	public void rechazarSolicitud(String titulo, String fecha) throws SQLException {
 		deleteSolicitudes(titulo, fecha);
 	}
 	

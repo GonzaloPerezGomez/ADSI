@@ -76,15 +76,15 @@ public class GestorGeneral {
 		return GestorPeliculas.getGestorPeliculas().solicitarAPI(buscador); 
 	}
 	
-	public void gestionarSolicitud(String titulo, String director, String fecha) {
+	public void gestionarSolicitud(String titulo, String director, String fecha) throws SQLException {
 	GestorPeliculas.getGestorPeliculas().gestionarSolicitud(titulo, director, fecha);
 	}
 	
-	public void aceptarSolicitud(String titulo, String director, String fecha) {
-		GestorUsuarios.getGestorUsuarios().aceptarSolicitud(titulo, director, fecha);
+	public void aceptarSolicitud(String titulo, String director, String fecha) throws SQLException {
+		GestorUsuarios.getGestorUsuarios().aceptarSolicitud(titulo, fecha);
 	}
 	
-	public void rechazarSolicitud(String titulo, String fecha) {
+	public void rechazarSolicitud(String titulo, String fecha) throws SQLException {
 		GestorUsuarios.getGestorUsuarios().rechazarSolicitud(titulo, fecha);
 	}
 	

@@ -82,6 +82,18 @@ public class Pelicula {
         }
         return null;
     }
+
+	public String getTitulo() {
+		return titulo;
+	}
+
+	public String getDirector() {
+		return director;
+	}
+
+	public String getFecha() {
+		return fecha.toString();
+	}
 	
 	
 	
