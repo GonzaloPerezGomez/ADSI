@@ -58,7 +58,6 @@ public class Catalogo extends JFrame {
 			}
 		});
 	}
-ffffffffffffffffffffffffffffffffffffffffffffffffff
 	/**
 	 * Create the frame.
 	 */
