@@ -99,4 +99,7 @@ public class GestorGeneral {
 	public void aceptarUsuario(String usuario){
 		GestorUsuarios.getGestorUsuarios().aceptarUsuario(usuario);
 	}
+	public void buscarPelicula(String pelicula){
+		GestorPeliculas.getGestorPeliculas().buscarPelicula(pelicula, null);
+	}
 }
