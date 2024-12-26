@@ -88,7 +88,7 @@ public class Catalogo extends JFrame {
 		lblBuscar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
+				GestorGeneral.getGestorGeneral().buscarPelicula(getName());
 			}
 		});
 		
