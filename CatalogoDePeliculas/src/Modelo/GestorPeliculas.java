@@ -112,7 +112,7 @@ public class GestorPeliculas extends Observable{
 			Iterator<Pelicula> iterador= getIteratorPelicula();
 			while (iterador.hasNext()) {
 	            Pelicula pelicula = iterador.next();            
-	            if (pelicula.getTitulo().toLowerCase().startsWith(titulo.toLowerCase())) {
+	            if (pelicula.getTitulo().toLowerCase().contains(titulo.toLowerCase())) {
 	               peliculas.add(pelicula);
 	            }
 			
