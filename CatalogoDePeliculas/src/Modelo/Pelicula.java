@@ -41,7 +41,15 @@ public class Pelicula {
 		
 		aceptadoPor = pAceptadoPor;
 	}
-
+	public String getTitulo() {
+		return titulo;
+	}
+	public String getDirector() {
+		return director;
+	}
+	public String getFecha() {
+		return fecha.toString();
+	}
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

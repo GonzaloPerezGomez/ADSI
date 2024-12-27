@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import org.json.JSONObject;
+
 import Modelo.GestorGeneral;
 import Modelo.GestorPeliculas;
 import Modelo.GestorUsuarios;
@@ -23,6 +25,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -43,6 +47,9 @@ public class Catalogo extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textBuscador;
+	private JScrollPane scrollPane;
+	private ArrayList<Pelicula> info;
+	private JList<Pelicula>listPeliculas;
 
 	/**
 	 * Launch the application.
@@ -61,6 +68,7 @@ public class Catalogo extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+
 	public Catalogo() {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -88,8 +96,26 @@ public class Catalogo extends JFrame {
 		lblBuscar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				GestorGeneral.getGestorGeneral().buscarPelicula(getName());
+				ArrayList<Pelicula> p = GestorGeneral.getGestorGeneral().buscarPeliculas(textBuscador.getText());
+				
+				listPeliculas = new JList<>(p.toArray(new Pelicula[0]));
+				listPeliculas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				
+				scrollPane = new JScrollPane(listPeliculas);
+				scrollPane.setBounds(0, 55, 320, 220);
+				
+				for (Component comp : panel.getComponents()) {
+		            if (comp instanceof JScrollPane) {
+		                panel.remove(comp);
+		            }
+		        }
+
+		        panel.add(scrollPane);
+		        
+		        panel.revalidate();
+		        panel.repaint();
 			}
+			       
 		});
 		
 		lblBuscar.setHorizontalAlignment(SwingConstants.CENTER);

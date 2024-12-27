@@ -104,9 +104,20 @@ public class GestorPeliculas extends Observable{
             if (pelicula.equals(titulo, fecha)) {
                 return pelicula; // Retorna la película si coincide
             }
-		
+		}
+		return null;
 	}
-	return null;
+		public ArrayList<Pelicula> buscarPeliculas(String titulo) {
+			ArrayList<Pelicula> peliculas = new ArrayList<Pelicula>();
+			Iterator<Pelicula> iterador= getIteratorPelicula();
+			while (iterador.hasNext()) {
+	            Pelicula pelicula = iterador.next();            
+	            if (pelicula.getTitulo().toLowerCase().startsWith(titulo.toLowerCase())) {
+	               peliculas.add(pelicula);
+	            }
+			
+		}
+	return peliculas;
 }
 
 }	
