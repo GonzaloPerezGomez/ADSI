@@ -4,32 +4,40 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import org.json.JSONObject;
 
+import db.SQLite;
+
 @SuppressWarnings("deprecation")
 public class GestorPeliculas extends Observable{
 	
-	private static GestorPeliculas gestorPeliculas = new GestorPeliculas();
+	private static GestorPeliculas gestorPeliculas;
 	private List<Pelicula> peliculas;
 	
-	private GestorPeliculas() {
+	private GestorPeliculas() throws SQLException {
 		peliculas = new ArrayList<Pelicula>();
-		cargarDatos();
+		
 	}
 	
 	public static GestorPeliculas getGestorPeliculas(){
 		if(gestorPeliculas == null) {
-			gestorPeliculas = new GestorPeliculas();
+			try {
+				gestorPeliculas = new GestorPeliculas();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		return gestorPeliculas;
 	}
 	
-	private void cargarDatos() {
-		//TODO: Cargar los datos de la base de datos
+	public void cargarPeliculas() throws SQLException {
+		peliculas.addAll(SQLite.getBaseDeDatos().getAllPeliculas());
+		System.out.print(peliculas);
 	}
 	
 	public void addPelicula(Pelicula pPelicula) {
@@ -96,9 +104,20 @@ public class GestorPeliculas extends Observable{
             if (pelicula.equals(titulo, fecha)) {
                 return pelicula; // Retorna la película si coincide
             }
-		
+		}
+		return null;
 	}
-	return null;
+		public ArrayList<Pelicula> buscarPeliculas(String titulo) {
+			ArrayList<Pelicula> peliculas = new ArrayList<Pelicula>();
+			Iterator<Pelicula> iterador= getIteratorPelicula();
+			while (iterador.hasNext()) {
+	            Pelicula pelicula = iterador.next();            
+	            if (pelicula.getTitulo().toLowerCase().contains(titulo.toLowerCase())) {
+	               peliculas.add(pelicula);
+	            }
+			
+		}
+	return peliculas;
 }
 
 }	

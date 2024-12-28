@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import Modelo.GestorGeneral;
 import Modelo.GestorUsuarios;
 
 import java.awt.BorderLayout;
@@ -24,7 +25,7 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerListModel;
 import org.json.JSONObject;
 
-public class ModificarUsuario extends JFrame implements Observer{
+public class ModificarUsuario extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textUsuario;
@@ -36,7 +37,7 @@ public class ModificarUsuario extends JFrame implements Observer{
 	 */
 	public ModificarUsuario(String pUsuario) {
 
-	JSONObject info = GestorUsuarios.getGestorUsuarios().obtenerInfoUsuario();
+	JSONObject info = GestorGeneral.getGestorGeneral().obtenerInfoUsuario();
 	
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setBounds(100, 100, 450, 300);
@@ -105,7 +106,7 @@ public class ModificarUsuario extends JFrame implements Observer{
 	JButton buttonCorfirmar = new JButton("Confirmar");
 	buttonCorfirmar.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-			if (GestorUsuarios.getGestorUsuarios().modificarUsuariosUsuario( textNombre.getText(), textUsuario.getText(), new String(textContraseña.getPassword()))) {
+			if (GestorGeneral.getGestorGeneral().modificarUsuariosUsuario( textNombre.getText(), textUsuario.getText(), new String(textContraseña.getPassword()))) {
 				ModificarUsuario modificarUsuario = new ModificarUsuario(textUsuario.getText());
 				dispose();
 			}
@@ -118,9 +119,4 @@ public class ModificarUsuario extends JFrame implements Observer{
 	setVisible(true);
 }
 
-@Override
-public void update(Observable o, Object arg) {
-	// TODO Esbozo de método generado automáticamente
-	
-}
 }

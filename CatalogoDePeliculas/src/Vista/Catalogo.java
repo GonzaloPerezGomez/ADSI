@@ -6,6 +6,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import org.json.JSONObject;
+
+import Modelo.GestorGeneral;
 import Modelo.GestorPeliculas;
 import Modelo.GestorUsuarios;
 import Modelo.Pelicula;
@@ -22,6 +25,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -37,11 +42,14 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ImageIcon;
 
 @SuppressWarnings("deprecation")
-public class Catalogo extends JFrame implements Observer{
+public class Catalogo extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textBuscador;
+	private JScrollPane scrollPane;
+	private ArrayList<Pelicula> info;
+	private JList<Pelicula>listPeliculas;
 
 	/**
 	 * Launch the application.
@@ -57,13 +65,11 @@ public class Catalogo extends JFrame implements Observer{
 			}
 		});
 	}
-
 	/**
 	 * Create the frame.
 	 */
+
 	public Catalogo() {
-		
-		GestorUsuarios.getGestorUsuarios().addObserver(this);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -90,8 +96,26 @@ public class Catalogo extends JFrame implements Observer{
 		lblBuscar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				ArrayList<Pelicula> p = GestorGeneral.getGestorGeneral().buscarPeliculas(textBuscador.getText());
 				
+				listPeliculas = new JList<>(p.toArray(new Pelicula[0]));
+				listPeliculas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				
+				scrollPane = new JScrollPane(listPeliculas);
+				scrollPane.setBounds(0, 55, 320, 220);
+				
+				for (Component comp : panel.getComponents()) {
+		            if (comp instanceof JScrollPane) {
+		                panel.remove(comp);
+		            }
+		        }
+
+		        panel.add(scrollPane);
+		        
+		        panel.revalidate();
+		        panel.repaint();
 			}
+			       
 		});
 		
 		lblBuscar.setHorizontalAlignment(SwingConstants.CENTER);
@@ -109,16 +133,9 @@ public class Catalogo extends JFrame implements Observer{
 			}
 		});
 		panel.add(btnAñadirUnaPelicula);
-		
-		JMenuBar mB = genMenu(GestorUsuarios.getGestorUsuarios().getRolSesion());
+		JMenuBar mB = genMenu(GestorGeneral.getGestorGeneral().getRolSesion());
 		this.setJMenuBar(mB);
 		setVisible(true);
-	}
-
-	@Override
-	public void update(Observable o, Object arg) {
-		// TODO Esbozo de método generado automáticamente
-		
 	}
 	
 	private JMenuBar genMenu(boolean esAdmin) {
@@ -164,7 +181,7 @@ public class Catalogo extends JFrame implements Observer{
 			op4.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
-					GestorUsuarios.getGestorUsuarios().cerrarSesion();
+					GestorGeneral.getGestorGeneral().cerrarSesion();
 					new InicioDeSesion();
 					dispose();
 				}
@@ -178,7 +195,7 @@ public class Catalogo extends JFrame implements Observer{
 			op1.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
-					new ModificarUsuario(GestorUsuarios.getGestorUsuarios().getUsuarioSesion().getNombreUsuario());
+					new ModificarUsuario(GestorGeneral.getGestorGeneral().obtenerUsuario());
 					dispose();
 				}
 			});
@@ -186,7 +203,7 @@ public class Catalogo extends JFrame implements Observer{
 			op2.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
-					new PeliculasAlquiladas();
+					new SolicitudesPeliculas();
 					dispose();
 				}
 			});
@@ -202,7 +219,7 @@ public class Catalogo extends JFrame implements Observer{
 			op4.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
-					GestorUsuarios.getGestorUsuarios().cerrarSesion();
+					GestorGeneral.getGestorGeneral().cerrarSesion();;
 					new InicioDeSesion();
 					dispose();
 				}

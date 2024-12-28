@@ -1,34 +1,45 @@
 package Modelo;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import org.json.JSONObject;
+
+import db.SQLite;
+
 import java.util.Iterator;
 
 @SuppressWarnings("deprecation")
-public class GestorUsuarios extends Observable{
+public class GestorUsuarios{
 	
 	private static GestorUsuarios gestorUsuarios;
 	private List<Usuario> usuarios;
 	private String usuarioSesion;
 	
-	private GestorUsuarios() {
+	private GestorUsuarios() throws SQLException {
 		usuarios = new ArrayList<Usuario>();
-		cargarDatos();
+		
 	}
 	
 	public static GestorUsuarios getGestorUsuarios() {
 		if(gestorUsuarios == null) {
-			gestorUsuarios = new GestorUsuarios();
+			try {
+				gestorUsuarios = new GestorUsuarios();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		return gestorUsuarios;
 	}
 	
-	private void cargarDatos() {
+	public void cargarUsuarios() throws SQLException {
 		usuarios.add(new Usuario("a","a","a",true));
 		usuarioSesion = "a";
+		
+		usuarios.addAll(SQLite.getBaseDeDatos().getAllUsuarios());
+		System.out.print(usuarios);
 	}
 	
 	public boolean addUsuario(String nombre, String nombreUsuario, char[] contraseña) {
@@ -103,7 +114,7 @@ public class GestorUsuarios extends Observable{
 		}
 	}
 	
-	private Usuario buscarUsuario(String pNombre) {
+	public Usuario buscarUsuario(String pNombre) {
 		return usuarios.stream().filter(p -> p.equals(pNombre)).findFirst().orElse(null);
 	}
 	
@@ -168,7 +179,7 @@ public class GestorUsuarios extends Observable{
 	
 	public void aceptarUsuario(String pUsuario) {
 		Usuario aceptado = buscarUsuario(pUsuario);
-		Usuario administrador = buscarUsuario(usuarioSesion);
+		String administrador = usuarioSesion;
 		aceptado.aceptar(administrador);
 		
 	}

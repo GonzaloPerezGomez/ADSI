@@ -30,7 +30,7 @@ public class GestorPuntuacion extends Observable{
 	
 	
 	
-	public void  ValorarPelicula(String titulo, String  fecha, String comentario, float puntuación) {
+	public void  ValorarPelicula(String titulo, String  fecha, String comentario, Integer puntuacion) {
 		Pelicula pelicula= gestorPeliculas.buscarPelicula(titulo,fecha);
 		Usuario usuario=gestorUsuario.getUsuarioSesion();
 		//comprobar si existia o no la puntuacion en la base de datos
@@ -39,7 +39,7 @@ public class GestorPuntuacion extends Observable{
 
 		if (puntuacionExistente != null) {
 			// Si ya existe, actualizar los valores
-			puntuacionExistente.setComentario(valoracion);
+			puntuacionExistente.setComentario(comentario);
 			puntuacionExistente.setPuntuacion(puntuacion);
 	
 			// Guardar los cambios en la base de datos
@@ -49,7 +49,7 @@ public class GestorPuntuacion extends Observable{
 		}
 		else {
 			// Si no existe, crear una nueva puntuación
-			Puntuacion nuevaPuntuacion = new Puntuacion(usuario, pelicula, puntuacion, valoracion);
+			Puntua nuevaPuntuacion = new Puntua(usuario, pelicula,comentario,puntuacion);
 
 			// Guardar la nueva puntuación en la base de datos
 			guardarNuevaPuntuacion(nuevaPuntuacion);
@@ -61,7 +61,13 @@ public class GestorPuntuacion extends Observable{
 			
 	public Puntua getPuntuacionPorUsuarioYPelicula(Usuario usuario, Pelicula pelicula) {
 		// Lógica para buscar en la base de datos
-		// Ejemplo: SELECT * FROM Puntuaciones WHERE usuario_id = ? AND pelicula_id = ?
+		String titulo= pelicula.getTitulo();
+		Puntua puntuacion=new Puntua(null,null,null,null);
+		String query = "SELECT puntuacion FROM Puntua WHERE nombreUsuario = ? AND titulo= ?";
+		puntuacion.setPuntuacion(Integer.parseInt(query));
+		String query2 = "SELECT comentario FROM Puntua WHERE nombreUsuario = ? AND titulo= ?";
+		puntuacion.setComentario(query2);
+		 
 		// Retorna un objeto Puntuacion o null si no se encuentra
 		return puntuacion;
 	}
@@ -76,7 +82,7 @@ public class GestorPuntuacion extends Observable{
 		// Lógica para insertar en la base de datos
 		// Ejemplo: INSERT INTO Puntuaciones (usuario_id, pelicula_id, puntuacion, comentario) VALUES (?, ?, ?, ?)
 	}
-	
+				
 //	public Iterator<Puntua> getIteratorPuntuaciones() {
 //		return puntuaciones.iterator();
 //	}

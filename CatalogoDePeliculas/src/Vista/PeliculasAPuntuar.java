@@ -4,8 +4,12 @@ import java.awt.EventQueue;
 
 import javax.swing.*;
 
+import Modelo.GestorGeneral;
 import Modelo.GestorPuntuacion;
 import Modelo.GestorUsuarios;
+import Modelo.Pelicula;
+import Modelo.Puntua;
+import Modelo.Usuario;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,7 +20,7 @@ import java.util.Observer;
 public class PeliculasAPuntuar extends JFrame implements Observer{ 
     private JTextField txtTitulo, txtAño, txtComentario, txtPuntuacion;
     private JButton btnValorar;
-    private Controler miControler;
+   // private Controler miControler;
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -28,7 +32,9 @@ public class PeliculasAPuntuar extends JFrame implements Observer{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					PeliculasAPuntuar frame = new PeliculasAPuntuar();
+					String tituloPelicula=null;
+					String fechaPelicula= null;
+					PeliculasAPuntuar frame = new PeliculasAPuntuar(tituloPelicula,fechaPelicula);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -40,7 +46,7 @@ public class PeliculasAPuntuar extends JFrame implements Observer{
 	/**
 	 * Create the frame.
 	 */
-	public PeliculasAPuntuar() {
+	public PeliculasAPuntuar(String tituloPelicula,String fechaPelicula) {
 		
 		GestorPuntuacion.getGestorPuntuacion().addObserver(this);
 		
@@ -51,10 +57,15 @@ public class PeliculasAPuntuar extends JFrame implements Observer{
 
 	        getContentPane().add(new JLabel("Título:"));
 	        txtTitulo = new JTextField();
+	        txtTitulo.setText(tituloPelicula); // Establecer el título recibido
+	        txtTitulo.setEditable(false); // No editable
 	        getContentPane().add(txtTitulo);
-
+	        
+	        
 	        getContentPane().add(new JLabel("Año:"));
 	        txtAño = new JTextField();
+	        txtAño.setText(fechaPelicula); // Establecer el título recibido
+	        txtAño.setEditable(false); // No editable
 	        getContentPane().add(txtAño);
 
 	        getContentPane().add(new JLabel("Comentario:"));
@@ -71,7 +82,7 @@ public class PeliculasAPuntuar extends JFrame implements Observer{
 				public void actionPerformed(ActionEvent e) {
 					try {
 						// Validar los campos
-						int puntuacion = getPuntuacion();
+						Integer puntuacion = getPuntuacion();
 						if (puntuacion < 1 || puntuacion > 5) {
 							JOptionPane.showMessageDialog(PeliculasAPuntuar.this, "La puntuación debe estar entre 1 y 5", "Error", JOptionPane.ERROR_MESSAGE);
 							return;
@@ -79,10 +90,12 @@ public class PeliculasAPuntuar extends JFrame implements Observer{
 			
 						// Crear/actualizar la puntuación en el gestor
 						String comentario = getComentario();
-						Pelicula pelicula = GestorPuntuacion.getGestorPuntuacion().getPeliculaActual();
-						Usuario usuario = GestorUsuarios.getUsuarioActual();
+						String titulo = getTitulo();
+						String fecha = getAño();
+						//Usuario usuario = GestorUsuarios.getUsuarioActual();
 			
-						GestorPuntuacion.getGestorPuntuacion().guardarPuntuacion(usuario, pelicula, puntuacion, comentario);
+						GestorGeneral.getGestorGeneral().ValorarPelicula(titulo, fecha, comentario,puntuacion);
+						//GestorPuntuacion.getGestorPuntuacion().ValorarPelicula(usuario, pelicula, puntuacion, comentario);
 						JOptionPane.showMessageDialog(PeliculasAPuntuar.this, "¡Puntuación guardada con éxito!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 					} catch (NumberFormatException ex) {
 						JOptionPane.showMessageDialog(PeliculasAPuntuar.this, "Debe ingresar una puntuación válida.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -97,15 +110,15 @@ public class PeliculasAPuntuar extends JFrame implements Observer{
 	        return txtTitulo.getText();
 	    }
 
-	    public int getAño() {
-	        return Integer.parseInt(txtAño.getText());
+	    public String getAño() {
+	    	return txtAño.getText();
 	    }
 
 	    public String getComentario() {
 	        return txtComentario.getText();
 	    }
 
-	    public int getPuntuacion() {
+	    public Integer getPuntuacion() {
 	        return Integer.parseInt(txtPuntuacion.getText());
 	    }
 	   
@@ -116,25 +129,19 @@ public class PeliculasAPuntuar extends JFrame implements Observer{
 			if (arg instanceof Pelicula) {
 				Pelicula pelicula = (Pelicula) arg;
 				txtTitulo.setText(pelicula.getTitulo());
-				txtAño.setText(String.valueOf(pelicula.getAño()));
+				txtAño.setText(String.valueOf(pelicula.getFecha()));
 				
 				// Verificar si la película ya tiene valoración previa
-				Puntuacion puntuacion = GestorPuntuacion.getGestorPuntuacion().getPuntuacionPorUsuarioYPelicula(GestorUsuarios.getUsuarioActual(), pelicula);
-				if (puntuacion != null) {
-					txtComentario.setText(puntuacion.getComentario());
-					txtPuntuacion.setText(String.valueOf(puntuacion.getPuntuacion()));
-				} else {
-					txtComentario.setText("");
-					txtPuntuacion.setText("");
-				}
+				//Puntua puntuacion = GestorPuntuacion.getGestorPuntuacion().getPuntuacionPorUsuarioYPelicula(usuario, pelicula);
+				//if (puntuacion != null) {
+					//txtComentario.setText(puntuacion.getComentario());
+					//txtPuntuacion.setText(String.valueOf(puntuacion.getPuntuacion()));
+//				} else {
+//					txtComentario.setText("");
+//					txtPuntuacion.setText("");
+//				}
 			}
 		}
 	}
-	
-		
-
-		
-
-
        
 

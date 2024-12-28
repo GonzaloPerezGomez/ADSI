@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 
 import org.json.JSONObject;
 
+import Modelo.GestorGeneral;
 import Modelo.GestorPeliculas;
 import Modelo.GestorUsuarios;
 import Modelo.Pelicula;
@@ -34,7 +35,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ImageIcon;
 
 @SuppressWarnings("deprecation")
-public class SolicitudesPeliculas extends JFrame implements Observer{
+public class SolicitudesPeliculas extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -60,8 +61,6 @@ public class SolicitudesPeliculas extends JFrame implements Observer{
 	 * Create the frame.
 	 */
 	public SolicitudesPeliculas() {
-		
-		GestorUsuarios.getGestorUsuarios().addObserver(this);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -99,8 +98,7 @@ public class SolicitudesPeliculas extends JFrame implements Observer{
 					String titulo = info.getString("Titulo");
 			        String director = info.getString("Director");
 			        String fecha = info.getString("Fecha");
-					GestorUsuarios.getGestorUsuarios().aceptarSolicitud(titulo, director, fecha);
-					
+					GestorGeneral.getGestorGeneral().aceptarSolicitud(titulo, director, fecha);
 					genPanel(panel);
 				}
 			}
@@ -116,7 +114,7 @@ public class SolicitudesPeliculas extends JFrame implements Observer{
 					JSONObject info = new JSONObject(listSolicitudesPeliculas.getSelectedValue().toJSON());
 					String titulo = info.getString("Titulo");
 			        String fecha = info.getString("Fecha");
-					GestorUsuarios.getGestorUsuarios().rechazarSolicitud(titulo, fecha);
+					GestorGeneral.getGestorGeneral().rechazarSolicitud(titulo, fecha);
 					
 					genPanel(panel);
 				}
@@ -129,15 +127,9 @@ public class SolicitudesPeliculas extends JFrame implements Observer{
 		
 		setVisible(true);
 	}
-
-	@Override
-	public void update(Observable o, Object arg) {
-		// TODO Esbozo de método generado automáticamente
-		
-	}
 	
 	private void genPanel(JPanel panel) {
-		Pelicula[] p = GestorUsuarios.getGestorUsuarios().getSolicitudes();
+		Pelicula[] p = GestorGeneral.getGestorGeneral().getSolicitudes();
 		
 		listSolicitudesPeliculas = new JList<Pelicula>(p);
 		listSolicitudesPeliculas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

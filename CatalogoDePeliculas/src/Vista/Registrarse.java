@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import Modelo.GestorGeneral;
 import Modelo.GestorUsuarios;
 
 import java.awt.BorderLayout;
@@ -19,7 +20,7 @@ import java.util.Observer;
 import java.awt.event.ActionEvent;
 
 @SuppressWarnings("deprecation")
-public class Registrarse extends JFrame implements Observer{
+public class Registrarse extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -94,7 +95,7 @@ public class Registrarse extends JFrame implements Observer{
 		buttonConfirmar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println(textNombre.getText());
-				if (GestorUsuarios.getGestorUsuarios().addUsuario( textNombre.getText(), textUsuario.getText(), textContraseña.getPassword())) {
+				if (GestorGeneral.getGestorGeneral().addUsuario( textNombre.getText(), textUsuario.getText(), textContraseña.getPassword())) {
 					Catalogo frame = new Catalogo();
 					dispose();
 				};
@@ -107,9 +108,4 @@ public class Registrarse extends JFrame implements Observer{
 		setVisible(true);
 	}
 
-	@Override
-	public void update(Observable o, Object arg) {
-		// TODO Esbozo de método generado automáticamente
-		
-	}
 }
