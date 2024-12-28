@@ -12,11 +12,12 @@ public class Puntua {
 
 	private Usuario usuario ;
 	private Pelicula pelicula;
-	private Float puntuacion;
+	private Integer puntuacion;
 	private String comentario;
 	
 	
-	 public Puntua(String comentario, float puntuacion, Usuario usuario, Pelicula pelicula) {
+
+	 public Puntua(Usuario usuario, Pelicula pelicula,String comentario, Integer puntuacion) {
 	        this.comentario = comentario;
 	        this.puntuacion = puntuacion;
 	        this.usuario = usuario;
@@ -27,7 +28,7 @@ public class Puntua {
 	        return comentario;
 	    }
 
-	    public float getPuntuacion() {
+	    public Integer getPuntuacion() {
 	        return puntuacion;
 	    }
 
@@ -42,6 +43,15 @@ public class Puntua {
 	    public boolean equals(Pelicula peli, Usuario usu) {
 			return (pelicula.equals(peli) && usuario.equals(usu));
 		}
+
+		public void setComentario(String comentario) {
+			 this.comentario = comentario;
+			
+		}
 	    
+		public void setPuntuacion(Integer puntuacion) {
+			 this.puntuacion = puntuacion;
+			
+		}
 	    
 }
