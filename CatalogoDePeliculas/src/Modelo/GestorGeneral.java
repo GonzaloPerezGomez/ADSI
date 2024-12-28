@@ -102,6 +102,7 @@ public class GestorGeneral {
 	public ArrayList<Pelicula> buscarPeliculas(String titulo){
 		return GestorPeliculas.getGestorPeliculas().buscarPeliculas(titulo);
 	}
+
 	public void ValorarPelicula(String titulo, String fecha,String comentario, Integer puntuacion ){
 		 GestorPuntuacion.getGestorPuntuacion().ValorarPelicula(titulo, fecha, comentario,puntuacion);
 	}
