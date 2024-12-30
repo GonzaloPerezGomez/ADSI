@@ -5,6 +5,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -119,6 +121,19 @@ public class GestorPeliculas extends Observable{
 		}
 	return peliculas;
 }
+		public boolean estaAlquilada(Usuario usuario, Pelicula pelicula) {
+			List<Pelicula> alquiladas = GestorAlquiler.getGestorAlquiler().getPeliculasAlquiladasPorUsuario(usuario);
+			for(int i = 0; i < alquiladas.size(); i++) {
+				if (pelicula.equals(alquiladas.get(i))) {
+					Instant ahora = Instant.now();
+					Duration diff = Duration.between(ahora, alquiladas.get(i).getFecha());
+					if (diff.toHours() < 48) {
+						return true;
+					}
+				}
+			}
+			return false;
+		}
 
 }	
 	

@@ -4,17 +4,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
-import Modelo.GestorAlquileres;
+import Modelo.GestorAlquiler;
 import Modelo.Pelicula;
 import Modelo.Usuario;
 
-public class ListaPeliculasAlquiladas extends JFrame {
+public class PeliculasAlquiladas extends JFrame {
     private Usuario usuarioActual;
     private JList<String> listaPeliculas;
     private DefaultListModel<String> modeloLista;
     private List<Pelicula> peliculasAlquiladas;
 
-    public ListaPeliculasAlquiladas(Usuario usuario) {
+    public PeliculasAlquiladas(Usuario usuario) {
         this.usuarioActual = usuario;
 
         setTitle("Películas Alquiladas");
@@ -44,7 +44,7 @@ public class ListaPeliculasAlquiladas extends JFrame {
                     Pelicula peliculaSeleccionada = peliculasAlquiladas.get(seleccion);
                     abrirPanelPeliculaAPuntuar(peliculaSeleccionada);
                 } else {
-                    JOptionPane.showMessageDialog(ListaPeliculasAlquiladas.this,
+                    JOptionPane.showMessageDialog(PeliculasAlquiladas.this,
                             "Por favor, selecciona una película.", "Error", JOptionPane.WARNING_MESSAGE);
                 }
             }
@@ -53,7 +53,7 @@ public class ListaPeliculasAlquiladas extends JFrame {
 
     // Método para cargar las películas alquiladas del usuario
     private void cargarPeliculasAlquiladas() {
-        peliculasAlquiladas = GestorAlquileres.getGestorAlquileres().getPeliculasAlquiladasPorUsuario(usuarioActual);
+        peliculasAlquiladas = GestorAlquiler.getGestorAlquiler().getPeliculasAlquiladasPorUsuario(usuarioActual);
 
         if (peliculasAlquiladas.isEmpty()) {
             JOptionPane.showMessageDialog(this,

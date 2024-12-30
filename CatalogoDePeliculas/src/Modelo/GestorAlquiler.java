@@ -1,6 +1,7 @@
 package Modelo;
 
 import java.util.Date;
+import java.util.List;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -15,7 +16,7 @@ public class GestorAlquiler {
     private static GestorAlquiler gestorAlquiler = new GestorAlquiler();
 
 
-	public static GestorAlquileres getGestorAlquiler(){
+	public static GestorAlquiler getGestorAlquiler(){
 		if(gestorAlquiler == null) {
 			gestorAlquiler = new GestorAlquiler();
 		}
