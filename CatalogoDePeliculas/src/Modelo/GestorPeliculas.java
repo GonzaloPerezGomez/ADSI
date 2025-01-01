@@ -7,6 +7,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -117,16 +118,15 @@ public class GestorPeliculas extends Observable{
 	            if (pelicula.getTitulo().toLowerCase().contains(titulo.toLowerCase())) {
 	               peliculas.add(pelicula);
 	            }
-			
 		}
 	return peliculas;
 }
 		public boolean estaAlquilada(Usuario usuario, Pelicula pelicula) {
-			List<Pelicula> alquiladas = GestorAlquiler.getGestorAlquiler().getPeliculasAlquiladasPorUsuario(usuario);
+			List<Alquila> alquiladas = GestorAlquiler.getGestorAlquiler().getPeliculasAlquiladasPorUsuario(usuario);
 			for(int i = 0; i < alquiladas.size(); i++) {
-				if (pelicula.equals(alquiladas.get(i))) {
+				if (pelicula.equals(alquiladas.get(i).getPelicula())) {
 					Instant ahora = Instant.now();
-					Duration diff = Duration.between(ahora, alquiladas.get(i).getFecha());
+					Duration diff = Duration.between(ahora, (Temporal) alquiladas.get(i).getFecha());
 					if (diff.toHours() < 48) {
 						return true;
 					}

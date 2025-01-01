@@ -34,12 +34,16 @@ import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.ListSelectionModel;
 import javax.swing.ImageIcon;
+
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 @SuppressWarnings("deprecation")
 public class Catalogo extends JFrame {
@@ -89,15 +93,35 @@ public class Catalogo extends JFrame {
 		
 		textBuscador = new JTextField();
 		textBuscador.setBounds(0, 12, 114, 21);
+		JLabel textofondo = new JLabel("TEXTO");
+		textofondo.setForeground(Color.GRAY); 
+		textofondo.setBounds(0, 12, 114, 21);
+		textofondo.setOpaque(false);
+        panel.add(textofondo);
 		panel.add(textBuscador);
 		textBuscador.setColumns(10);
-		
+        
+        textBuscador.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+            	textofondo.setVisible(false);
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (textBuscador.getText().isEmpty()) {
+                	textofondo.setVisible(true);
+                }
+            }
+        });
+        
+        
 		JLabel lblBuscar = new JLabel("Buscar");
 		lblBuscar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				ArrayList<Pelicula> p = GestorGeneral.getGestorGeneral().buscarPeliculas(textBuscador.getText());
-				
+				if (p.isEmpty()) {JOptionPane.showMessageDialog(null, "Película no encontrada");}
 				listPeliculas = new JList<>(p.toArray(new Pelicula[0]));
 				listPeliculas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				

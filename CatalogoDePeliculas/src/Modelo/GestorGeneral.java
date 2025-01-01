@@ -106,4 +106,8 @@ public class GestorGeneral {
 	public void ValorarPelicula(String titulo, String fecha,String comentario, Integer puntuacion ){
 		 GestorPuntuacion.getGestorPuntuacion().ValorarPelicula(titulo, fecha, comentario,puntuacion);
 	}
+	public void alquilarPelicula(Usuario usuario, Pelicula pelicula) {
+		GestorAlquiler.getGestorAlquiler().alquilarPelicula(usuario, pelicula);
+	}
+	
 }
