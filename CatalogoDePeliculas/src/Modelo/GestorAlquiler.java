@@ -11,6 +11,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Objects;
 
+import javax.swing.JOptionPane;
+
 
 
 public class GestorAlquiler {
@@ -44,9 +46,9 @@ public class GestorAlquiler {
     	if (GestorPeliculas.getGestorPeliculas().estaAlquilada(usuario, pelicula) == false) {
     		Alquila nuevo = new Alquila(usuario, pelicula);
     		alquiladas.add(nuevo);
-    		System.out.print("Película alquilada correctamente");
+    		JOptionPane.showMessageDialog(null,"Película alquilada correctamente");
     	}
-    	else {System.out.print("Película ya alquilada");}
+    	else {JOptionPane.showMessageDialog(null,"Película ya alquilada");}
     	
     }
 }
