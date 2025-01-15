@@ -5,6 +5,8 @@ import java.awt.Image;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import org.json.JSONObject;
 
@@ -34,12 +36,16 @@ import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.ListSelectionModel;
 import javax.swing.ImageIcon;
+
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 @SuppressWarnings("deprecation")
 public class Catalogo extends JFrame {
@@ -91,13 +97,19 @@ public class Catalogo extends JFrame {
 		textBuscador.setBounds(0, 12, 114, 21);
 		panel.add(textBuscador);
 		textBuscador.setColumns(10);
-		
+        
+        
+        
 		JLabel lblBuscar = new JLabel("Buscar");
 		lblBuscar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if (textBuscador.getText().trim().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Introduce un título");
+				}
+				else {
 				ArrayList<Pelicula> p = GestorGeneral.getGestorGeneral().buscarPeliculas(textBuscador.getText());
-				
+				if (p.isEmpty()) {JOptionPane.showMessageDialog(null, "Película no encontrada");}
 				listPeliculas = new JList<>(p.toArray(new Pelicula[0]));
 				listPeliculas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				
@@ -109,13 +121,29 @@ public class Catalogo extends JFrame {
 		                panel.remove(comp);
 		            }
 		        }
-
+				listPeliculas.addListSelectionListener(new ListSelectionListener(){
+					@Override
+					public void valueChanged(ListSelectionEvent e) {
+						if(e.getValueIsAdjusting()) {
+							int i = listPeliculas.getSelectedIndex();
+							if(i!= -1) {
+								Pelicula m = listPeliculas.getSelectedValue();
+								JSONObject jsonData = new JSONObject();
+						        jsonData.put("titulo", m.getTitulo());
+						        jsonData.put("fecha", m.getFecha());
+								new PeliculasAPuntuar(jsonData);
+								dispose();
+							}
+						}
+					}
+				});
 		        panel.add(scrollPane);
 		        
 		        panel.revalidate();
 		        panel.repaint();
+				}
 			}
-			       
+			     
 		});
 		
 		lblBuscar.setHorizontalAlignment(SwingConstants.CENTER);
@@ -203,7 +231,7 @@ public class Catalogo extends JFrame {
 			op2.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
-					new SolicitudesPeliculas();
+					new PeliculasAlquiladas(); //para que pueda elegir la pelicula que ya alquilo para reseñar					
 					dispose();
 				}
 			});

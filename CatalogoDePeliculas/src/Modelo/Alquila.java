@@ -20,3 +20,14 @@ public class Alquila {
 	        this.usuario = usuario;
 	        this.pelicula = pelicula;
             this.fecha = new Date();}
+	 
+	public Date getFecha() {
+		return fecha;
+	}
+	public Pelicula getPelicula() {
+		return pelicula;
+	}
+	public Usuario getusuario() {
+		return usuario;
+	}
+}

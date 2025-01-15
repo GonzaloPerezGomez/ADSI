@@ -1,5 +1,7 @@
 package Modelo;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
@@ -10,14 +12,21 @@ public class GestorPuntuacion extends Observable{
 	private static GestorPuntuacion GestorPuntuacion;
 	private GestorPeliculas gestorPeliculas;
 	private GestorUsuarios gestorUsuario;
+	private List<Puntua> Puntuaciones;
+	
+	private GestorPuntuacion() throws SQLException {
+		Puntuaciones = new ArrayList<Puntua>();
+	}
 	
 	
 	
-	
-	
-	public static GestorPuntuacion getGestorPuntuacion() {
+	public static GestorPuntuacion getGestorPuntuacion()  {
 		if(GestorPuntuacion == null) {
-			GestorPuntuacion = new GestorPuntuacion();
+			try {
+				GestorPuntuacion = new GestorPuntuacion();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		return GestorPuntuacion;
 	}
@@ -31,28 +40,25 @@ public class GestorPuntuacion extends Observable{
 	
 	
 	public void  ValorarPelicula(String titulo, String  fecha, String comentario, Integer puntuacion) {
-		Pelicula pelicula= gestorPeliculas.buscarPelicula(titulo,fecha);
-		Usuario usuario=gestorUsuario.getUsuarioSesion();
-		//comprobar si existia o no la puntuacion en la base de datos
-		// Buscar si ya existe una puntuación para este usuario y película
+		Pelicula pelicula= gestorPeliculas.getGestorPeliculas().buscarPelicula(titulo,fecha);
+		Usuario usuario=gestorUsuario.getGestorUsuarios().getUsuarioSesion();
+		
 		Puntua puntuacionExistente = getPuntuacionPorUsuarioYPelicula(usuario, pelicula);
-
+		
+		System.out.println(puntuacionExistente);//////para ver si guarda puntuaciones
+		
 		if (puntuacionExistente != null) {
 			// Si ya existe, actualizar los valores
 			puntuacionExistente.setComentario(comentario);
 			puntuacionExistente.setPuntuacion(puntuacion);
-	
-			// Guardar los cambios en la base de datos
-			actualizarPuntuacion(puntuacionExistente);
+		
 			System.out.println("Puntuación actualizada correctamente.");
 
 		}
 		else {
 			// Si no existe, crear una nueva puntuación
 			Puntua nuevaPuntuacion = new Puntua(usuario, pelicula,comentario,puntuacion);
-
-			// Guardar la nueva puntuación en la base de datos
-			guardarNuevaPuntuacion(nuevaPuntuacion);
+			Puntuaciones.add(nuevaPuntuacion);
 			System.out.println("Nueva puntuación creada correctamente.");
 		}
 		
@@ -60,43 +66,26 @@ public class GestorPuntuacion extends Observable{
 	}
 			
 	public Puntua getPuntuacionPorUsuarioYPelicula(Usuario usuario, Pelicula pelicula) {
-		// Lógica para buscar en la base de datos
-		String titulo= pelicula.getTitulo();
-		Puntua puntuacion=new Puntua(null,null,null,null);
-		String query = "SELECT puntuacion FROM Puntua WHERE nombreUsuario = ? AND titulo= ?";
-		puntuacion.setPuntuacion(Integer.parseInt(query));
-		String query2 = "SELECT comentario FROM Puntua WHERE nombreUsuario = ? AND titulo= ?";
-		puntuacion.setComentario(query2);
-		 
-		// Retorna un objeto Puntuacion o null si no se encuentra
-		return puntuacion;
+	   System.out.println(Puntuaciones);
+	    // Crear un iterador para recorrer la lista
+	    Iterator<Puntua> iterator = Puntuaciones.iterator();
+
+	    // Recorrer la lista buscando la coincidencia
+	    while (iterator.hasNext()) {
+	        Puntua puntua = iterator.next();
+	        
+	        // Comparar el usuario y la película
+	        if (puntua.getUsuario().equals(usuario.getNombreUsuario()) && puntua.getPelicula().equals(pelicula.getTitulo(),pelicula.getFecha())) {
+	            return puntua; // Retornar la puntuación si se encuentra
+	        }
+	    }
+
+	    // Si no se encuentra, devolver null
+	    return null;
 	}
 	
-	public void actualizarPuntuacion(Puntua puntuacion) {
-		// Lógica para actualizar en la base de datos
-		// Ejemplo: UPDATE Puntua SET puntuacion = ?, comentario = ? WHERE pelicula = ? AND usuario = ?
+	public Integer getPuntuacion(Puntua puntu) {
+		return puntu.getPuntuacion();
 	}
-	
-	
-	public void guardarNuevaPuntuacion(Puntua puntuacion) {
-		// Lógica para insertar en la base de datos
-		// Ejemplo: INSERT INTO Puntuaciones (usuario_id, pelicula_id, puntuacion, comentario) VALUES (?, ?, ?, ?)
-	}
-				
-//	public Iterator<Puntua> getIteratorPuntuaciones() {
-//		return puntuaciones.iterator();
-//	}
-//	
-//	public Puntua buscarPuntuacion(Pelicula peli, Usuario usu ) {
-//		
-//		Iterator<Puntua> iterador= getIteratorPuntuaciones();
-//		while (iterador.hasNext()) {
-//            Puntua puntu = iterador.next();            
-//            if (puntu.equals(peli, usu)) {
-//                return puntu; 
-//            }
-//		
-//	}
-//	return null;
-//}
+
 }
