@@ -5,6 +5,8 @@ import java.awt.Image;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import org.json.JSONObject;
 
@@ -119,7 +121,19 @@ public class Catalogo extends JFrame {
 		                panel.remove(comp);
 		            }
 		        }
-
+				listPeliculas.addListSelectionListener(new ListSelectionListener(){
+					@Override
+					public void valueChanged(ListSelectionEvent e) {
+						if(e.getValueIsAdjusting()) {
+							int i = listPeliculas.getSelectedIndex();
+							if(i!= -1) {
+								Pelicula m = listPeliculas.getSelectedValue();
+								new PeliculasAPuntuar(m.getTitulo(), m.getFecha());
+								dispose();
+							}
+						}
+					}
+				});
 		        panel.add(scrollPane);
 		        
 		        panel.revalidate();
