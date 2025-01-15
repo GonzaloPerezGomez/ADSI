@@ -27,6 +27,7 @@ public class Alquila {
 	public Pelicula getPelicula() {
 		return pelicula;
 	}
+
 	public Usuario getusuario() {
 		return usuario;
 	}

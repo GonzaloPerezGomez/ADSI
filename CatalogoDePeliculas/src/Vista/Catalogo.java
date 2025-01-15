@@ -132,6 +132,7 @@ public class Catalogo extends JFrame {
 						        jsonData.put("titulo", m.getTitulo());
 						        jsonData.put("fecha", m.getFecha());
 								new PeliculasAPuntuar(jsonData);
+
 								dispose();
 							}
 						}
