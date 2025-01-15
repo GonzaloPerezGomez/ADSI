@@ -21,6 +21,11 @@ public class GestorUsuarios{
 	private GestorUsuarios() throws SQLException {
 		usuarios = new ArrayList<Usuario>();
 		
+	/////pruebas para punuaciones y demas
+		Usuario p1 = new Usuario("b","b","Hola1234.",false);
+		Usuario p2 = new Usuario("bb","bb","Hola1234.",false);
+		Usuario p3 = new Usuario("bbb","bbb","Hola1234.",false);
+		usuarios.add(p3);usuarios.add(p2);usuarios.add(p1);
 	}
 	
 	public static GestorUsuarios getGestorUsuarios() {
@@ -41,7 +46,9 @@ public class GestorUsuarios{
 		usuarios.addAll(SQLite.getBaseDeDatos().getAllUsuarios());
 		System.out.print(usuarios);
 	}
-	
+	public String getNombreUsuario(Usuario usu) {
+		return usu.getNombreUsuario();
+	}
 	public boolean addUsuario(String nombre, String nombreUsuario, char[] contraseña) {
 		if (buscarUsuario(nombreUsuario) == null) {
 			if(nombre == " " || nombreUsuario == " " || contraseña.length==0 ) {

@@ -24,7 +24,18 @@ public class GestorAlquiler {
 	private GestorAlquiler() throws SQLException {
 		alquiladas = new ArrayList<Alquila>();
 			
+	/////pruebas para punuaciones y demas
+		Usuario p1 = new Usuario("b","b","Hola1234.",false);
+		Usuario p2 = new Usuario("bb","bb","Hola1234.",false);
+		Usuario p3 = new Usuario("bbb","bbb","Hola1234.",false);
 		
+		Pelicula p11 = new Pelicula("ff","ff","2000-01-02");
+		Pelicula p22 = new Pelicula("rr","ff","2000-01-02");
+		Pelicula p33 = new Pelicula("r3","ff","2000-01-02");
+		
+		Alquila p111 = new Alquila(p1,p22); Alquila p333 = new Alquila(p2,p22);
+		Alquila p222 = new Alquila(p1,p33);Alquila p444 = new Alquila(p2,p33);
+		alquiladas.add(p444);alquiladas.add(p111);alquiladas.add(p222);alquiladas.add(p333);
 	}
     
 	public static GestorAlquiler getGestorAlquiler(){

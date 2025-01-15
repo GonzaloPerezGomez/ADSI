@@ -80,10 +80,10 @@ public class PeliculasAlquiladas extends JFrame {
 
     // Método para abrir el panel de PeliculasAPuntuar
     private void abrirPanelPeliculaAPuntuar(Pelicula pelicula) {
-    	String fechaa = "2000-01-01";
+    	
     	JSONObject json = new JSONObject();
         json.put("titulo", pelicula.getTitulo());
-        json.put("fecha", fechaa); //////////// falla la fecha
+        json.put("fecha", pelicula.getFecha()); 
 
     	
         PeliculasAPuntuar panelPuntuar = new PeliculasAPuntuar(json);

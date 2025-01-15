@@ -125,7 +125,7 @@ public class GestorGeneral {
 
 	public JSONObject revisarPuntuacionexistente(String titulo, String fecha) {
 		Usuario usu = GestorUsuarios.getGestorUsuarios().getUsuarioSesion(); 
-		Pelicula peli = GestorPeliculas.getGestorPeliculas().buscarPelicula(titulo, fecha);
+		Pelicula peli = GestorPeliculas.getGestorPeliculas().buscarPelicula(titulo);
 		JSONObject resultado = new JSONObject();
 	    try {
 		
@@ -140,5 +140,15 @@ public class GestorGeneral {
 	        e.printStackTrace();
 	    }
 	    return resultado;
+	}
+
+	public JSONObject obtenerPeliculasOrdenadasPorPuntuacionMedia() {
+		JSONObject json = GestorPuntuacion.getGestorPuntuacion().CalcularMedia();
+		return json;
+	}
+
+	public JSONObject obtenerComentariosYPuntuaciones(String titulo) {
+		JSONObject json = GestorPuntuacion.getGestorPuntuacion().obtenerComentariosYPuntuaciones(titulo);
+		return json;
 	}
 }
