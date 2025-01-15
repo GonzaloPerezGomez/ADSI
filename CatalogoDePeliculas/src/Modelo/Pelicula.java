@@ -62,8 +62,8 @@ public class Pelicula {
 		return Objects.equals(fecha, other.fecha) && Objects.equals(titulo, other.titulo);
 	}
 	
-	public boolean equals(String pTitulo, String pFecha) {
-		return (titulo.equals(pTitulo) && fecha.equals(formatFecha(pFecha)));
+	public boolean equals(String pTitulo) {
+		return (titulo.equals(pTitulo));
 	}
 	
 	@Override

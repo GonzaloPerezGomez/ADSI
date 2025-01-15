@@ -25,6 +25,12 @@ public class GestorPeliculas extends Observable{
 	private GestorPeliculas() throws SQLException {
 		peliculas = new ArrayList<Pelicula>();
 		
+		/////pruebas para punuaciones y demas
+		Pelicula p1 = new Pelicula("ff","ff","2000-01-02");
+		Pelicula p2 = new Pelicula("rr","ff","2000-01-02");
+		Pelicula p3 = new Pelicula("r3","ff","2000-01-02");
+		peliculas.add(p3);peliculas.add(p2);peliculas.add(p1);
+		p1.toString();p2.toString();p3.toString();
 	}
 	
 	public static GestorPeliculas getGestorPeliculas(){
@@ -61,7 +67,7 @@ public class GestorPeliculas extends Observable{
 	}
 	
 	private boolean existe(String titulo, String fecha) {
-		return peliculas.stream().anyMatch(p -> p.equals(titulo, fecha));
+		return peliculas.stream().anyMatch(p -> p.equals(titulo));
 	}
 
 	public JSONObject solicitarAPI(String pTitulo) {
@@ -101,12 +107,12 @@ public class GestorPeliculas extends Observable{
 		return peliculas.iterator();
 	}
 	
-	public Pelicula buscarPelicula(String titulo, String fecha ) {
+	public Pelicula buscarPelicula(String titulo) {
 		
 		Iterator<Pelicula> iterador= getIteratorPelicula();
 		while (iterador.hasNext()) {
             Pelicula pelicula = iterador.next();            
-            if (pelicula.equals(titulo, fecha)) {
+            if (pelicula.equals(titulo)) {
                 return pelicula; // Retorna la película si coincide
             }
 		}

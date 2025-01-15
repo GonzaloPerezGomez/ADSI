@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import Modelo.GestorGeneral;
@@ -40,8 +41,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 
 import javax.swing.ListSelectionModel;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 
 import java.awt.event.FocusEvent;
@@ -56,6 +60,7 @@ public class Catalogo extends JFrame {
 	private JScrollPane scrollPane;
 	private ArrayList<Pelicula> info;
 	private JList<Pelicula>listPeliculas;
+	private JPanel panelComentarios;
 
 	/**
 	 * Launch the application.
@@ -78,7 +83,7 @@ public class Catalogo extends JFrame {
 	public Catalogo() {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(0, 0, 800, 800);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -124,10 +129,15 @@ public class Catalogo extends JFrame {
 				listPeliculas.addListSelectionListener(new ListSelectionListener(){
 					@Override
 					public void valueChanged(ListSelectionEvent e) {
+						
 						if(e.getValueIsAdjusting()) {
 							int i = listPeliculas.getSelectedIndex();
 							if(i!= -1) {
 								System.out.println("okay");
+								 String titulo = listPeliculas.getModel().getElementAt(i).getTitulo();			  
+								 System.out.println(titulo);
+								 mostrarComentariosYPuntuaciones(titulo);
+					             
 							}
 						}
 					}
@@ -159,6 +169,18 @@ public class Catalogo extends JFrame {
 		JMenuBar mB = genMenu(GestorGeneral.getGestorGeneral().getRolSesion());
 		this.setJMenuBar(mB);
 		setVisible(true);
+		
+		////////boton valorar ordenar
+		 
+		    JButton btnActualizar = new JButton("Ordenar por puntuacion");
+		    btnActualizar.setBounds(320, 12, 200, 21);
+		    panel.add(btnActualizar);
+		    btnActualizar.addActionListener(new ActionListener() {
+		        public void actionPerformed(ActionEvent e) {
+		        actualizarCatalogo();
+		        }
+		    });
+		
 	}
 	
 	private JMenuBar genMenu(boolean esAdmin) {
@@ -257,5 +279,85 @@ public class Catalogo extends JFrame {
 		mB.add(menu);
 		
 		return mB;
+	}
+	
+	private void actualizarCatalogo() {
+	    try {
+	        JSONObject jsonData = GestorGeneral.getGestorGeneral().obtenerPeliculasOrdenadasPorPuntuacionMedia();
+	        // Actualizar la interfaz con la lista ordenada
+	        actualizarListaPeliculas(jsonData);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        JOptionPane.showMessageDialog(this, "Error al actualizar el catálogo", "Error", JOptionPane.ERROR_MESSAGE);
+	    }
+	}
+	
+	private void actualizarListaPeliculas(JSONObject jsonData) {
+	    // Limpia la lista actual de películas
+	    contentPane.removeAll();
+
+	    JLabel lblCatalogo = new JLabel("Catalogo");
+	    lblCatalogo.setHorizontalAlignment(SwingConstants.CENTER);
+	    contentPane.add(lblCatalogo, BorderLayout.NORTH);
+
+	    JPanel panel = new JPanel();
+	    contentPane.add(panel, BorderLayout.CENTER);
+	    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+	    JSONArray peliculas = jsonData.getJSONArray("peliculas");
+	    for (int i = 0; i < peliculas.length(); i++) {
+	        JSONObject pelicula = peliculas.getJSONObject(i);
+	        String titulo = pelicula.getString("titulo");
+	        String fecha = pelicula.getString("fecha");
+	        double puntuacionMedia = pelicula.getDouble("puntuacionMedia");
+
+	        JLabel lblPelicula = new JLabel(titulo + " (" + fecha + ")     - Puntuación media: " + puntuacionMedia);
+	        panel.add(lblPelicula);
+	    }
+
+	    contentPane.revalidate();
+	    contentPane.repaint();
+	}
+	private void mostrarComentariosYPuntuaciones(String titulo) {
+	    try {
+	    	System.out.println(titulo);
+	        JSONObject jsonData = GestorGeneral.getGestorGeneral().obtenerComentariosYPuntuaciones(titulo);
+	        actualizarPanelComentarios(jsonData);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        JOptionPane.showMessageDialog(this, "Error al obtener los comentarios y puntuaciones", "Error", JOptionPane.ERROR_MESSAGE);
+	    }
+	}
+
+	private void actualizarPanelComentarios(JSONObject jsonData) {
+	    // Imprimir el contenido del JSONObject para depuración
+	    System.out.println("JSON Data: " + jsonData.toString());
+
+	    if (panelComentarios != null || jsonData==null) {
+	        contentPane.remove(panelComentarios);
+
+	    }
+
+	    panelComentarios = new JPanel();
+	    panelComentarios.setLayout(new BoxLayout(panelComentarios, BoxLayout.Y_AXIS));
+	    panelComentarios.setBorder(BorderFactory.createTitledBorder("Comentarios y Puntuaciones"));
+
+	    JSONArray comentarios = jsonData.getJSONArray("comentarios");
+	    for (int i = 0; i < comentarios.length(); i++) {
+	        JSONObject comentario = comentarios.getJSONObject(i);
+	        String usuario = comentario.getString("usuario");
+	        int puntuacion = comentario.getInt("puntuacion");
+	        String textoComentario = comentario.getString("comentario");
+
+	        JLabel lblComentario = new JLabel(usuario + " - Puntuación: " + puntuacion + " - " + textoComentario);
+	        panelComentarios.add(lblComentario);
+	    }
+
+	    JScrollPane scrollPaneComentarios = new JScrollPane(panelComentarios);
+	    scrollPaneComentarios.setPreferredSize(new Dimension(600, 400));
+	    contentPane.add(scrollPaneComentarios, BorderLayout.SOUTH);
+
+	    contentPane.revalidate();
+	    contentPane.repaint();
 	}
 }
