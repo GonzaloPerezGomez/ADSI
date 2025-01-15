@@ -93,33 +93,19 @@ public class Catalogo extends JFrame {
 		
 		textBuscador = new JTextField();
 		textBuscador.setBounds(0, 12, 114, 21);
-		JLabel textofondo = new JLabel("TEXTO");
-		textofondo.setForeground(Color.GRAY); 
-		textofondo.setBounds(0, 12, 114, 21);
-		textofondo.setOpaque(false);
-        panel.add(textofondo);
 		panel.add(textBuscador);
 		textBuscador.setColumns(10);
         
-        textBuscador.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-            	textofondo.setVisible(false);
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (textBuscador.getText().isEmpty()) {
-                	textofondo.setVisible(true);
-                }
-            }
-        });
         
         
 		JLabel lblBuscar = new JLabel("Buscar");
 		lblBuscar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if (textBuscador.getText().trim().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Introduce un título");
+				}
+				else {
 				ArrayList<Pelicula> p = GestorGeneral.getGestorGeneral().buscarPeliculas(textBuscador.getText());
 				if (p.isEmpty()) {JOptionPane.showMessageDialog(null, "Película no encontrada");}
 				listPeliculas = new JList<>(p.toArray(new Pelicula[0]));
@@ -138,8 +124,9 @@ public class Catalogo extends JFrame {
 		        
 		        panel.revalidate();
 		        panel.repaint();
+				}
 			}
-			       
+			     
 		});
 		
 		lblBuscar.setHorizontalAlignment(SwingConstants.CENTER);
