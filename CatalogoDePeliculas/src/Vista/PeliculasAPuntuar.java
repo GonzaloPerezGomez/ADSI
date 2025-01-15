@@ -74,15 +74,15 @@ public class PeliculasAPuntuar extends JFrame implements Observer{
 
 	        getContentPane().add(new JLabel("Comentario:"));
 	        txtComentario = new JTextField();
-	        if (puntu!= null) {
-	        	txtComentario.setText(puntu.getString("comentario"));
+	        if (puntu != null && puntu.has("comentario")) {
+	            txtComentario.setText(puntu.getString("comentario"));
 	        }
 	        getContentPane().add(txtComentario);
 
 	        getContentPane().add(new JLabel("Puntuación: 5 max - 1 min"));
 	        txtPuntuacion = new JTextField();
-	        if (puntu!= null) {
-	        	txtPuntuacion.setText(puntu.getString("puntuacion"));
+	        if (puntu != null && puntu.has("puntuacion")) {
+	            txtPuntuacion.setText(Integer.toString(puntu.getInt("puntuacion")));
 	        }
 	        getContentPane().add(txtPuntuacion);
 

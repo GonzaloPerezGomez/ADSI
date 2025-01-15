@@ -40,6 +40,8 @@ public class GestorPeliculas extends Observable{
 	
 	public void cargarPeliculas() throws SQLException {
 		peliculas.addAll(SQLite.getBaseDeDatos().getAllPeliculas());
+		
+		
 		System.out.print(peliculas);
 	}
 	
@@ -122,9 +124,7 @@ public class GestorPeliculas extends Observable{
 	return peliculas;
 }
 		public boolean estaAlquilada(Usuario usuario, Pelicula pelicula) {
-
 			List<Alquila> alquiladas = GestorAlquiler.getGestorAlquiler().getAlquiladasPorUsuario(usuario);
-
 			for(int i = 0; i < alquiladas.size(); i++) {
 				if (pelicula.equals(alquiladas.get(i).getPelicula())) {
 					Instant ahora = Instant.now();
