@@ -127,13 +127,7 @@ public class Catalogo extends JFrame {
 						if(e.getValueIsAdjusting()) {
 							int i = listPeliculas.getSelectedIndex();
 							if(i!= -1) {
-								Pelicula m = listPeliculas.getSelectedValue();
-								JSONObject jsonData = new JSONObject();
-						        jsonData.put("titulo", m.getTitulo());
-						        jsonData.put("fecha", m.getFecha());
-								new PeliculasAPuntuar(jsonData);
-
-								dispose();
+								System.out.println("okay");
 							}
 						}
 					}

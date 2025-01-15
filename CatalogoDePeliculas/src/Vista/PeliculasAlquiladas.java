@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import Modelo.GestorAlquiler;
-
 import Modelo.GestorGeneral;
 import Modelo.Pelicula;
 import Modelo.Usuario;
@@ -26,7 +25,7 @@ public class PeliculasAlquiladas extends JFrame {
     public PeliculasAlquiladas() {
         this.usuarioActual = GestorGeneral.getGestorGeneral().obtenerUsuarioActual();
         this.peliculasAlquiladas = new ArrayList<Pelicula>();
-
+        
         setTitle("Películas Alquiladas");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -68,11 +67,7 @@ public class PeliculasAlquiladas extends JFrame {
     private void cargarPeliculasAlquiladas() {
         this.peliculasAlquiladas = GestorGeneral.getGestorGeneral().getPeliculasAlquiladasPorUsuario(usuarioActual);
       
-        ///pa probar cosos /////////////////////
-        Pelicula peli = new Pelicula("hola","Manolo","1000 01 01");
-        this.peliculasAlquiladas.add(peli);
-        /////////////////////////////////
-
+        
         if (peliculasAlquiladas.isEmpty()) {
             JOptionPane.showMessageDialog(this,
                     "No has alquilado ninguna película.", "Información", JOptionPane.INFORMATION_MESSAGE);

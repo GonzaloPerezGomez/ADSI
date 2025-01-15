@@ -126,15 +126,19 @@ public class GestorGeneral {
 	public JSONObject revisarPuntuacionexistente(String titulo, String fecha) {
 		Usuario usu = GestorUsuarios.getGestorUsuarios().getUsuarioSesion(); 
 		Pelicula peli = GestorPeliculas.getGestorPeliculas().buscarPelicula(titulo, fecha);
+		JSONObject resultado = new JSONObject();
+	    try {
+		
 		Puntua puntu = GestorPuntuacion.getGestorPuntuacion().getPuntuacionPorUsuarioYPelicula(usu, peli);
-		JSONObject json = new JSONObject();
-		json = null;
-		if (puntu !=null) {
-			json.put("puntuacion", puntu.getPuntuacion());
-			json.put("comentario", puntu.getComentario());
-		}
-		return json;
+		
+		 if (puntu != null) {
+	            resultado.put("comentario", puntu.getComentario());
+	            resultado.put("puntuacion", puntu.getPuntuacion());
+	        
+		 }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return resultado;
 	}
-
-	
 }

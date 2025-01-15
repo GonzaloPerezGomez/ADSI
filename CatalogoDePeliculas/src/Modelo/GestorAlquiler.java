@@ -23,6 +23,7 @@ public class GestorAlquiler {
     
 	private GestorAlquiler() throws SQLException {
 		alquiladas = new ArrayList<Alquila>();
+			
 		
 	}
     
@@ -36,7 +37,6 @@ public class GestorAlquiler {
 		}
 		return gestorAlquiler;
 	}
-
 
 	public List<Pelicula> getPeliculasAlquiladasPorUsuario(Usuario usuario) {
 	    // Lista donde se almacenarán las películas filtradas
@@ -77,6 +77,6 @@ public class GestorAlquiler {
     		JOptionPane.showMessageDialog(null,"Película alquilada correctamente");
     	}
     	else {JOptionPane.showMessageDialog(null,"Película ya alquilada");}
-    	}
-
+    	
+    }
 }
