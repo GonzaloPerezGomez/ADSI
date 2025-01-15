@@ -65,7 +65,7 @@ public class Pelicula {
 	public boolean equals(String pTitulo, String pFecha) {
 		return (titulo.equals(pTitulo) && fecha.equals(formatFecha(pFecha)));
 	}
-
+	
 	@Override
 	public String toString() {
 		return "<html>Titulo: " + titulo + "<br>Director: " + director + "<br>Fecha: " + fecha + "<html>";

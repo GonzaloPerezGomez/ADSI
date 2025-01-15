@@ -4,6 +4,8 @@ import java.awt.EventQueue;
 
 import javax.swing.*;
 
+import org.json.JSONObject;
+
 import Modelo.GestorGeneral;
 import Modelo.GestorPuntuacion;
 import Modelo.GestorUsuarios;
@@ -32,9 +34,8 @@ public class PeliculasAPuntuar extends JFrame implements Observer{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					String tituloPelicula=null;
-					String fechaPelicula= null;
-					PeliculasAPuntuar frame = new PeliculasAPuntuar(tituloPelicula,fechaPelicula);
+					JSONObject jsonData= null;
+					PeliculasAPuntuar frame = new PeliculasAPuntuar(jsonData);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -46,9 +47,12 @@ public class PeliculasAPuntuar extends JFrame implements Observer{
 	/**
 	 * Create the frame.
 	 */
-	public PeliculasAPuntuar(String tituloPelicula,String fechaPelicula) {
+	public PeliculasAPuntuar(JSONObject json) {
 		
 		GestorPuntuacion.getGestorPuntuacion().addObserver(this);
+		//JSONObject jsonObject = new JSONObject(json);
+		
+        JSONObject puntu= GestorGeneral.getGestorGeneral().revisarPuntuacionexistente(json.getString("titulo"),json.getString("fecha"));
 		
 		 setTitle("Valorar Película");
 	        setSize(473, 433);
@@ -57,23 +61,29 @@ public class PeliculasAPuntuar extends JFrame implements Observer{
 
 	        getContentPane().add(new JLabel("Título:"));
 	        txtTitulo = new JTextField();
-	        txtTitulo.setText(tituloPelicula); // Establecer el título recibido
+	        txtTitulo.setText(json.getString("titulo")); // Establecer el título recibido
 	        txtTitulo.setEditable(false); // No editable
 	        getContentPane().add(txtTitulo);
 	        
 	        
 	        getContentPane().add(new JLabel("Año:"));
 	        txtAño = new JTextField();
-	        txtAño.setText(fechaPelicula); // Establecer el título recibido
+	        txtAño.setText(json.getString("fecha")); // Establecer el título recibido
 	        txtAño.setEditable(false); // No editable
 	        getContentPane().add(txtAño);
 
 	        getContentPane().add(new JLabel("Comentario:"));
 	        txtComentario = new JTextField();
+	        if (puntu!= null) {
+	        	txtComentario.setText(puntu.getString("comentario"));
+	        }
 	        getContentPane().add(txtComentario);
 
 	        getContentPane().add(new JLabel("Puntuación: 5 max - 1 min"));
 	        txtPuntuacion = new JTextField();
+	        if (puntu!= null) {
+	        	txtPuntuacion.setText(puntu.getString("puntuacion"));
+	        }
 	        getContentPane().add(txtPuntuacion);
 
 	        btnValorar = new JButton("Valorar");
@@ -95,8 +105,9 @@ public class PeliculasAPuntuar extends JFrame implements Observer{
 						//Usuario usuario = GestorUsuarios.getUsuarioActual();
 			
 						GestorGeneral.getGestorGeneral().ValorarPelicula(titulo, fecha, comentario,puntuacion);
-						//GestorPuntuacion.getGestorPuntuacion().ValorarPelicula(usuario, pelicula, puntuacion, comentario);
 						JOptionPane.showMessageDialog(PeliculasAPuntuar.this, "¡Puntuación guardada con éxito!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+						 dispose();
+						 new Catalogo();
 					} catch (NumberFormatException ex) {
 						JOptionPane.showMessageDialog(PeliculasAPuntuar.this, "Debe ingresar una puntuación válida.", "Error", JOptionPane.ERROR_MESSAGE);
 					} catch (Exception ex) {
@@ -131,17 +142,11 @@ public class PeliculasAPuntuar extends JFrame implements Observer{
 				txtTitulo.setText(pelicula.getTitulo());
 				txtAño.setText(String.valueOf(pelicula.getFecha()));
 				
-				// Verificar si la película ya tiene valoración previa
-				//Puntua puntuacion = GestorPuntuacion.getGestorPuntuacion().getPuntuacionPorUsuarioYPelicula(usuario, pelicula);
-				//if (puntuacion != null) {
-					//txtComentario.setText(puntuacion.getComentario());
-					//txtPuntuacion.setText(String.valueOf(puntuacion.getPuntuacion()));
-//				} else {
-//					txtComentario.setText("");
-//					txtPuntuacion.setText("");
-//				}
+			
+				
+				}
 			}
 		}
-	}
+	
        
 

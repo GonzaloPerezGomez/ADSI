@@ -128,7 +128,11 @@ public class Catalogo extends JFrame {
 							int i = listPeliculas.getSelectedIndex();
 							if(i!= -1) {
 								Pelicula m = listPeliculas.getSelectedValue();
-								new PeliculasAPuntuar(m.getTitulo(), m.getFecha());
+								JSONObject jsonData = new JSONObject();
+						        jsonData.put("titulo", m.getTitulo());
+						        jsonData.put("fecha", m.getFecha());
+								new PeliculasAPuntuar(jsonData);
+
 								dispose();
 							}
 						}
@@ -228,7 +232,7 @@ public class Catalogo extends JFrame {
 			op2.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
-					new SolicitudesPeliculas();
+					new PeliculasAlquiladas(); //para que pueda elegir la pelicula que ya alquilo para reseñar					
 					dispose();
 				}
 			});

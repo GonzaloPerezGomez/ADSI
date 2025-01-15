@@ -39,6 +39,11 @@ public class GestorGeneral {
 		return GestorUsuarios.getGestorUsuarios().getUsuarioSesion().getNombreUsuario();
 	}
 	
+	public Usuario obtenerUsuarioActual() {
+		String Nombre = GestorUsuarios.getGestorUsuarios().getUsuarioSesion().getNombreUsuario();
+		 return GestorUsuarios.getGestorUsuarios().buscarUsuario(Nombre);
+	}
+	
 	public List<String> mostrarUsuarios(){
 		return GestorUsuarios.getGestorUsuarios().mostrarUsuarios();
 	}
@@ -109,5 +114,27 @@ public class GestorGeneral {
 	public void alquilarPelicula(Usuario usuario, Pelicula pelicula) {
 		GestorAlquiler.getGestorAlquiler().alquilarPelicula(usuario, pelicula);
 	}
+
+	public List<Pelicula> getPeliculasAlquiladasPorUsuario(Usuario usuarioActual) {
+		return GestorAlquiler.getGestorAlquiler().getPeliculasAlquiladasPorUsuario(usuarioActual);
+	}
+	
+	public List<Alquila> getAlquiladasPorUsuario(Usuario usuarioActual) {
+		return GestorAlquiler.getGestorAlquiler().getAlquiladasPorUsuario(usuarioActual);
+	}
+
+	public JSONObject revisarPuntuacionexistente(String titulo, String fecha) {
+		Usuario usu = GestorUsuarios.getGestorUsuarios().getUsuarioSesion(); 
+		Pelicula peli = GestorPeliculas.getGestorPeliculas().buscarPelicula(titulo, fecha);
+		Puntua puntu = GestorPuntuacion.getGestorPuntuacion().getPuntuacionPorUsuarioYPelicula(usu, peli);
+		JSONObject json = new JSONObject();
+		json = null;
+		if (puntu !=null) {
+			json.put("puntuacion", puntu.getPuntuacion());
+			json.put("comentario", puntu.getComentario());
+		}
+		return json;
+	}
+
 	
 }

@@ -1,3 +1,4 @@
+
 package Modelo;
 
 import java.util.ArrayList;
@@ -36,11 +37,38 @@ public class GestorAlquiler {
 		return gestorAlquiler;
 	}
 
-    public List<Alquila> getPeliculasAlquiladasPorUsuario(Usuario usuario) {
-        // Implementar la consulta a la base de datos
-        // Ejemplo: SELECT * FROM Alquileres WHERE usuario = ?
-        return /* Lista de películas alquiladas */;
-    }
+
+	public List<Pelicula> getPeliculasAlquiladasPorUsuario(Usuario usuario) {
+	    // Lista donde se almacenarán las películas filtradas
+	    List<Pelicula> peliculasAlquiladas = new ArrayList<>();
+	    
+	    // Recorrer la lista de todos los alquileres
+	    for (Alquila alquiler : GestorAlquiler.getGestorAlquiler().alquiladas) {
+	        // Si el usuario del alquiler coincide con el usuario proporcionado
+	        if (alquiler.getusuario().equals(usuario.getNombreUsuario())) {
+	            peliculasAlquiladas.add(alquiler.getPelicula());
+	        }
+	    }
+	    
+	    // Devolver la lista de películas alquiladas por el usuario
+	    return peliculasAlquiladas;
+	}
+	public List<Alquila> getAlquiladasPorUsuario(Usuario usuario) {
+	    // Lista donde se almacenarán las películas filtradas
+	    List<Alquila> peliculasAlquiladas = new ArrayList<>();
+	    
+	    // Recorrer la lista de todos los alquileres
+	    for (Alquila alquiler : GestorAlquiler.getGestorAlquiler().alquiladas) {
+	        // Si el usuario del alquiler coincide con el usuario proporcionado
+	        if (alquiler.getusuario().equals(usuario.getNombreUsuario())) {
+	            peliculasAlquiladas.add(alquiler);
+	        }
+	    }
+	    
+	    // Devolver la lista de películas alquiladas por el usuario
+	    return peliculasAlquiladas;
+	}
+
     
     public void alquilarPelicula(Usuario usuario, Pelicula pelicula) {
     	if (GestorPeliculas.getGestorPeliculas().estaAlquilada(usuario, pelicula) == false) {
@@ -49,6 +77,6 @@ public class GestorAlquiler {
     		JOptionPane.showMessageDialog(null,"Película alquilada correctamente");
     	}
     	else {JOptionPane.showMessageDialog(null,"Película ya alquilada");}
-    	
-    }
+    	}
+
 }
