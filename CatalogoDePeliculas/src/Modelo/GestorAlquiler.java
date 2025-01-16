@@ -15,6 +15,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
 import java.util.Locale;
 import java.util.Objects;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import javax.swing.JOptionPane;
 
@@ -81,7 +83,8 @@ public class GestorAlquiler {
 		for(int i = 0; i < alquiladas.size(); i++) {
 			if (pelicula.equals(alquiladas.get(i).getPelicula())) {
 				Temporal ahora = Instant.now();
-				Duration diff = Duration.between(ahora, alquiladas.get(i).getFecha().toInstant());
+				ZoneId zona = ZoneId.of("Europe/Madrid");
+				Duration diff = Duration.between(ahora, alquiladas.get(i).getFecha().atZone(zona).toInstant());
 				if (diff.toHours() < 48) {
 					return true;
 				}
@@ -91,7 +94,7 @@ public class GestorAlquiler {
 	}
 	 public void alquilarPelicula(Usuario usuario, Pelicula pelicula) {
 	    	if (estaAlquilada(usuario, pelicula) == false) {
-	    		Alquila nuevo = new Alquila(usuario, pelicula, new Date());
+	    		Alquila nuevo = new Alquila(usuario, pelicula, LocalDateTime.now());
 	    		alquiladas.add(nuevo);
 	    		String sql = "INSERT INTO Alquila (nombreUsuario, titulo, fechaPelicula, fechaAlquila) VALUES ('" + usuario.getNombreUsuario() + "', '" + pelicula.getTitulo() + "', '" + pelicula.getFecha() + "','" + nuevo.getFecha() + "' )";
 	    		SQLite.getBaseDeDatos().execSQL(sql);

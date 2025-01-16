@@ -26,6 +26,7 @@ public class GestorGeneral {
 			GestorPeliculas.getGestorPeliculas().cargarPeliculas();
 			GestorUsuarios.getGestorUsuarios().cargarSolicitudes();
 			GestorPuntuacion.getGestorPuntuacion().cargarPuntuaciones();
+			GestorAlquiler.getGestorAlquiler().cargarAlquila();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
