@@ -4,6 +4,7 @@ package Modelo;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -89,11 +90,10 @@ public class GestorAlquiler {
 	}
 
 	public boolean estaAlquilada(Usuario usuario, Pelicula pelicula) {
-		List<Alquila> alquiladas = GestorAlquiler.getGestorAlquiler().getAlquiladasPorUsuario(usuario);
 		for(int i = 0; i < alquiladas.size(); i++) {
 			if (pelicula.equals(alquiladas.get(i).getPelicula())) {
-				Instant ahora = Instant.now();
-				Duration diff = Duration.between(ahora, (Temporal) alquiladas.get(i).getFecha());
+				Temporal ahora = Instant.now();
+				Duration diff = Duration.between(ahora, alquiladas.get(i).getFecha().toInstant());
 				if (diff.toHours() < 48) {
 					return true;
 				}

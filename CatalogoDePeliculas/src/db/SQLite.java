@@ -85,7 +85,7 @@ public class SQLite {
                         "nombreUsuario TEXT NOT NULL, " +
                         "titulo TEXT NOT NULL, " +
                         "fechaPelicula DATE NOT NULL," +
-                        "fechaAlquila INT NOT NULL," +
+                        "fechaAlquila DATE NOT NULL," +
                         "PRIMARY KEY (nombreUsuario, titulo, fechaPelicula, fechaAlquila), " +
                         "FOREIGN KEY (nombreUsuario) REFERENCES Usuario(nombreUsuario)" + 
                         "FOREIGN KEY (titulo) REFERENCES Pelicula(titulo)" +
@@ -174,7 +174,6 @@ public class SQLite {
     	List<Pelicula> listaPeliculas = new ArrayList<Pelicula>();
     	// Ruta del archivo de base de datos SQLite
         String url = "jdbc:sqlite:src/db/database.db";
-
         // Conexión y operaciones
         try (Connection conn = DriverManager.getConnection(url)) {
             if (conn != null) {
@@ -195,29 +194,40 @@ public class SQLite {
     }
     
     public Collection<Alquila> getAllAlquila() throws SQLException {
+    	System.out.println("Entra");
     	List<Alquila> listaAlquiladas = new ArrayList<Alquila>();
     	// Ruta del archivo de base de datos SQLite
         String url = "jdbc:sqlite:src/db/database.db";
 
         // Conexión y operaciones
         try (Connection conn = DriverManager.getConnection(url)) {
+        	System.out.println("Conecta");
             if (conn != null) {
+            	System.out.println("No esta vacio");
             	// Crear un Statement para ejecutar SQL
                 Statement stmt = conn.createStatement();
-                /*List<Pelicula> listaPeliculas =  new ArrayList<Pelicula>();
-                listaPeliculas.addAll(SQLite.getBaseDeDatos().getAllPeliculas());
-                List<Usuario> listaUsuarios =  new ArrayList<Usuario>();
-                listaUsuarios.addAll(SQLite.getBaseDeDatos().getAllUsuarios());*/
+                //List<Pelicula> listaPeliculas =  new ArrayList<Pelicula>();
+                //listaPeliculas.addAll(SQLite.getBaseDeDatos().getAllPeliculas());
+                //List<Usuario> listaUsuarios =  new ArrayList<Usuario>();
+                //listaUsuarios.addAll(SQLite.getBaseDeDatos().getAllUsuarios());
             	 String sql1 = "SELECT * FROM Alquila";
                  ResultSet rs = stmt.executeQuery(sql1);
                  while(rs.next())
                  {
+                	 System.out.println("Entra al while");
                 	 Usuario u = GestorUsuarios.getGestorUsuarios().buscarUsuario(rs.getString("nombreUsuario"));
                 	 Pelicula p = GestorPeliculas.getGestorPeliculas().buscarPelicula(rs.getString("titulo"));
+                	 //Usuario u = listaPeliculas.
+                			 //Pelicula p = GestorPeliculas.getGestorPeliculas().buscarPelicula(rs.getString("titulo"));
                 	 listaAlquiladas.add(new Alquila(u, p, rs.getDate("fechaAlquila")));
                  }
             }
-        }
+            if (listaAlquiladas.isEmpty()) { System.out.println("Vacio");}
+            else {listaAlquiladas.stream().forEach(System.out::println);} 
+        }catch (SQLException e) {
+       	 System.out.println("Error en la conexión con SQLite.");
+         e.printStackTrace();
+	}
         
         return listaAlquiladas;
     }

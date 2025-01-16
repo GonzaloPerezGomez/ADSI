@@ -166,4 +166,8 @@ public class GestorGeneral {
 		JSONObject json2=GestorPeliculas.getGestorPeliculas().recogerInfo(json.getString("titulo"));
 		return json2;
 	}
+	
+	public Pelicula buscarPelicula(String titulo) {
+		return GestorPeliculas.getGestorPeliculas().buscarPelicula(titulo);
+	}
 }

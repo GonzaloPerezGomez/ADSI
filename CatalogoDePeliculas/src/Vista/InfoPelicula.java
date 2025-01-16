@@ -63,6 +63,7 @@ public class InfoPelicula extends JFrame {
         btnAlquilar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	GestorGeneral.getGestorGeneral().alquilarPelicula(GestorGeneral.getGestorGeneral().obtenerUsuarioActual(), GestorGeneral.getGestorGeneral().buscarPelicula(json2.getString("titulo")));
                // realizarAlquiler(json.getString("titulo"),json.getString("fecha"));
             }
         });
