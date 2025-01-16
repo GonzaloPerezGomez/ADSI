@@ -11,6 +11,8 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import Modelo.Alquila;
+import Modelo.GestorPeliculas;
 import Modelo.GestorUsuarios;
 import Modelo.Pelicula;
 import Modelo.Usuario;
@@ -188,6 +190,34 @@ public class SQLite {
         }
         
         return listaPeliculas;
+    }
+    
+    public Collection<Alquila> getAllAlquila() throws SQLException {
+    	List<Alquila> listaAlquiladas = new ArrayList<Alquila>();
+    	// Ruta del archivo de base de datos SQLite
+        String url = "jdbc:sqlite:src/db/database.db";
+
+        // Conexión y operaciones
+        try (Connection conn = DriverManager.getConnection(url)) {
+            if (conn != null) {
+            	// Crear un Statement para ejecutar SQL
+                Statement stmt = conn.createStatement();
+                /*List<Pelicula> listaPeliculas =  new ArrayList<Pelicula>();
+                listaPeliculas.addAll(SQLite.getBaseDeDatos().getAllPeliculas());
+                List<Usuario> listaUsuarios =  new ArrayList<Usuario>();
+                listaUsuarios.addAll(SQLite.getBaseDeDatos().getAllUsuarios());*/
+            	 String sql1 = "SELECT * FROM Alquila";
+                 ResultSet rs = stmt.executeQuery(sql1);
+                 while(rs.next())
+                 {
+                	 Usuario u = GestorUsuarios.getGestorUsuarios().buscarUsuario(rs.getString("nombreUsuario"));
+                	 Pelicula p = GestorPeliculas.getGestorPeliculas().buscarPelicula(rs.getString("titulo"));
+                	 listaAlquiladas.add(new Alquila(u, p, rs.getDate("fechaAlquila")));
+                 }
+            }
+        }
+        
+        return listaAlquiladas;
     }
     
     public void execSQL(String sql) {
