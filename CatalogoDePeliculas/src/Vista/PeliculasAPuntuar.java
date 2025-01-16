@@ -19,7 +19,7 @@ import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 
-public class PeliculasAPuntuar extends JFrame implements Observer{ 
+public class PeliculasAPuntuar extends JFrame { 
     private JTextField txtTitulo, txtAño, txtComentario, txtPuntuacion;
     private JButton btnValorar;
    // private Controler miControler;
@@ -49,7 +49,7 @@ public class PeliculasAPuntuar extends JFrame implements Observer{
 	 */
 	public PeliculasAPuntuar(JSONObject json) {
 		
-		GestorPuntuacion.getGestorPuntuacion().addObserver(this);
+		//GestorPuntuacion.getGestorPuntuacion().addObserver(this);
 		//JSONObject jsonObject = new JSONObject(json);
 		
         JSONObject puntu= GestorGeneral.getGestorGeneral().revisarPuntuacionexistente(json.getString("titulo"),json.getString("fecha"));
@@ -102,9 +102,15 @@ public class PeliculasAPuntuar extends JFrame implements Observer{
 						String comentario = getComentario();
 						String titulo = getTitulo();
 						String fecha = getAño();
+						
 						//Usuario usuario = GestorUsuarios.getUsuarioActual();
-			
-						GestorGeneral.getGestorGeneral().ValorarPelicula(titulo, fecha, comentario,puntuacion);
+						JSONObject peliculaData = new JSONObject();
+						peliculaData.put("titulo", titulo);
+						peliculaData.put("fecha", fecha);
+						peliculaData.put("comentario", comentario);
+						peliculaData.put("puntuacion", puntuacion);
+						
+						GestorGeneral.getGestorGeneral().ValorarPelicula(peliculaData);
 						JOptionPane.showMessageDialog(PeliculasAPuntuar.this, "¡Puntuación guardada con éxito!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 						 dispose();
 						 new Catalogo();
@@ -134,18 +140,8 @@ public class PeliculasAPuntuar extends JFrame implements Observer{
 	    }
 	   
 	    
-		@Override
-		public void update(Observable o, Object arg) {
-			// Suponemos que el arg es un objeto de tipo Pelicula (del modelo)
-			if (arg instanceof Pelicula) {
-				Pelicula pelicula = (Pelicula) arg;
-				txtTitulo.setText(pelicula.getTitulo());
-				txtAño.setText(String.valueOf(pelicula.getFecha()));
-				
+	
 			
-				
-				}
-			}
 		}
 	
        

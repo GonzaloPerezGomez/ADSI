@@ -10,8 +10,12 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.stream.Collectors;
 
+import javax.swing.JOptionPane;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import db.SQLite;
 
 public class GestorPuntuacion extends Observable{
 
@@ -46,30 +50,35 @@ public class GestorPuntuacion extends Observable{
 	public void addObserverJuego(Observer observer) {
         this.addObserver(observer);}
 		
+	public void cargarPuntuaciones() throws SQLException {
+		Puntuaciones.addAll(SQLite.getBaseDeDatos().getAllPuntua());
+	}
 	
 	
 	
-	
-	public void  ValorarPelicula(String titulo, String  fecha, String comentario, Integer puntuacion) {
-		Pelicula pelicula= gestorPeliculas.getGestorPeliculas().buscarPelicula(titulo);
+	public void  ValorarPelicula(JSONObject json) {
+		Pelicula pelicula= gestorPeliculas.getGestorPeliculas().buscarPelicula(json.getString("titulo"));
 		Usuario usuario=gestorUsuario.getGestorUsuarios().getUsuarioSesion();
 		
 		Puntua puntuacionExistente = getPuntuacionPorUsuarioYPelicula(usuario, pelicula);
-		
-		System.out.println(puntuacionExistente);//////para ver si guarda puntuaciones
-		
+
 		if (puntuacionExistente != null) {
 			// Si ya existe, actualizar los valores
-			puntuacionExistente.setComentario(comentario);
-			puntuacionExistente.setPuntuacion(puntuacion);
+			puntuacionExistente.setComentario(json.getString("comentario"));
+			puntuacionExistente.setPuntuacion(json.getInt("puntuacion"));
 		
+			String sql = "UPDATE Puntua SET puntuacion = '" + json.getInt("puntuacion") +  "', comentario = '" + json.getString("comentario") + "' WHERE nombreUsuario = '" + usuario.getNombreUsuario() + "' AND titulo = '" + pelicula.getTitulo() + "' AND fecha = '" + pelicula.getFecha() + "'";
+    		SQLite.getBaseDeDatos().execSQL(sql);
 			System.out.println("Puntuación actualizada correctamente.");
 
 		}
 		else {
 			// Si no existe, crear una nueva puntuación
-			Puntua nuevaPuntuacion = new Puntua(usuario, pelicula,comentario,puntuacion);
+			Puntua nuevaPuntuacion = new Puntua(usuario, pelicula,json.getString("comentario"),json.getInt("puntuacion"));
 			Puntuaciones.add(nuevaPuntuacion);
+			String sql = "INSERT INTO Puntua (nombreUsuario, titulo, fecha, puntuacion, comentario) VALUES ('" + usuario.getNombreUsuario() + "', '" + pelicula.getTitulo() + "', '" + pelicula.getFecha() + "','" + json.getInt("puntuacion") + "','" + json.getString("comentario") + "' )";
+    		SQLite.getBaseDeDatos().execSQL(sql);
+		
 			System.out.println("Nueva puntuación creada correctamente.");
 			
 		}
@@ -78,16 +87,14 @@ public class GestorPuntuacion extends Observable{
 	}
 			
 	public Puntua getPuntuacionPorUsuarioYPelicula(Usuario usuario, Pelicula pelicula) {
-	   System.out.println(Puntuaciones);
+
 	    // Crear un iterador para recorrer la lista
 	    Iterator<Puntua> iterator = Puntuaciones.iterator();
 
 	    // Recorrer la lista buscando la coincidencia
 	    while (iterator.hasNext()) {
 	        Puntua puntua = iterator.next();
-	        
-	        System.out.println( puntua.getPelicula());
-	        
+
 	        // Comparar el usuario y la película
 	        if (puntua.getUsuario().equals(usuario.getNombreUsuario()) && puntua.getPelicula().equals(pelicula.getTitulo())) {
 	            return puntua; // Retornar la puntuación si se encuentra
@@ -145,23 +152,20 @@ public class GestorPuntuacion extends Observable{
 	public JSONObject obtenerComentariosYPuntuaciones(String titulo) {
 		List<Puntua> puntuaciones = obtenerPuntuacionesPorPelicula(titulo);
 	    puntuaciones.sort((p1, p2) -> Integer.compare(p2.getPuntuacion(), p1.getPuntuacion()));
-	    
-	    System.out.println(puntuaciones);
-	    
+
 	    JSONObject resultado = new JSONObject();
 	    JSONArray comentariosArray = new JSONArray();
 
 	    for (Puntua puntuacion : puntuaciones) {
 	        JSONObject comentarioJson = new JSONObject();
 	        String usu = GestorUsuarios.getGestorUsuarios().getNombreUsuario(puntuacion.getUsuario());
-	        comentarioJson.put("usuario", usu);
+	        comentarioJson.put("nombreUsuario", usu);
 	        comentarioJson.put("puntuacion", puntuacion.getPuntuacion());
 	        comentarioJson.put("comentario", puntuacion.getComentario());
 	        comentariosArray.put(comentarioJson);
 	    }
 
 	    resultado.put("comentarios", comentariosArray);
-	    System.out.println(resultado);
 	    return resultado;
 	}
 

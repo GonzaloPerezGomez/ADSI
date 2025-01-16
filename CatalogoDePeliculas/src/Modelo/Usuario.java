@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Objects;
 import org.json.JSONObject;
 
+import db.SQLite;
+
 public class Usuario {
 	
 	private String nombre;
@@ -35,9 +37,20 @@ public class Usuario {
 		solicitudes = new ArrayList<Pelicula>();
 	}
 	
+	public void cargarSolicitud(Pelicula pPelicula) {
+		solicitudes.add(pPelicula);
+		System.out.println(solicitudes);
+	}
+	
 	public void addSolicitud(Pelicula pPelicula) {
 		if(!solicitudes.contains(pPelicula))
 			solicitudes.add(pPelicula);
+		
+			String sql = "INSERT INTO Pelicula(titulo, director, fecha) VALUES('" + pPelicula.getTitulo() + "', '" + pPelicula.getDirector() + "', '" + pPelicula.getFecha() + "')";
+			SQLite.getBaseDeDatos().execSQL(sql);
+			
+			sql = "INSERT INTO Solicitud(nombreUsuario, titulo, fecha) VALUES('" + this.getNombreUsuario() + "', '" + pPelicula.getTitulo() + "', '" + pPelicula.getFecha() + "')";
+			SQLite.getBaseDeDatos().execSQL(sql);
 	}
 	
 	public void deleteSolicitud(Pelicula pPelicula) {

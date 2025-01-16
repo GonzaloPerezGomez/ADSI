@@ -3,6 +3,7 @@ package Vista;
 
 import javax.swing.*;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.awt.*;
@@ -17,15 +18,13 @@ import Modelo.Pelicula;
 import Modelo.Usuario;
 
 public class PeliculasAlquiladas extends JFrame {
-    private Usuario usuarioActual;
     private JList<String> listaPeliculas;
     private DefaultListModel<String> modeloLista;
-    private List<Pelicula> peliculasAlquiladas;
+    private JSONArray peliculasAlquiladas;
 
     public PeliculasAlquiladas() {
-        this.usuarioActual = GestorGeneral.getGestorGeneral().obtenerUsuarioActual();
-        this.peliculasAlquiladas = new ArrayList<Pelicula>();
         
+
         setTitle("Películas Alquiladas");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -39,19 +38,31 @@ public class PeliculasAlquiladas extends JFrame {
 
         // Cargar las películas alquiladas
      
-        cargarPeliculasAlquiladas();
+        Boolean vacio=cargarPeliculasAlquiladas();
+        
+     // Panel para los botones
+        JPanel panelBotones = new JPanel();
+        panelBotones.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
         // Botón para seleccionar la película
         JButton btnSeleccionar = new JButton("Seleccionar Película");
-        add(btnSeleccionar, BorderLayout.SOUTH);
+        panelBotones.add(btnSeleccionar);
 
+        // Botón para volver al catálogo inicial
+        JButton btnVolver = new JButton("Volver");
+        panelBotones.add(btnVolver);
+
+        add(panelBotones, BorderLayout.SOUTH);
+        
+        
         // Acción al pulsar el botón
         btnSeleccionar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int seleccion = listaPeliculas.getSelectedIndex();
                 if (seleccion != -1) {
-                    Pelicula peliculaSeleccionada = peliculasAlquiladas.get(seleccion);
+                   
+                	JSONObject peliculaSeleccionada = peliculasAlquiladas.getJSONObject(seleccion);
                     abrirPanelPeliculaAPuntuar(peliculaSeleccionada);
                     dispose();
                 } else {
@@ -60,32 +71,51 @@ public class PeliculasAlquiladas extends JFrame {
                 }
             }
         });
-        setVisible(true);
+        
+     // Acción al pulsar el botón "Volver"
+        btnVolver.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	Catalogo catalogo = new Catalogo();
+    			dispose();
+            }
+        });
+        
+        if (vacio==true) {
+        	setVisible(true);
+        	
+        }
+        else {
+        new Catalogo();
+    	dispose();}
     }
+    
+    
 
     // Método para cargar las películas alquiladas del usuario
-    private void cargarPeliculasAlquiladas() {
-        this.peliculasAlquiladas = GestorGeneral.getGestorGeneral().getPeliculasAlquiladasPorUsuario(usuarioActual);
-      
+    private boolean cargarPeliculasAlquiladas() {
+    	Boolean vacio=false;
+    	JSONObject jsonPeliculas = GestorGeneral.getGestorGeneral().getPeliculasAlquiladasPorUsuario();
+    	peliculasAlquiladas = jsonPeliculas.getJSONArray("peliculas");
         
-        if (peliculasAlquiladas.isEmpty()) {
+        if (peliculasAlquiladas.length() == 0) {
             JOptionPane.showMessageDialog(this,
                     "No has alquilado ninguna película.", "Información", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            for (Pelicula pelicula : peliculasAlquiladas) {
-                modeloLista.addElement(pelicula.getTitulo() + " ) ");
+        	//peliculasAlquiladas = jsonPeliculas.getJSONArray("peliculas");
+            for (int i = 0; i < peliculasAlquiladas.length(); i++) {
+            	JSONObject pelicula = peliculasAlquiladas.getJSONObject(i);
+                modeloLista.addElement("Pelicula: "  + pelicula.getString("titulo") + " Fecha : "  + pelicula.getString("fecha") +"");
+                vacio=true;
+                
             }
+            return vacio;
         }
+        return vacio;
     }
 
     // Método para abrir el panel de PeliculasAPuntuar
-    private void abrirPanelPeliculaAPuntuar(Pelicula pelicula) {
-    	
-    	JSONObject json = new JSONObject();
-        json.put("titulo", pelicula.getTitulo());
-        json.put("fecha", pelicula.getFecha()); 
-
-    	
+    private void abrirPanelPeliculaAPuntuar(JSONObject json) {
         PeliculasAPuntuar panelPuntuar = new PeliculasAPuntuar(json);
         panelPuntuar.setVisible(true);
 
