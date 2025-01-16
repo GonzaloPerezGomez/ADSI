@@ -50,6 +50,9 @@ public class Pelicula {
 	public String getFecha() {
 		return fecha.toString();
 	}
+	public String getAceptadoPor() {
+		return aceptadoPor;
+	}
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

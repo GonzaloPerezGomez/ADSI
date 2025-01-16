@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import Modelo.GestorUsuarios;
 import Modelo.Pelicula;
 import Modelo.Usuario;
@@ -52,12 +55,12 @@ public class SQLite {
 
                 // Crear la tabla Pelicula si no existe
                 createTable = "CREATE TABLE IF NOT EXISTS Pelicula (" +
-                                     "titulo TEXT NOT NULL, " +
-                                     "director TEXT NOT NULL, " +
-                                     "fecha DATE NOT NULL," +
-                                     "aceptadoPor TEXT, " +
-                                     "PRIMARY KEY (titulo, fecha), " + 
-                                     "FOREIGN KEY (aceptadoPor) REFERENCES Usuario(nombreUsuario))";
+                            "titulo TEXT NOT NULL, " +
+                            "director TEXT NOT NULL, " +
+                            "fecha DATE NOT NULL," +
+                            "aceptadoPor TEXT, " +
+                            "PRIMARY KEY (titulo, fecha), " + 
+                            "FOREIGN KEY (aceptadoPor) REFERENCES Usuario(nombreUsuario))";
                 stmt.execute(createTable);
                 
                 // Crear la tabla Puntua si no existe
@@ -95,9 +98,6 @@ public class SQLite {
                         "FOREIGN KEY (titulo) REFERENCES Pelicula(titulo)" +
                         "FOREIGN KEY (fecha) REFERENCES Pelicula(fecha))";
                 stmt.execute(createTable);
-                
-                pruebaUsuario(stmt);
-                prueba(stmt);
                 
                 conn.close();
                 stmt.close();
@@ -188,6 +188,70 @@ public class SQLite {
         }
         
         return listaPeliculas;
+    }
+    
+    public void execSQL(String sql) {
+    	 String url = "jdbc:sqlite:src/db/database.db";
+
+         // Conexión y operaciones
+         try (Connection conn = DriverManager.getConnection(url)) {
+             if (conn != null) {
+                 System.out.println("Conexión establecida con SQLite.");
+
+                 // Crear un Statement para ejecutar SQL
+                 Statement stmt = conn.createStatement();
+                 
+                 stmt.execute(sql);
+                 
+                 conn.close();
+                 stmt.close();
+             }
+         } catch (SQLException e) {
+        	 System.out.println("Error en la conexión con SQLite.");
+             e.printStackTrace();
+		}
+    }
+    
+    public JSONArray getAllSolicitudes() {
+    	String url = "jdbc:sqlite:src/db/database.db";
+    	JSONArray solicitudes = new JSONArray();
+
+        // Conexión y operaciones
+        try (Connection conn = DriverManager.getConnection(url)) {
+            if (conn != null) {
+                System.out.println("Conexión establecida con SQLite.");
+
+                Statement stmt = conn.createStatement();
+                
+           	 	String sql1 = "SELECT * FROM Solicitud";
+                ResultSet result = stmt.executeQuery(sql1);
+                
+                while(result.next())
+                {
+                	Statement stmt2 = conn.createStatement();
+	               	 sql1 = "Select director FROM Pelicula WHERE titulo = '" + result.getString("titulo") + "' AND fecha = '" + result.getString("fecha") + "' ";
+	               	ResultSet rs = stmt2.executeQuery(sql1);
+	               	
+	               	JSONObject solicitud = new JSONObject();
+	               	solicitud.put("nombreUsuario", result.getString("nombreUsuario"));
+	               	solicitud.put("titulo", result.getString("titulo"));
+	               	solicitud.put("director", rs.getString("director"));
+	               	solicitud.put("fecha", result.getString("fecha"));
+	               	solicitudes.put(solicitud);
+	               	
+	               	stmt2.close();
+                }
+                
+                stmt.close();
+                conn.close();
+                
+                return solicitudes;
+           }
+        } catch (SQLException e) {
+       	 System.out.println("Error en la conexión con SQLite.");
+            e.printStackTrace();
+		}
+		return null;
     }
 }
 
