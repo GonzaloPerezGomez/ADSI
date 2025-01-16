@@ -46,13 +46,13 @@ public class GestorPeliculas extends Observable{
 	
 	public void cargarPeliculas() throws SQLException {
 		peliculas.addAll(SQLite.getBaseDeDatos().getAllPeliculas());
-		
-		
-		System.out.print(peliculas);
 	}
 	
 	public void addPelicula(Pelicula pPelicula) {
 		peliculas.add(pPelicula);
+		
+		String sql = "UPDATE Pelicula SET aceptadoPor= '" + pPelicula.getAceptadoPor() + "' WHERE titulo = '" + pPelicula.getTitulo() + "' AND fecha = '" + pPelicula.getFecha() + "' ";
+		SQLite.getBaseDeDatos().execSQL(sql);
 	}
 	
 	public void deletePelicula(Pelicula pPelicula) {

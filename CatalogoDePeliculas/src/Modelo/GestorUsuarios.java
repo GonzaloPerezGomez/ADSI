@@ -1,10 +1,13 @@
 package Modelo;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import db.SQLite;
@@ -44,8 +47,23 @@ public class GestorUsuarios{
 		usuarioSesion = "a";
 		
 		usuarios.addAll(SQLite.getBaseDeDatos().getAllUsuarios());
-		System.out.print(usuarios);
 	}
+	
+	public void cargarSolicitudes() throws SQLException {
+		
+		JSONArray result;
+		if((result = SQLite.getBaseDeDatos().getAllSolicitudes()) != null) {
+			for (int i = 0; i < result.length(); i++) {
+				JSONObject solicitud = result.getJSONObject(i);
+				
+				Usuario u = this.buscarUsuario(solicitud.getString("nombreUsuario"));
+				
+				u.cargarSolicitud(new Pelicula(solicitud.getString("titulo"), solicitud.getString("director"), solicitud.getString("fecha")));
+			}
+		}
+		
+	}
+	
 	public String getNombreUsuario(Usuario usu) {
 		return usu.getNombreUsuario();
 	}
@@ -163,11 +181,21 @@ public class GestorUsuarios{
 	
 	private void deleteSolicitudes(String titulo, String fecha) {
 		for (Usuario u : usuarios) {
-			u.deleteSolicitud(new Pelicula(titulo, null, fecha));}
+			u.deleteSolicitud(new Pelicula(titulo, null, fecha));
+		}
+		
+		String sql = "DELETE FROM Solicitud WHERE titulo = '" + titulo + "' AND fecha = '" + fecha + "' ";
+		SQLite.getBaseDeDatos().execSQL(sql);
 	}
 
 	public void rechazarSolicitud(String titulo, String fecha) {
 		deleteSolicitudes(titulo, fecha);
+		
+		String sql = "DELETE FROM Solicitud WHERE titulo = '" + titulo + "' AND fecha = '" + fecha + "' ";
+		SQLite.getBaseDeDatos().execSQL(sql);
+		
+		sql = "DELETE FROM Pelicula WHERE titulo = '" + titulo + "' AND fecha = '" + fecha + "' ";
+		SQLite.getBaseDeDatos().execSQL(sql);
 	}
 	
 	public List<String> mostrarUsuariosNoAceptados(){
