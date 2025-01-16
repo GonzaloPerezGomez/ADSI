@@ -22,6 +22,7 @@ public class GestorGeneral {
 		try {
 			GestorUsuarios.getGestorUsuarios().cargarUsuarios();
 			GestorPeliculas.getGestorPeliculas().cargarPeliculas();
+			GestorUsuarios.getGestorUsuarios().cargarSolicitudes();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -82,7 +83,7 @@ public class GestorGeneral {
 	}
 	
 	public void gestionarSolicitud(String titulo, String director, String fecha) {
-	GestorPeliculas.getGestorPeliculas().gestionarSolicitud(titulo, director, fecha);
+		GestorPeliculas.getGestorPeliculas().gestionarSolicitud(titulo, director, fecha);
 	}
 	
 	public void aceptarSolicitud(String titulo, String director, String fecha) {
