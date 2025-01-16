@@ -11,6 +11,8 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
 import java.util.Locale;
@@ -39,8 +41,8 @@ public class GestorAlquiler {
 		Pelicula p22 = new Pelicula("rr","ff","2000-01-02");
 		Pelicula p33 = new Pelicula("r3","ff","2000-01-02");
 		
-		Alquila p111 = new Alquila(p1,p22, new Date()); Alquila p333 = new Alquila(p2,p22, new Date());
-		Alquila p222 = new Alquila(p1,p33, new Date());Alquila p444 = new Alquila(p2,p33, new Date());
+		Alquila p111 = new Alquila(p1,p22, LocalDateTime.now()); Alquila p333 = new Alquila(p2,p22, LocalDateTime.now());
+		Alquila p222 = new Alquila(p1,p33, LocalDateTime.now());Alquila p444 = new Alquila(p2,p33, LocalDateTime.now());
 		alquiladas.add(p444);alquiladas.add(p111);alquiladas.add(p222);alquiladas.add(p333);
 	}
     
@@ -93,7 +95,8 @@ public class GestorAlquiler {
 		for(int i = 0; i < alquiladas.size(); i++) {
 			if (pelicula.equals(alquiladas.get(i).getPelicula())) {
 				Temporal ahora = Instant.now();
-				Duration diff = Duration.between(ahora, alquiladas.get(i).getFecha().toInstant());
+				ZoneId zona = ZoneId.of("Europe/Madrid");
+				Duration diff = Duration.between(ahora, alquiladas.get(i).getFecha().atZone(zona).toInstant());
 				if (diff.toHours() < 48) {
 					return true;
 				}
@@ -103,7 +106,7 @@ public class GestorAlquiler {
 	}
     public void alquilarPelicula(Usuario usuario, Pelicula pelicula) {
     	if (estaAlquilada(usuario, pelicula) == false) {
-    		Alquila nuevo = new Alquila(usuario, pelicula, new Date());
+    		Alquila nuevo = new Alquila(usuario, pelicula, LocalDateTime.now());
     		alquiladas.add(nuevo);
     		String sql = "INSERT INTO Alquila (nombreUsuario, titulo, fechaPelicula, fechaAlquila) VALUES ('" + usuario.getNombreUsuario() + "', '" + pelicula.getTitulo() + "', '" + pelicula.getFecha() + "','" + nuevo.getFecha() + "' )";
     		SQLite.getBaseDeDatos().execSQL(sql);

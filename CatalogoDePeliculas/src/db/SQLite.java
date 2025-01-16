@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -33,7 +35,6 @@ public class SQLite {
 		}
 		return baseDeDatos;
 	}
-	
     public void build() {
         // Ruta del archivo de base de datos SQLite
         String url = "jdbc:sqlite:src/db/database.db";
@@ -45,7 +46,6 @@ public class SQLite {
 
                 // Crear un Statement para ejecutar SQL
                 Statement stmt = conn.createStatement();
-                
                 // Crear la tabla Usuario si no existe
                 String createTable = "CREATE TABLE IF NOT EXISTS Usuario (" +
 	                        "nombreUsuario TEXT NOT NULL, " +
@@ -85,7 +85,7 @@ public class SQLite {
                         "nombreUsuario TEXT NOT NULL, " +
                         "titulo TEXT NOT NULL, " +
                         "fechaPelicula DATE NOT NULL," +
-                        "fechaAlquila DATE NOT NULL," +
+                        "fechaAlquila TIMESTAMP WITH TIME ZONE NOT NULL," +
                         "PRIMARY KEY (nombreUsuario, titulo, fechaPelicula, fechaAlquila), " +
                         "FOREIGN KEY (nombreUsuario) REFERENCES Usuario(nombreUsuario)" + 
                         "FOREIGN KEY (titulo) REFERENCES Pelicula(titulo)" +
@@ -219,15 +219,13 @@ public class SQLite {
                 	 Pelicula p = GestorPeliculas.getGestorPeliculas().buscarPelicula(rs.getString("titulo"));
                 	 //Usuario u = listaPeliculas.
                 			 //Pelicula p = GestorPeliculas.getGestorPeliculas().buscarPelicula(rs.getString("titulo"));
-                	 listaAlquiladas.add(new Alquila(u, p, rs.getDate("fechaAlquila")));
+                	 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                	 listaAlquiladas.add(new Alquila(u, p, LocalDateTime.parse(rs.getDate("fechaAlquila").toString(), formatter)));
                  }
-            }
+            } 
             if (listaAlquiladas.isEmpty()) { System.out.println("Vacio");}
             else {listaAlquiladas.stream().forEach(System.out::println);} 
-        }catch (SQLException e) {
-       	 System.out.println("Error en la conexión con SQLite.");
-         e.printStackTrace();
-	}
+        }
         
         return listaAlquiladas;
     }
