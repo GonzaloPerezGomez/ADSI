@@ -27,10 +27,6 @@ public class GestorPuntuacion extends Observable{
 	private GestorPuntuacion() throws SQLException {
 		Puntuaciones = new ArrayList<Puntua>();
 		
-		Usuario p1 = new Usuario("b","b","Hola1234.",false);
-		Pelicula p22 = new Pelicula("rr","ff","2000-01-02");
-		Puntua puntu = new Puntua(p1,p22,"jhfdkdgs",4);
-		Puntuaciones.add(puntu);
 	}
 	
 	
@@ -111,41 +107,44 @@ public class GestorPuntuacion extends Observable{
 
 
 
-	public JSONObject CalcularMedia() {
+public JSONObject CalcularMedia() {
 		
-	    Map<Pelicula, List<Integer>> peliculaPuntuaciones = new HashMap<>();
+	    Map<String, List<Integer>> peliculaPuntuaciones = new HashMap<>();
 
 	    // Agrupar puntuaciones por película
 	    for (Puntua puntuacion : Puntuaciones) {
-	        Pelicula pelicula = puntuacion.getPelicula();
+	        String pelicula = puntuacion.getPelicula().getTitulo();
 	        peliculaPuntuaciones.putIfAbsent(pelicula, new ArrayList<>());
 	        peliculaPuntuaciones.get(pelicula).add(puntuacion.getPuntuacion());
 	    }
 
 	    // Calcular la media de puntuaciones para cada película
-	    Map<Pelicula, Double> peliculaPuntuacionMedia = new HashMap<>();
-	    for (Map.Entry<Pelicula, List<Integer>> entry : peliculaPuntuaciones.entrySet()) {
+	    Map<String, Double> peliculaPuntuacionMedia = new HashMap<>();
+	    for (Map.Entry<String, List<Integer>> entry : peliculaPuntuaciones.entrySet()) {
 	        List<Integer> puntuaciones = entry.getValue();
 	        double media = puntuaciones.stream().mapToInt(Integer::intValue).average().orElse(0);
 	        peliculaPuntuacionMedia.put(entry.getKey(), media);
 	    }
 
 	    // Ordenar las películas por puntuación media en orden descendente
-	    List<Map.Entry<Pelicula, Double>> listaOrdenada = new ArrayList<>(peliculaPuntuacionMedia.entrySet());
+	    List<Map.Entry<String, Double>> listaOrdenada = new ArrayList<>(peliculaPuntuacionMedia.entrySet());
 	    listaOrdenada.sort((e1, e2) -> Double.compare(e2.getValue(), e1.getValue()));
 
 	    // Crear el JSON con la lista ordenada
 	    JSONObject resultado = new JSONObject();
-	    for (Map.Entry<Pelicula, Double> entry : listaOrdenada) {
+	    for (Map.Entry<String, Double> entry : listaOrdenada) {
 	        JSONObject peliculaJson = new JSONObject();
-	        peliculaJson.put("titulo", entry.getKey().getTitulo());
-	        peliculaJson.put("fecha", entry.getKey().getFecha());
+	        peliculaJson.put("titulo", entry.getKey());	        
+	        peliculaJson.put("fecha",GestorPeliculas.getGestorPeliculas().buscarPelicula( entry.getKey()).getFecha());
 	        peliculaJson.put("puntuacionMedia", entry.getValue());
 	        resultado.append("peliculas", peliculaJson);
 	    }
 
 	    return resultado;
 	}
+
+
+
 
 
 

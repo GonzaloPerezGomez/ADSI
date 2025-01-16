@@ -1,6 +1,5 @@
 package Modelo;
 
-
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -12,12 +11,12 @@ public class Alquila {
 
 	
 	
-	 public Alquila( Usuario usuario, Pelicula pelicula, LocalDateTime fecha) {
+	 public Alquila( Usuario usuario, Pelicula pelicula,LocalDateTime fecha) {
 	        this.usuario = usuario;
 	        this.pelicula = pelicula;
             this.fecha = fecha;}
 	 
-	public LocalDateTime getFecha() {
+	 public LocalDateTime getFecha() {
 		return fecha;
 	}
 	public Pelicula getPelicula() {

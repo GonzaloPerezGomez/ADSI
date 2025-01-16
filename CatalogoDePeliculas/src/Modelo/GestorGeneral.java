@@ -134,9 +134,9 @@ public class GestorGeneral {
 		return GestorAlquiler.getGestorAlquiler().getAlquiladasPorUsuario(usuarioActual);
 	}
 
-	public JSONObject revisarPuntuacionexistente(String titulo, String fecha) {
+	public JSONObject revisarPuntuacionexistente(JSONObject json) {
 		Usuario usu = GestorUsuarios.getGestorUsuarios().getUsuarioSesion(); 
-		Pelicula peli = GestorPeliculas.getGestorPeliculas().buscarPelicula(titulo);
+		Pelicula peli = GestorPeliculas.getGestorPeliculas().buscarPelicula(json.getString("titulo"));
 		JSONObject resultado = new JSONObject();
 	    try {
 		
@@ -167,7 +167,6 @@ public class GestorGeneral {
 		JSONObject json2=GestorPeliculas.getGestorPeliculas().recogerInfo(json.getString("titulo"));
 		return json2;
 	}
-	
 	public Pelicula buscarPelicula(String titulo) {
 		return GestorPeliculas.getGestorPeliculas().buscarPelicula(titulo);
 	}
