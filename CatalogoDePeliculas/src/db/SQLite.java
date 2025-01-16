@@ -112,39 +112,6 @@ public class SQLite {
         }
     }
     
-    @SuppressWarnings("unused")
-	private void prueba(Statement stmt) throws SQLException {
-    	String sql2 = "DELETE FROM Pelicula";
-        stmt.execute(sql2);
-        
-        String sql = "INSERT INTO Pelicula(titulo, director, fecha, aceptadoPor) VALUES ('e','James','1999-01-01', 'a')";
-        stmt.execute(sql);
-        
-        String sql1 = "SELECT * FROM Pelicula";
-        ResultSet rs = stmt.executeQuery(sql1);
-        while(rs.next())
-        {
-          // read the result set
-          System.out.println("titulo = " + rs.getString("titulo"));
-          System.out.println("fecha = " + rs.getString("fecha"));
-          System.out.println("director = " + rs.getString("director"));
-
-          System.out.println("aceptadoPor = " + rs.getString("aceptadoPor"));
-        }
-    }
-    
-    @SuppressWarnings("unused")
-	private void pruebaUsuario(Statement stmt) throws SQLException {
-    	String sql2 = "DELETE FROM Usuario";
-        stmt.execute(sql2);
-        
-        String sql = "INSERT INTO Usuario(nombre, nombreUsuario, contraseña, administrador) VALUES ('a','a','a', 1)";
-        stmt.execute(sql);
-        
-        sql = "INSERT INTO Usuario(nombre, nombreUsuario, contraseña, administrador, aceptadoPor) VALUES ('b','b','b', 0, 'a')";
-        stmt.execute(sql);
-        
-    }
     
     public Collection<Usuario> getAllUsuarios() throws SQLException {
     	List<Usuario> listaUsuarios = new ArrayList<Usuario>();
@@ -271,7 +238,7 @@ public class SQLite {
                 while(result.next())
                 {
                 	Statement stmt2 = conn.createStatement();
-	               	 sql1 = "Select director FROM Pelicula WHERE titulo = '" + result.getString("titulo") + "' AND fecha = '" + result.getString("fecha") + "' ";
+	               	sql1 = "Select director FROM Pelicula WHERE titulo = '" + result.getString("titulo") + "' AND fecha = '" + result.getString("fecha") + "' ";
 	               	ResultSet rs = stmt2.executeQuery(sql1);
 	               	
 	               	JSONObject solicitud = new JSONObject();
@@ -290,7 +257,7 @@ public class SQLite {
                 return solicitudes;
            }
         } catch (SQLException e) {
-       	 System.out.println("Error en la conexión con SQLite.");
+        	System.out.println("Error en la conexión con SQLite.");
             e.printStackTrace();
 		}
 		return null;

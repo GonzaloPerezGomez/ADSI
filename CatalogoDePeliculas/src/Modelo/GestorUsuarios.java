@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 
+import javax.swing.JOptionPane;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -25,7 +27,7 @@ public class GestorUsuarios{
 		usuarios = new ArrayList<Usuario>();
 		
 	/////pruebas para punuaciones y demas
-		Usuario p1 = new Usuario("b","b","Hola1234.",false);
+		Usuario p1 = new Usuario("b","b","b",true);
 		Usuario p2 = new Usuario("bb","bb","Hola1234.",false);
 		Usuario p3 = new Usuario("bbb","bbb","Hola1234.",false);
 		usuarios.add(p3);usuarios.add(p2);usuarios.add(p1);
@@ -43,8 +45,6 @@ public class GestorUsuarios{
 	}
 	
 	public void cargarUsuarios() throws SQLException {
-		usuarios.add(new Usuario("a","a","a",true));
-		usuarioSesion = "a";
 		
 		usuarios.addAll(SQLite.getBaseDeDatos().getAllUsuarios());
 	}
@@ -176,7 +176,9 @@ public class GestorUsuarios{
 
 	public void aceptarSolicitud(String titulo, String director, String fecha) {
 		GestorPeliculas.getGestorPeliculas().addPelicula(new Pelicula(titulo, director, fecha, usuarioSesion));
-		deleteSolicitudes(titulo, fecha);	
+		deleteSolicitudes(titulo, fecha);
+		
+		JOptionPane.showMessageDialog(null, "Solicitud aceptada correctamente");
 	}
 	
 	private void deleteSolicitudes(String titulo, String fecha) {
@@ -196,6 +198,8 @@ public class GestorUsuarios{
 		
 		sql = "DELETE FROM Pelicula WHERE titulo = '" + titulo + "' AND fecha = '" + fecha + "' ";
 		SQLite.getBaseDeDatos().execSQL(sql);
+		
+		JOptionPane.showMessageDialog(null, "Solicitud rechazada correctamente");
 	}
 	
 	public List<String> mostrarUsuariosNoAceptados(){
