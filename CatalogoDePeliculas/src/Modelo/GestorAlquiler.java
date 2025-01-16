@@ -7,12 +7,17 @@ import java.util.List;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.Temporal;
 import java.util.Locale;
 import java.util.Objects;
 
 import javax.swing.JOptionPane;
+
+import db.SQLite;
 
 
 
@@ -33,8 +38,8 @@ public class GestorAlquiler {
 		Pelicula p22 = new Pelicula("rr","ff","2000-01-02");
 		Pelicula p33 = new Pelicula("r3","ff","2000-01-02");
 		
-		Alquila p111 = new Alquila(p1,p22); Alquila p333 = new Alquila(p2,p22);
-		Alquila p222 = new Alquila(p1,p33);Alquila p444 = new Alquila(p2,p33);
+		Alquila p111 = new Alquila(p1,p22, new Date()); Alquila p333 = new Alquila(p2,p22, new Date());
+		Alquila p222 = new Alquila(p1,p33, new Date());Alquila p444 = new Alquila(p2,p33, new Date());
 		alquiladas.add(p444);alquiladas.add(p111);alquiladas.add(p222);alquiladas.add(p333);
 	}
     
@@ -47,6 +52,9 @@ public class GestorAlquiler {
 			}
 		}
 		return gestorAlquiler;
+	}
+	public void cargarAlquila() throws SQLException {
+		alquiladas.addAll(SQLite.getBaseDeDatos().getAllAlquila());
 	}
 
 	public List<Pelicula> getPeliculasAlquiladasPorUsuario(Usuario usuario) {
@@ -80,12 +88,27 @@ public class GestorAlquiler {
 	    return peliculasAlquiladas;
 	}
 
-    
+	public boolean estaAlquilada(Usuario usuario, Pelicula pelicula) {
+		List<Alquila> alquiladas = GestorAlquiler.getGestorAlquiler().getAlquiladasPorUsuario(usuario);
+		for(int i = 0; i < alquiladas.size(); i++) {
+			if (pelicula.equals(alquiladas.get(i).getPelicula())) {
+				Instant ahora = Instant.now();
+				Duration diff = Duration.between(ahora, (Temporal) alquiladas.get(i).getFecha());
+				if (diff.toHours() < 48) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
     public void alquilarPelicula(Usuario usuario, Pelicula pelicula) {
-    	if (GestorPeliculas.getGestorPeliculas().estaAlquilada(usuario, pelicula) == false) {
-    		Alquila nuevo = new Alquila(usuario, pelicula);
+    	if (estaAlquilada(usuario, pelicula) == false) {
+    		Alquila nuevo = new Alquila(usuario, pelicula, new Date());
     		alquiladas.add(nuevo);
+    		String sql = "INSERT INTO Alquila (nombreUsuario, titulo, fechaPelicula, fechaAlquila) VALUES ('" + usuario.getNombreUsuario() + "', '" + pelicula.getTitulo() + "', '" + pelicula.getFecha() + "','" + nuevo.getFecha() + "' )";
+    		SQLite.getBaseDeDatos().execSQL(sql);
     		JOptionPane.showMessageDialog(null,"Película alquilada correctamente");
+    		
     	}
     	else {JOptionPane.showMessageDialog(null,"Película ya alquilada");}
     	
