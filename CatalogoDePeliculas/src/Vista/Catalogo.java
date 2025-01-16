@@ -134,9 +134,14 @@ public class Catalogo extends JFrame {
 							int i = listPeliculas.getSelectedIndex();
 							if(i!= -1) {
 								System.out.println("okay");
-								 String titulo = listPeliculas.getModel().getElementAt(i).getTitulo();			  
-								 System.out.println(titulo);
-								 mostrarComentariosYPuntuaciones(titulo);
+								JSONObject json = new JSONObject();	
+						        json.put("titulo", listPeliculas.getModel().getElementAt(i).getTitulo());
+						      
+							
+								
+								new InfoPelicula(json);
+								dispose();
+								 
 					             
 							}
 						}
@@ -318,46 +323,7 @@ public class Catalogo extends JFrame {
 	    contentPane.revalidate();
 	    contentPane.repaint();
 	}
-	private void mostrarComentariosYPuntuaciones(String titulo) {
-	    try {
-	    	System.out.println(titulo);
-	        JSONObject jsonData = GestorGeneral.getGestorGeneral().obtenerComentariosYPuntuaciones(titulo);
-	        actualizarPanelComentarios(jsonData);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        JOptionPane.showMessageDialog(this, "Error al obtener los comentarios y puntuaciones", "Error", JOptionPane.ERROR_MESSAGE);
-	    }
-	}
+	
 
-	private void actualizarPanelComentarios(JSONObject jsonData) {
-	    // Imprimir el contenido del JSONObject para depuración
-	    System.out.println("JSON Data: " + jsonData.toString());
-
-	    if (panelComentarios != null || jsonData==null) {
-	        contentPane.remove(panelComentarios);
-
-	    }
-
-	    panelComentarios = new JPanel();
-	    panelComentarios.setLayout(new BoxLayout(panelComentarios, BoxLayout.Y_AXIS));
-	    panelComentarios.setBorder(BorderFactory.createTitledBorder("Comentarios y Puntuaciones"));
-
-	    JSONArray comentarios = jsonData.getJSONArray("comentarios");
-	    for (int i = 0; i < comentarios.length(); i++) {
-	        JSONObject comentario = comentarios.getJSONObject(i);
-	        String usuario = comentario.getString("usuario");
-	        int puntuacion = comentario.getInt("puntuacion");
-	        String textoComentario = comentario.getString("comentario");
-
-	        JLabel lblComentario = new JLabel(usuario + " - Puntuación: " + puntuacion + " - " + textoComentario);
-	        panelComentarios.add(lblComentario);
-	    }
-
-	    JScrollPane scrollPaneComentarios = new JScrollPane(panelComentarios);
-	    scrollPaneComentarios.setPreferredSize(new Dimension(600, 400));
-	    contentPane.add(scrollPaneComentarios, BorderLayout.SOUTH);
-
-	    contentPane.revalidate();
-	    contentPane.repaint();
-	}
+	
 }

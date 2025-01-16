@@ -62,7 +62,7 @@ public class GestorAlquiler {
 	    List<Pelicula> peliculasAlquiladas = new ArrayList<>();
 	    
 	    // Recorrer la lista de todos los alquileres
-	    for (Alquila alquiler : GestorAlquiler.getGestorAlquiler().alquiladas) {
+	    for (Alquila alquiler : alquiladas) {
 	        // Si el usuario del alquiler coincide con el usuario proporcionado
 	        if (alquiler.getusuario().equals(usuario.getNombreUsuario())) {
 	            peliculasAlquiladas.add(alquiler.getPelicula());
@@ -77,14 +77,14 @@ public class GestorAlquiler {
 	    List<Alquila> peliculasAlquiladas = new ArrayList<>();
 	    
 	    // Recorrer la lista de todos los alquileres
-	    for (Alquila alquiler : GestorAlquiler.getGestorAlquiler().alquiladas) {
+	    for (Alquila alquiler : alquiladas) {
 	        // Si el usuario del alquiler coincide con el usuario proporcionado
 	        if (alquiler.getusuario().equals(usuario.getNombreUsuario())) {
 	            peliculasAlquiladas.add(alquiler);
 	        }
 	    }
 	    
-	    // Devolver la lista de películas alquiladas por el usuario
+	    // Devolver la lista de alquilar por el usuario
 	    return peliculasAlquiladas;
 	}
 

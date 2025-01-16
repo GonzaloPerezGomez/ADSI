@@ -1,3 +1,4 @@
+
 package Modelo;
 
 import java.io.BufferedReader;
@@ -12,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import db.SQLite;
@@ -129,6 +132,31 @@ public class GestorPeliculas extends Observable{
 		}
 	return peliculas;
 }
+
+		public JSONObject recogerInfo(String titulo) {
+			
+			
+			Pelicula peli= buscarPelicula(titulo);
+			JSONObject json = new JSONObject();
+		    json.put("titulo", peli.getTitulo());
+	        json.put("fecha", peli.getFecha());
+	        json.put("director", peli.getDirector());
+	       
+			return json;
+		}
+
+		public JSONArray sacarInfo(List<Pelicula> alquiladasPorEl) {
+			JSONArray jsonPeliculas = new JSONArray();
+
+		    // Llena el arreglo JSON con los títulos y fechas de las películas
+		    for (Pelicula pelicula : alquiladasPorEl) {
+		        JSONObject jsonPelicula = new JSONObject();
+		        jsonPelicula.put("titulo", pelicula.getTitulo());
+		        jsonPelicula.put("fecha", pelicula.getFecha());
+		        jsonPeliculas.put(jsonPelicula);
+		    }
+			return jsonPeliculas;
+		}
 
 }	
 	

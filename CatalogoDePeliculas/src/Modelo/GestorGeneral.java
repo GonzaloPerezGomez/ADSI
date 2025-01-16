@@ -3,6 +3,8 @@ package Modelo;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class GestorGeneral {
@@ -23,6 +25,7 @@ public class GestorGeneral {
 			GestorUsuarios.getGestorUsuarios().cargarUsuarios();
 			GestorPeliculas.getGestorPeliculas().cargarPeliculas();
 			GestorUsuarios.getGestorUsuarios().cargarSolicitudes();
+			GestorPuntuacion.getGestorPuntuacion().cargarPuntuaciones();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -41,8 +44,8 @@ public class GestorGeneral {
 	}
 	
 	public Usuario obtenerUsuarioActual() {
-		String Nombre = GestorUsuarios.getGestorUsuarios().getUsuarioSesion().getNombreUsuario();
-		 return GestorUsuarios.getGestorUsuarios().buscarUsuario(Nombre);
+		
+		 return GestorUsuarios.getGestorUsuarios().getUsuarioSesion();
 	}
 	
 	public List<String> mostrarUsuarios(){
@@ -109,15 +112,21 @@ public class GestorGeneral {
 		return GestorPeliculas.getGestorPeliculas().buscarPeliculas(titulo);
 	}
 
-	public void ValorarPelicula(String titulo, String fecha,String comentario, Integer puntuacion ){
-		 GestorPuntuacion.getGestorPuntuacion().ValorarPelicula(titulo, fecha, comentario,puntuacion);
+	public void ValorarPelicula(JSONObject json ){
+		 GestorPuntuacion.getGestorPuntuacion().ValorarPelicula(json);
 	}
 	public void alquilarPelicula(Usuario usuario, Pelicula pelicula) {
 		GestorAlquiler.getGestorAlquiler().alquilarPelicula(usuario, pelicula);
 	}
 
-	public List<Pelicula> getPeliculasAlquiladasPorUsuario(Usuario usuarioActual) {
-		return GestorAlquiler.getGestorAlquiler().getPeliculasAlquiladasPorUsuario(usuarioActual);
+	public JSONObject getPeliculasAlquiladasPorUsuario() {
+		Usuario usuarioActual = GestorUsuarios.getGestorUsuarios().getUsuarioSesion();
+		List<Pelicula> alquiladasPorEl = GestorAlquiler.getGestorAlquiler().getPeliculasAlquiladasPorUsuario(usuarioActual);
+		JSONArray jsonPeliculas = GestorPeliculas.getGestorPeliculas().sacarInfo(alquiladasPorEl);
+		JSONObject jsonResultado = new JSONObject();
+		 // Añade el arreglo de películas al objeto JSON
+		  jsonResultado.put("peliculas", jsonPeliculas);
+		  return jsonResultado;
 	}
 	
 	public List<Alquila> getAlquiladasPorUsuario(Usuario usuarioActual) {
@@ -148,8 +157,13 @@ public class GestorGeneral {
 		return json;
 	}
 
-	public JSONObject obtenerComentariosYPuntuaciones(String titulo) {
-		JSONObject json = GestorPuntuacion.getGestorPuntuacion().obtenerComentariosYPuntuaciones(titulo);
-		return json;
+	public JSONObject obtenerComentariosYPuntuaciones(JSONObject json) {
+		JSONObject json2 = GestorPuntuacion.getGestorPuntuacion().obtenerComentariosYPuntuaciones(json.getString("titulo"));
+		return json2;
+	}
+
+	public JSONObject infoPelicula(JSONObject json) {
+		JSONObject json2=GestorPeliculas.getGestorPeliculas().recogerInfo(json.getString("titulo"));
+		return json2;
 	}
 }

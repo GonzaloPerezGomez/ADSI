@@ -1,3 +1,4 @@
+
 package db;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,6 +16,7 @@ import Modelo.Alquila;
 import Modelo.GestorPeliculas;
 import Modelo.GestorUsuarios;
 import Modelo.Pelicula;
+import Modelo.Puntua;
 import Modelo.Usuario;
 
 public class SQLite {
@@ -283,5 +285,29 @@ public class SQLite {
 		}
 		return null;
     }
-}
+    
+    public Collection<Puntua> getAllPuntua() throws SQLException {
+    	List<Puntua> listaPuntuaciones = new ArrayList<Puntua>();
+    	// Ruta del archivo de base de datos SQLite
+        String url = "jdbc:sqlite:src/db/database.db";
 
+        // Conexión y operaciones
+        try (Connection conn = DriverManager.getConnection(url)) {
+            if (conn != null) {
+            	// Crear un Statement para ejecutar SQL
+                Statement stmt = conn.createStatement();
+                
+            	 String sql1 = "SELECT * FROM Puntua";
+                 ResultSet rs = stmt.executeQuery(sql1);
+                 while(rs.next())
+                 {
+                	 Usuario u = GestorUsuarios.getGestorUsuarios().buscarUsuario(rs.getString("nombreUsuario"));
+                	 Pelicula p = GestorPeliculas.getGestorPeliculas().buscarPelicula(rs.getString("titulo"));
+                	 listaPuntuaciones.add(new Puntua(u, p, rs.getString("comentario"), rs.getInt("puntuacion")));
+                 }
+            }
+        }
+        
+        return listaPuntuaciones;
+    }
+}
