@@ -251,6 +251,29 @@ public class SQLite {
 		}
     }
     
+    public void execSQLModificar(String sql) throws SQLException {
+   	 String url = "jdbc:sqlite:src/db/database.db";
+
+        // Conexión y operaciones
+        try (Connection conn = DriverManager.getConnection(url)) {
+            if (conn != null) {
+
+                // Crear un Statement para ejecutar SQL
+                Statement stmt = conn.createStatement();
+                
+                stmt.execute(sql);
+                
+                conn.close();
+                stmt.close();
+            }
+        } catch (SQLException e) {
+       	 System.out.println("Error en la conexión con SQLite.");
+            e.printStackTrace();
+            throw e;
+		}
+   }
+    
+    
     public JSONArray getAllSolicitudes() {
     	String url = "jdbc:sqlite:src/db/database.db";
     	JSONArray solicitudes = new JSONArray();

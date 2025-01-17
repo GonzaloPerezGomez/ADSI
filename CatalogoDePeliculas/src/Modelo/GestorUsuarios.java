@@ -134,15 +134,8 @@ public class GestorUsuarios{
 	
 	public void deleteUsuario(String pUsuario) {
 		if (pUsuario != usuarioSesion){
-			try (Connection conn = DriverManager.getConnection("jdbc:sqlite:src/db/database.db")) {
-				String insertData = "UPDATE Usuario SET eliminado = 1 WHERE nombreUsuario = ?" ;
-				try (PreparedStatement pstmt = conn.prepareStatement(insertData)) {
-					pstmt.setString(1, pUsuario);
-					pstmt.execute();}
-			} catch (Exception e) {
-				System.out.println("Error en la conexión con SQLite.");
-		        e.printStackTrace();
-		    }		
+			Usuario usu = buscarUsuario(pUsuario);
+			usu.eliminar();
 		} else {
 			System.out.println("no te puedes eliminar a ti mismo");
 		}
@@ -266,7 +259,7 @@ public class GestorUsuarios{
 		}
 	}
 	
-	public boolean modificarUsuariosUsuario(String pNombreUsuario, String pNombre, String pContraseña) {
+	public boolean modificarUsuariosUsuario(String pNombre, String pNombreUsuario,  String pContraseña) {
 		if (!pNombreUsuario.equals(usuarioSesion)) {
 			Usuario usu = buscarUsuario(pNombreUsuario);
 			if (usu == null) {
@@ -295,7 +288,7 @@ public class GestorUsuarios{
 		else {
 			if(this.esContraseñaValida(pContraseña)){
 				Usuario usu=buscarUsuario(usuarioSesion);
-				usu.setNombreContraseñaAdmin(pNombre, usuarioSesion, pContraseña);
+				usu.setNombreContraseñaUsuario(pNombre, usuarioSesion, pContraseña);
 				return true;
 			}
 			else {
