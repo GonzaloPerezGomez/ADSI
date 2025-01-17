@@ -173,5 +173,8 @@ public class Usuario {
 		eliminado = true;
 		String sql = "UPDATE Usuario SET eliminado = 1 WHERE nombreUsuario = '" + nombreUsuario + "'";
 		SQLite.getBaseDeDatos().execSQL(sql);
+		solicitudes=null;
+		sql = "DELETE FROM Solicitud WHERE nombreUsuario = '" + nombreUsuario + "'";
+		SQLite.getBaseDeDatos().execSQL(sql);
 	}
 }
