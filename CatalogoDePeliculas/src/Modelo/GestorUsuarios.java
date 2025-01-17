@@ -1,6 +1,10 @@
 package Modelo;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,8 +27,6 @@ public class GestorUsuarios{
 	
 	private GestorUsuarios() throws SQLException {
 		usuarios = new ArrayList<Usuario>();
-		
-	
 	}
 	
 	public static GestorUsuarios getGestorUsuarios() {
@@ -39,9 +41,6 @@ public class GestorUsuarios{
 	}
 	
 	public void cargarUsuarios() throws SQLException {
-		usuarios.add(new Usuario("a","a","a",true));
-		usuarioSesion = "a";
-		
 		usuarios.addAll(SQLite.getBaseDeDatos().getAllUsuarios());
 	}
 	
@@ -63,16 +62,18 @@ public class GestorUsuarios{
 	public String getNombreUsuario(Usuario usu) {
 		return usu.getNombreUsuario();
 	}
+	
 	public boolean addUsuario(String nombre, String nombreUsuario, char[] contraseña) {
 		if (buscarUsuario(nombreUsuario) == null) {
 			if(nombre == " " || nombreUsuario == " " || contraseña.length==0 ) {
 				System.out.println("uno de los campos no esta completado");
 				return false;
 			}
+			
 			else {
 				String contraseñaString =  new String(contraseña);
 				if (esContraseñaValida(contraseñaString)) {
-					Usuario pUsuario = new Usuario(nombre, nombreUsuario, contraseñaString, false);
+					Usuario pUsuario = new Usuario(nombre, nombreUsuario, contraseñaString);
 					usuarios.add(pUsuario);
 					usuarioSesion = nombreUsuario;
 					System.out.println("iniciado correctamente");
@@ -113,13 +114,19 @@ public class GestorUsuarios{
 	public boolean iniciarSesion(String nombreUsuario, char[] contraseña) {
 		Usuario pUsuario = buscarUsuario(nombreUsuario);
 		if (pUsuario != null) {
-			if (pUsuario.esCorrectaLaContraseña(new String(contraseña))) {
-				usuarioSesion = nombreUsuario;
-				System.out.println("Sesión iniciada correctamente");
-				return true;}
+			if (!pUsuario.estaEliminado()) {
+				if (pUsuario.esCorrectaLaContraseña(new String(contraseña))) {
+					usuarioSesion = nombreUsuario;
+					System.out.println("Sesión iniciada correctamente");
+					return true;}
+				else {
+					System.out.println("La contraseña no es correcta");
+					return false;}
+			}
 			else {
-				System.out.println("La contraseña no es correcta");
-				return false;}}
+				System.out.println("El usuario se ha eliminado");
+				return false;}
+			}
 		else {
 			System.out.println("No existe un usuario con ese nombre de usuario");
 			return false;}
@@ -127,10 +134,9 @@ public class GestorUsuarios{
 	
 	public void deleteUsuario(String pUsuario) {
 		if (pUsuario != usuarioSesion){
-			Usuario pUsu = buscarUsuario(pUsuario);
-			usuarios.remove(pUsu);
-		}
-		else {
+			Usuario usu = buscarUsuario(pUsuario);
+			usu.eliminar();
+		} else {
 			System.out.println("no te puedes eliminar a ti mismo");
 		}
 	}
@@ -199,7 +205,7 @@ public class GestorUsuarios{
 		Iterator<Usuario> iterador= getIteratorUsuario();
 		while (iterador.hasNext()) {
             Usuario usuario = iterador.next();            
-            if (!usuario.estaAceptada()) {
+            if (!usuario.estaAceptada() && !usuario.estaEliminado()) {
             	listaUsuario.add(usuario.getNombreUsuario());}}
 		return listaUsuario;	
 	}
@@ -210,51 +216,88 @@ public class GestorUsuarios{
 	
 	public void aceptarUsuario(String pUsuario) {
 		Usuario aceptado = buscarUsuario(pUsuario);
-		String administrador = usuarioSesion;
-		aceptado.aceptar(administrador);
+		aceptado.aceptar(usuarioSesion);
 		
 	}
 	
 	public List<String> mostrarUsuarios(){
 		List<String> lista = new ArrayList<String>();
 		for(Usuario pUs: usuarios) {
-			lista.add(pUs.getNombreUsuario());}
+			if (!pUs.estaEliminado()) {
+				lista.add(pUs.getNombreUsuario());	
+			}
+		}	
 		return lista;
 	}
 	
-	public boolean modificarUsuariosAdmin(String pNombreUsuario, String pNombre, String pAdmin) {
-		if(!pNombreUsuario.trim().isEmpty() && !pNombre.trim().isEmpty() && !pAdmin.trim().isEmpty()) {
+	public boolean modificarUsuariosAdmin(String pNombre, String pNombreUsuario, String pNombreUsuarioAnt, String pAdmin) {
+		if (!pNombreUsuario.equals(pNombreUsuarioAnt)) {
 			Usuario usu = buscarUsuario(pNombreUsuario);
-			if (!usuarioSesion.equals(pNombreUsuario)) {
-				usu=buscarUsuario(usuarioSesion);
-				usuarioSesion=pNombreUsuario;
-				usu.setNombreContraseña(usuarioSesion, pNombre, pAdmin);}
+			if (usu==null) {
+				if(!pNombreUsuario.trim().isEmpty() && !pNombre.trim().isEmpty() && !pAdmin.trim().isEmpty()) {
+					usu = buscarUsuario(pNombreUsuarioAnt);
+					usu.setNombreContraseñaAdmin(pNombre, pNombreUsuario, pAdmin);
+					if (usuarioSesion.equals(pNombreUsuarioAnt)){
+						usuarioSesion = pNombreUsuario;
+					}
+					return true;
+				}
+				else {
+					System.out.println("uno de los campos no esta completado");
+					return false;
+				}
+			}
 			else {
-				usu.setNombreContraseña(usuarioSesion, pNombre, pAdmin);}
-			return true;}
-		else{
-			System.out.println("uno de los campos no esta completado");
-			return false;}
+				System.out.println("Ya existe un usuario con ese nombre de usuario");
+				return false;
+			}
+		}	
+		else {
+			Usuario usu=buscarUsuario(pNombreUsuarioAnt);
+			usu.setNombreContraseñaAdmin(pNombre, pNombreUsuario, pAdmin);
+			return true;
+		}
 	}
 	
-	public boolean modificarUsuariosUsuario(String pNombreUsuario, String pNombre, String pContraseña) {
-		if(!pNombreUsuario.trim().isEmpty() && !pNombre.trim().isEmpty() && !pContraseña.trim().isEmpty() ) {
+	public boolean modificarUsuariosUsuario(String pNombre, String pNombreUsuario,  String pContraseña) {
+		if (!pNombreUsuario.equals(usuarioSesion)) {
 			Usuario usu = buscarUsuario(pNombreUsuario);
-			if (!usuarioSesion.equals(pNombreUsuario)) {
-					if(esContraseñaValida(pContraseña)) {
-						usu=buscarUsuario(usuarioSesion);
+			if (usu == null) {
+				if(!pNombreUsuario.trim().isEmpty() && !pNombre.trim().isEmpty() && !pContraseña.trim().isEmpty() ) {
+					if(this.esContraseñaValida(pContraseña)){
+						usu = buscarUsuario(usuarioSesion);
 						usuarioSesion=pNombreUsuario;
-						usu.setNombreContraseña(usuarioSesion, pNombre, pContraseña);
-						return true;}
-					else {System.out.println("contraseña no valida");}}
+						usu.setNombreContraseñaUsuario(pNombre, pNombreUsuario, pContraseña);
+						return true;
+					}
+					else {
+						System.out.println("contraseña no valida");
+						return false;
+					}
+				}
+				else {
+					System.out.println("uno de los campos no esta completado");
+					return false;
+				}
+			}
+			else{
+				System.out.println("Ya existe un usuario con ese nombre de usuario");
+				return false;
+			}
+		}
+		else {
+			if(this.esContraseñaValida(pContraseña)){
+				Usuario usu=buscarUsuario(usuarioSesion);
+				usu.setNombreContraseñaUsuario(pNombre, usuarioSesion, pContraseña);
+				return true;
+			}
 			else {
-				if(esContraseñaValida(pContraseña)) {
-					usu.setNombreContraseña(usuarioSesion, pNombre, pContraseña);
-					return true;}
-				else {System.out.println("contraseña no valida");}}}
-		else{System.out.println("uno de los campos no esta completado");}
-		return false;
-	}
+				System.out.println("contraseña no valida");
+				return false;
+			}
+		}
+	}	
+	
 	
 	public JSONObject obtenerInfoAdministrador(String pUsuarioInfor) {
 		System.out.println(pUsuarioInfor);

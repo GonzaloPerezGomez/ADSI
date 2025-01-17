@@ -60,7 +60,7 @@ public class ModificarUsuarioA extends JFrame {
 		panel.add(lblNombre);
 		lblNombre.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		textNombre = new JTextField(info.getString("NombreUsuario"));
+		textNombre = new JTextField(info.getString("Nombre"));
 		textNombre.setBounds(154, 45, 105, 17);
 		textNombre.setHorizontalAlignment(SwingConstants.CENTER);
 		textNombre.setColumns(10);
@@ -72,7 +72,7 @@ public class ModificarUsuarioA extends JFrame {
 		lblUsuario.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblUsuario);
 		
-		textUsuario = new JTextField(info.getString("Nombre"));
+		textUsuario = new JTextField(info.getString("NombreUsuario"));
 		textUsuario.setBounds(154, 81, 105, 17);
 		textUsuario.setHorizontalAlignment(SwingConstants.CENTER);
 		textUsuario.setColumns(10);
@@ -103,8 +103,8 @@ public class ModificarUsuarioA extends JFrame {
 		JButton buttonCorfirmar = new JButton("Confirmar");
 		buttonCorfirmar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (GestorGeneral.getGestorGeneral().modificarUsuariosAdmin( textNombre.getText(), textUsuario.getText(),(String) textAdmin.getSelectedItem())) {
-					ModificarUsuarioA modificarUsuarios = new ModificarUsuarioA(textNombre.getText());
+				if (GestorGeneral.getGestorGeneral().modificarUsuariosAdmin( textNombre.getText(), textUsuario.getText(), info.getString("NombreUsuario"), (String) textAdmin.getSelectedItem())) {
+					ModificarUsuarioA modificarUsuarios = new ModificarUsuarioA(textUsuario.getText());
 					dispose();
 				}
 			}

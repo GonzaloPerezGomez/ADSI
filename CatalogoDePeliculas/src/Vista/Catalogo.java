@@ -1,6 +1,5 @@
 package Vista;
 import java.awt.EventQueue;
-import java.awt.FlowLayout;
 import java.awt.Image;
 
 import javax.swing.JFrame;
@@ -63,24 +62,6 @@ public class Catalogo extends JFrame {
 	private JList<Pelicula>listPeliculas;
 	private JPanel panelComentarios;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					new Catalogo();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	/**
-	 * Create the frame.
-	 */
-
 	public Catalogo() {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -133,7 +114,8 @@ public class Catalogo extends JFrame {
 						
 						if(e.getValueIsAdjusting()) {
 							int i = listPeliculas.getSelectedIndex();
-							if(i!= -1) {						
+							if(i!= -1) {
+								System.out.println("okay");
 								JSONObject json = new JSONObject();	
 						        json.put("titulo", listPeliculas.getModel().getElementAt(i).getTitulo());
 						      
@@ -177,8 +159,8 @@ public class Catalogo extends JFrame {
 		
 		////////boton valorar ordenar
 		 
-		    JButton btnActualizar = new JButton("Ver Peliculas Mejor valoradas");
-		    btnActualizar.setBounds(320, 12, 220, 21);
+		    JButton btnActualizar = new JButton("Ordenar por puntuacion");
+		    btnActualizar.setBounds(320, 12, 200, 21);
 		    panel.add(btnActualizar);
 		    btnActualizar.addActionListener(new ActionListener() {
 		        public void actionPerformed(ActionEvent e) {
@@ -261,7 +243,7 @@ public class Catalogo extends JFrame {
 			op3.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
-					new CuentasUsuarios();
+					new ModificarUsuarioA(GestorGeneral.getGestorGeneral().obtenerUsuario());
 					dispose();
 				}
 			});
@@ -318,19 +300,7 @@ public class Catalogo extends JFrame {
 
 	        JLabel lblPelicula = new JLabel(titulo + " (" + fecha + ")     - Puntuación media: " + puntuacionMedia);
 	        panel.add(lblPelicula);
-	        
-	     // Botón "Alquilar"
-	        JButton btnAlquilar = new JButton("Volver al Catalogo");
-	        btnAlquilar.addActionListener(new ActionListener() {
-	            @Override
-	            public void actionPerformed(ActionEvent e) {
-	               new Catalogo();
-	               dispose();
-	            }});
-	        JPanel panelBoton = new JPanel();
-	        panelBoton.setLayout(new FlowLayout(FlowLayout.LEFT));  // Alinea el botón a la izquierda dentro del panel
-	        panelBoton.add(btnAlquilar);
-	        contentPane.add(panelBoton, BorderLayout.SOUTH);
+	    }
 
 	    contentPane.revalidate();
 	    contentPane.repaint();
@@ -338,4 +308,4 @@ public class Catalogo extends JFrame {
 	
 
 	
-}}
+}

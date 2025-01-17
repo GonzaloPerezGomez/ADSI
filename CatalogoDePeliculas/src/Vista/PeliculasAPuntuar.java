@@ -48,7 +48,10 @@ public class PeliculasAPuntuar extends JFrame {
 	 * Create the frame.
 	 */
 	public PeliculasAPuntuar(JSONObject json) {
-				
+		
+		//GestorPuntuacion.getGestorPuntuacion().addObserver(this);
+		//JSONObject jsonObject = new JSONObject(json);
+		
         JSONObject puntu= GestorGeneral.getGestorGeneral().revisarPuntuacionexistente(json);
 		
 		 setTitle("Valorar Película");
