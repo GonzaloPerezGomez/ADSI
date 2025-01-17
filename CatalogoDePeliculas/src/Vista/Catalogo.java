@@ -62,24 +62,6 @@ public class Catalogo extends JFrame {
 	private JList<Pelicula>listPeliculas;
 	private JPanel panelComentarios;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					new Catalogo();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	/**
-	 * Create the frame.
-	 */
-
 	public Catalogo() {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -261,7 +243,7 @@ public class Catalogo extends JFrame {
 			op3.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
-					new CuentasUsuarios();
+					new ModificarUsuarioA(GestorGeneral.getGestorGeneral().obtenerUsuario());
 					dispose();
 				}
 			});

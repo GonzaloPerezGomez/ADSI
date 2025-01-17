@@ -1,6 +1,5 @@
 package Modelo;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -9,6 +8,13 @@ import org.json.JSONObject;
 
 import db.SQLite;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 public class Usuario {
 	
 	private String nombre;
@@ -16,24 +22,30 @@ public class Usuario {
 	private String contraseña;
 	private boolean esAdmin;
 	private String aceptadoPor;
+	private boolean eliminado;
 	private List<Pelicula> solicitudes;
+	private String url = "jdbc:sqlite:src/db/database.db";
 	
-	public Usuario(String nombre, String nombreUsuario, String contraseña, boolean esAdmin) {
+	public Usuario(String nombre, String nombreUsuario, String contraseña) {
 		this.nombre = nombre;
 		this.nombreUsuario = nombreUsuario;
 		this.contraseña = new String(contraseña);
-		this.esAdmin = esAdmin;
+		this.esAdmin = true;
+		this.eliminado = false;
 		this.aceptadoPor = null;
 		solicitudes = new ArrayList<Pelicula>();
+		String sql = "INSERT INTO Usuario (nombreUsuario, nombre, contraseña, administrador,eliminado, aceptadoPor) VALUES ('" + nombreUsuario + "', '" + nombre + "', '" + contraseña + "', '" + (esAdmin ? 1 : 0) + "', 0 , NULL) ";
+		SQLite.getBaseDeDatos().execSQL(sql);
+		
 	}
 	
-	public Usuario(String nombre, String nombreUsuario, String contraseña, boolean esAdmin, String aceptadoPor) throws SQLException {
+	public Usuario(String nombre, String nombreUsuario, String contraseña, boolean esAdmin, boolean eliminado, String aceptadoPor) {
 		this.nombre = nombre;
 		this.nombreUsuario = nombreUsuario;
 		this.contraseña = new String(contraseña);
 		this.esAdmin = esAdmin;
+		this.eliminado = eliminado;
 		this.aceptadoPor = aceptadoPor;
-		
 		solicitudes = new ArrayList<Pelicula>();
 	}
 	
@@ -100,13 +112,35 @@ public class Usuario {
 	}
 
 	public void aceptar(String pUsuario) {
-		this.aceptadoPor = pUsuario;
+		this.aceptadoPor=pUsuario;
+		String sql = "UPDATE Usuario SET aceptadoPor = '" + pUsuario + "' where nombreUsuario = '" + nombreUsuario + "'";
+		SQLite.getBaseDeDatos().execSQL(sql);
+		
 	}
 	
-	public void setNombreContraseña(String pNombreUsuario, String pNombre, String pAdministrador) {
-		this.nombreUsuario = pNombreUsuario;
-		this.nombre = pNombre;
-		this.esAdmin = Boolean.valueOf(pAdministrador);
+	public void setNombreContraseñaAdmin(String pNombre, String pNombreUsuario, String pAdministrador) {
+		String sql = "UPDATE Usuario SET nombreUsuario = '" + pNombreUsuario + "', nombre = '" + pNombre + "', administrador = '" + (Boolean.parseBoolean(pAdministrador) ? 1 : 0) + "' where nombreUsuario = '" + nombreUsuario + "'";
+		try {
+			SQLite.getBaseDeDatos().execSQLModificar(sql);
+			this.nombreUsuario = pNombreUsuario;
+			this.nombre = pNombre;
+			this.esAdmin = Boolean.valueOf(pAdministrador);
+		}catch (SQLException e) {
+	        // Manejo del error
+	        System.out.println("No se pudo actualizar el usuario: " + e.getMessage());
+	    }
+	}
+	
+	public void setNombreContraseñaUsuario(String pNombre, String pNombreUsuario, String contraseña) {
+		String sql = "UPDATE Usuario SET nombreUsuario = '" + pNombreUsuario + "', nombre = '" + pNombre + "', contraseña = '" + contraseña + "' where nombreUsuario = '" + nombreUsuario + "'";
+		try {
+			SQLite.getBaseDeDatos().execSQLModificar(sql);
+			this.nombreUsuario = pNombreUsuario;
+			this.nombre = pNombre;
+			this.contraseña = contraseña;
+		} catch (Exception e) {
+			System.out.println("No se pudo actualizar el usuario: " + e.getMessage());
+		}
 	}
 	
 	public JSONObject getInfoAdministrador() {
@@ -131,4 +165,13 @@ public class Usuario {
 				+ ", esAdmin=" + esAdmin + ", aceptadoPor=" + aceptadoPor + "]";
 	}
 	
+	public boolean estaEliminado() {
+		return eliminado;
+	}
+	
+	public void eliminar() {
+		eliminado = true;
+		String sql = "UPDATE Usuario SET eliminado = 1 WHERE nombreUsuario = '" + nombreUsuario + "'";
+		SQLite.getBaseDeDatos().execSQL(sql);
+	}
 }
