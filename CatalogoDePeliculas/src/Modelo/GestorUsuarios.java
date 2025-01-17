@@ -212,7 +212,7 @@ public class GestorUsuarios{
 		Iterator<Usuario> iterador= getIteratorUsuario();
 		while (iterador.hasNext()) {
             Usuario usuario = iterador.next();            
-            if (!usuario.estaAceptada() || !usuario.estaEliminado()) {
+            if (!usuario.estaAceptada() && !usuario.estaEliminado()) {
             	listaUsuario.add(usuario.getNombreUsuario());}}
 		return listaUsuario;	
 	}
