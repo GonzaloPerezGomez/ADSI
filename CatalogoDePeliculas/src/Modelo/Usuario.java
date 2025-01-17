@@ -1,6 +1,5 @@
 package Modelo;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -9,6 +8,12 @@ import org.json.JSONObject;
 
 import db.SQLite;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
 public class Usuario {
 	
 	private String nombre;
@@ -16,24 +21,42 @@ public class Usuario {
 	private String contraseña;
 	private boolean esAdmin;
 	private String aceptadoPor;
+	private boolean eliminado;
 	private List<Pelicula> solicitudes;
+	private String url = "jdbc:sqlite:src/db/database.db";
 	
-	public Usuario(String nombre, String nombreUsuario, String contraseña, boolean esAdmin) {
+	public Usuario(String nombre, String nombreUsuario, String contraseña) {
 		this.nombre = nombre;
 		this.nombreUsuario = nombreUsuario;
 		this.contraseña = new String(contraseña);
-		this.esAdmin = esAdmin;
+		this.esAdmin = true;
+		this.eliminado = false;
 		this.aceptadoPor = null;
 		solicitudes = new ArrayList<Pelicula>();
+		
+		try (Connection conn = DriverManager.getConnection(url)) {
+			String insertData = "INSERT INTO Usuario (nombreUsuario, nombre, contraseña, administrador,eliminado, aceptadoPor) VALUES (?, ?, ?, ?, 0, ?)" ;
+			try (PreparedStatement pstmt = conn.prepareStatement(insertData)) {
+				pstmt.setString(1, nombreUsuario);
+				pstmt.setString(2, nombre);
+				pstmt.setString(3, contraseña);
+				pstmt.setInt(4, esAdmin? 1:0);
+				pstmt.setString(5, aceptadoPor);
+				pstmt.executeUpdate();
+			}
+		} catch (Exception e) {
+			System.out.println("Error en la conexión con SQLite.");
+	        e.printStackTrace();
+	    }
 	}
 	
-	public Usuario(String nombre, String nombreUsuario, String contraseña, boolean esAdmin, String aceptadoPor) throws SQLException {
+	public Usuario(String nombre, String nombreUsuario, String contraseña, boolean esAdmin, boolean eliminado, String aceptadoPor) {
 		this.nombre = nombre;
 		this.nombreUsuario = nombreUsuario;
 		this.contraseña = new String(contraseña);
 		this.esAdmin = esAdmin;
+		this.eliminado = eliminado;
 		this.aceptadoPor = aceptadoPor;
-		
 		solicitudes = new ArrayList<Pelicula>();
 	}
 	
@@ -100,13 +123,57 @@ public class Usuario {
 	}
 
 	public void aceptar(String pUsuario) {
-		this.aceptadoPor = pUsuario;
+		this.aceptadoPor=pUsuario;
+		try (Connection conn = DriverManager.getConnection(url)) {
+			String insertData = "UPDATE Usuario SET aceptadoPor = ? where nombreUsuario = ?" ;
+			try (PreparedStatement pstmt = conn.prepareStatement(insertData)) {
+				pstmt.setString(1, pUsuario);
+				pstmt.setString(2, nombreUsuario);
+				pstmt.executeUpdate();
+			}
+		} catch (Exception e) {
+            System.out.println("Error en la conexión con SQLite.");
+            e.printStackTrace();
+        }
 	}
 	
-	public void setNombreContraseña(String pNombreUsuario, String pNombre, String pAdministrador) {
-		this.nombreUsuario = pNombreUsuario;
-		this.nombre = pNombre;
-		this.esAdmin = Boolean.valueOf(pAdministrador);
+	public void setNombreContraseñaAdmin(String pNombre, String pNombreUsuario, String pAdministrador) {
+		try (Connection conn = DriverManager.getConnection(url)) {
+			String insertData = "UPDATE Usuario SET nombreUsuario = ?, nombre = ?, administrador = ? where nombreUsuario = ?" ;
+			try (PreparedStatement pstmt = conn.prepareStatement(insertData)) {
+				pstmt.setString(1, pNombreUsuario);
+				pstmt.setString(2, pNombre);
+				pstmt.setInt(3, Boolean.parseBoolean(pAdministrador)?1:0);
+				pstmt.setString(4, nombreUsuario);
+				pstmt.executeUpdate();
+				
+				this.nombreUsuario = pNombreUsuario;
+				this.nombre = pNombre;
+				this.esAdmin = Boolean.valueOf(pAdministrador);
+			}
+		} catch (Exception e) {
+			System.out.println("Error en la conexión con SQLite.");
+		    e.printStackTrace();
+		}	
+	}
+	
+	public void setNombreContraseñaUsuario(String pNombre, String pNombreUsuario, String contraseña) {
+		try (Connection conn = DriverManager.getConnection(url)) {
+			String insertData = "UPDATE Usuario SET nombreUsuario = ?, nombre = ?, contraseña = ? where nombreUsuario = ?" ;
+			try (PreparedStatement pstmt = conn.prepareStatement(insertData)) {
+				pstmt.setString(1, pNombreUsuario);
+				pstmt.setString(2, pNombre);
+				pstmt.setString(3, contraseña);
+				pstmt.setString(4, nombreUsuario);
+				pstmt.executeUpdate();
+				this.nombreUsuario = pNombreUsuario;
+				this.nombre = pNombre;
+				this.contraseña = contraseña;
+			}
+		} catch (Exception e) {
+			System.out.println("Error en la conexión con SQLite.");
+		    e.printStackTrace();
+		}
 	}
 	
 	public JSONObject getInfoAdministrador() {
@@ -131,4 +198,7 @@ public class Usuario {
 				+ ", esAdmin=" + esAdmin + ", aceptadoPor=" + aceptadoPor + "]";
 	}
 	
+	public boolean estaEliminado() {
+		return eliminado;
+	}
 }

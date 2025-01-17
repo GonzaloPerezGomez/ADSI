@@ -30,24 +30,6 @@ public class InicioDeSesion extends JFrame {
 	private JTextField textField;
 	private JPasswordField passwordField;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					new InicioDeSesion();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public InicioDeSesion() {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

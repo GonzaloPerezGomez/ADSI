@@ -55,6 +55,7 @@ public class SQLite {
 	                        "contraseña TEXT NOT NULL," +
 	                        "administrador BIT NOT NULL," + // 0 == FALSE y 1 == TRUE*/
 	                        "aceptadoPor TEXT," +
+	                        "eliminado BIT NOT NULL," +
 	                        "PRIMARY KEY (nombreUsuario), " +
 	                        "FOREIGN KEY (aceptadoPor) REFERENCES Usuario(nombreUsuario))";
                 stmt.execute(createTable);
@@ -163,8 +164,8 @@ public class SQLite {
                  ResultSet rs = stmt.executeQuery(sql1);
                  while(rs.next())
                  {
-                	 listaUsuarios.add(new Usuario(rs.getString("nombre"), rs.getString("nombreUsuario"), rs.getString("contraseña"), 
-                			 						rs.getBoolean("administrador"), rs.getString("aceptadoPor")));
+                	 listaUsuarios.add(new Usuario(rs.getString("nombre"), rs.getString("nombreUsuario"), rs.getString("contraseña"),  
+                			 						rs.getBoolean("administrador"), rs.getBoolean("eliminado"), rs.getString("aceptadoPor")));
                  }
             }
         }

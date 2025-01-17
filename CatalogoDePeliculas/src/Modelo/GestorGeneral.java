@@ -7,6 +7,8 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import db.SQLite;
+
 public class GestorGeneral {
 	private static GestorGeneral gestorGeneral;
 	
@@ -69,8 +71,8 @@ public class GestorGeneral {
 		 return GestorUsuarios.getGestorUsuarios().modificarUsuariosUsuario( nombre, nombreUsuario, contraseña);
 	}
 	
-	public boolean modificarUsuariosAdmin(String nombre, String nombreUsuario, String esAdmin) { 
-		 return GestorUsuarios.getGestorUsuarios().modificarUsuariosAdmin( nombre, nombreUsuario,(String) esAdmin);
+	public boolean modificarUsuariosAdmin(String nombre, String nombreUsuario, String nombreUsuarioAnt, String esAdmin) { 
+		 return GestorUsuarios.getGestorUsuarios().modificarUsuariosAdmin( nombre, nombreUsuario, nombreUsuarioAnt, esAdmin);
 	}
 	
 	public JSONObject obtenerInfoAdministrador(String pUsuario) {
@@ -78,7 +80,7 @@ public class GestorGeneral {
 		
 	}
 	
-	public boolean addUsuario(String nombre, String nombreUsuario,char[] contraseña) {
+	public boolean addUsuario(String nombre, String nombreUsuario, char[] contraseña) {
 		return GestorUsuarios.getGestorUsuarios().addUsuario(nombre, nombreUsuario, contraseña);
 	}
 	
