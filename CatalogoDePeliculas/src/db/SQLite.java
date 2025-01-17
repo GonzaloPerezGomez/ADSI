@@ -5,11 +5,14 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -194,39 +197,37 @@ public class SQLite {
     }
     
     public Collection<Alquila> getAllAlquila() throws SQLException {
-    	System.out.println("Entra");
-    	List<Alquila> listaAlquiladas = new ArrayList<Alquila>();
-    	// Ruta del archivo de base de datos SQLite
+        List<Alquila> listaAlquiladas = new ArrayList<>();
+        // Ruta del archivo de base de datos SQLite
         String url = "jdbc:sqlite:src/db/database.db";
 
         // Conexión y operaciones
         try (Connection conn = DriverManager.getConnection(url)) {
-        	System.out.println("Conecta");
             if (conn != null) {
-            	System.out.println("No esta vacio");
-            	// Crear un Statement para ejecutar SQL
+                // Crear un Statement para ejecutar SQL
                 Statement stmt = conn.createStatement();
-                //List<Pelicula> listaPeliculas =  new ArrayList<Pelicula>();
-                //listaPeliculas.addAll(SQLite.getBaseDeDatos().getAllPeliculas());
-                //List<Usuario> listaUsuarios =  new ArrayList<Usuario>();
-                //listaUsuarios.addAll(SQLite.getBaseDeDatos().getAllUsuarios());
-            	 String sql1 = "SELECT * FROM Alquila";
-                 ResultSet rs = stmt.executeQuery(sql1);
-                 while(rs.next())
-                 {
-                	 System.out.println("Entra al while");
-                	 Usuario u = GestorUsuarios.getGestorUsuarios().buscarUsuario(rs.getString("nombreUsuario"));
-                	 Pelicula p = GestorPeliculas.getGestorPeliculas().buscarPelicula(rs.getString("titulo"));
-                	 //Usuario u = listaPeliculas.
-                			 //Pelicula p = GestorPeliculas.getGestorPeliculas().buscarPelicula(rs.getString("titulo"));
-                	 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                	 listaAlquiladas.add(new Alquila(u, p, LocalDateTime.parse(rs.getDate("fechaAlquila").toString(), formatter)));
-                 }
-            } 
-            if (listaAlquiladas.isEmpty()) { System.out.println("Vacio");}
-            else {listaAlquiladas.stream().forEach(System.out::println);} 
+                String sql1 = "SELECT * FROM Alquila";
+                ResultSet rs = stmt.executeQuery(sql1);
+
+                while (rs.next()) {
+                    Usuario u = GestorUsuarios.getGestorUsuarios().buscarUsuario(rs.getString("nombreUsuario"));
+                    Pelicula p = GestorPeliculas.getGestorPeliculas().buscarPelicula(rs.getString("titulo"));
+
+                    // Obtener el campo fechaAlquila como String
+                    String fechaAlquilaStr = rs.getString("fechaAlquila");
+                    // Parsear la fecha y truncar nanosegundos
+                    LocalDateTime fechaAlquila = LocalDateTime.parse(fechaAlquilaStr).truncatedTo(ChronoUnit.SECONDS);
+                    listaAlquiladas.add(new Alquila(u, p, fechaAlquila));
+                }
+            }
+
+            if (listaAlquiladas.isEmpty()) {
+                System.out.println("Vacio");
+            } else {
+                listaAlquiladas.forEach(System.out::println);
+            }
         }
-        
+
         return listaAlquiladas;
     }
     
