@@ -7,6 +7,8 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import db.SQLite;
+
 public class GestorGeneral {
 	private static GestorGeneral gestorGeneral;
 	
@@ -26,6 +28,7 @@ public class GestorGeneral {
 			GestorPeliculas.getGestorPeliculas().cargarPeliculas();
 			GestorUsuarios.getGestorUsuarios().cargarSolicitudes();
 			GestorPuntuacion.getGestorPuntuacion().cargarPuntuaciones();
+			GestorAlquiler.getGestorAlquiler().cargarAlquila();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -68,8 +71,8 @@ public class GestorGeneral {
 		 return GestorUsuarios.getGestorUsuarios().modificarUsuariosUsuario( nombre, nombreUsuario, contraseña);
 	}
 	
-	public boolean modificarUsuariosAdmin(String nombre, String nombreUsuario, String esAdmin) { 
-		 return GestorUsuarios.getGestorUsuarios().modificarUsuariosAdmin( nombre, nombreUsuario,(String) esAdmin);
+	public boolean modificarUsuariosAdmin(String nombre, String nombreUsuario, String nombreUsuarioAnt, String esAdmin) { 
+		 return GestorUsuarios.getGestorUsuarios().modificarUsuariosAdmin( nombre, nombreUsuario, nombreUsuarioAnt, esAdmin);
 	}
 	
 	public JSONObject obtenerInfoAdministrador(String pUsuario) {
@@ -77,7 +80,7 @@ public class GestorGeneral {
 		
 	}
 	
-	public boolean addUsuario(String nombre, String nombreUsuario,char[] contraseña) {
+	public boolean addUsuario(String nombre, String nombreUsuario, char[] contraseña) {
 		return GestorUsuarios.getGestorUsuarios().addUsuario(nombre, nombreUsuario, contraseña);
 	}
 	
@@ -108,7 +111,7 @@ public class GestorGeneral {
 	public void aceptarUsuario(String usuario){
 		GestorUsuarios.getGestorUsuarios().aceptarUsuario(usuario);
 	}
-	public ArrayList<Pelicula> buscarPeliculas(String titulo){
+	public JSONArray buscarPeliculas(String titulo){
 		return GestorPeliculas.getGestorPeliculas().buscarPeliculas(titulo);
 	}
 
@@ -122,6 +125,8 @@ public class GestorGeneral {
 	public JSONObject getPeliculasAlquiladasPorUsuario() {
 		Usuario usuarioActual = GestorUsuarios.getGestorUsuarios().getUsuarioSesion();
 		List<Pelicula> alquiladasPorEl = GestorAlquiler.getGestorAlquiler().getPeliculasAlquiladasPorUsuario(usuarioActual);
+		 System.out.println("gestorgeneral");
+		System.out.println(alquiladasPorEl.isEmpty());
 		JSONArray jsonPeliculas = GestorPeliculas.getGestorPeliculas().sacarInfo(alquiladasPorEl);
 		JSONObject jsonResultado = new JSONObject();
 		 // Añade el arreglo de películas al objeto JSON
@@ -133,9 +138,9 @@ public class GestorGeneral {
 		return GestorAlquiler.getGestorAlquiler().getAlquiladasPorUsuario(usuarioActual);
 	}
 
-	public JSONObject revisarPuntuacionexistente(String titulo, String fecha) {
+	public JSONObject revisarPuntuacionexistente(JSONObject json) {
 		Usuario usu = GestorUsuarios.getGestorUsuarios().getUsuarioSesion(); 
-		Pelicula peli = GestorPeliculas.getGestorPeliculas().buscarPelicula(titulo);
+		Pelicula peli = GestorPeliculas.getGestorPeliculas().buscarPelicula(json.getString("titulo"));
 		JSONObject resultado = new JSONObject();
 	    try {
 		
@@ -166,7 +171,6 @@ public class GestorGeneral {
 		JSONObject json2=GestorPeliculas.getGestorPeliculas().recogerInfo(json.getString("titulo"));
 		return json2;
 	}
-	
 	public Pelicula buscarPelicula(String titulo) {
 		return GestorPeliculas.getGestorPeliculas().buscarPelicula(titulo);
 	}

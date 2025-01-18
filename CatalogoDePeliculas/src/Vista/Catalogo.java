@@ -1,5 +1,6 @@
 package Vista;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.Image;
 
 import javax.swing.JFrame;
@@ -62,24 +63,6 @@ public class Catalogo extends JFrame {
 	private JList<Pelicula>listPeliculas;
 	private JPanel panelComentarios;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					new Catalogo();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	/**
-	 * Create the frame.
-	 */
-
 	public Catalogo() {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -113,10 +96,17 @@ public class Catalogo extends JFrame {
 					JOptionPane.showMessageDialog(null, "Introduce un título");
 				}
 				else {
-				ArrayList<Pelicula> p = GestorGeneral.getGestorGeneral().buscarPeliculas(textBuscador.getText());
+				JSONArray p = GestorGeneral.getGestorGeneral().buscarPeliculas(textBuscador.getText());
 				if (p.isEmpty()) {JOptionPane.showMessageDialog(null, "Película no encontrada");}
-				listPeliculas = new JList<>(p.toArray(new Pelicula[0]));
-				listPeliculas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				//listPeliculas = new JList<>(p.toArray(new Pelicula[0]));
+				List<Pelicula> listaPeliculas = new ArrayList<>();
+		        for (int i = 0; i < p.length(); i++) {
+		            JSONObject peliculaJSON = p.getJSONObject(i); 
+		            Pelicula pelicula = new Pelicula(peliculaJSON.getString("titulo"), peliculaJSON.getString("director"), peliculaJSON.getString("fecha")); 
+		            listaPeliculas.add(pelicula);
+		        }
+		        listPeliculas = new JList<>(listaPeliculas.toArray(new Pelicula[listaPeliculas.size()]));
+		        listPeliculas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				
 				scrollPane = new JScrollPane(listPeliculas);
 				scrollPane.setBounds(0, 55, 320, 220);
@@ -260,7 +250,7 @@ public class Catalogo extends JFrame {
 			op3.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
-					new CuentasUsuarios();
+					new ModificarUsuarioA(GestorGeneral.getGestorGeneral().obtenerUsuario());
 					dispose();
 				}
 			});
@@ -285,18 +275,22 @@ public class Catalogo extends JFrame {
 		return mB;
 	}
 	
-	private void actualizarCatalogo() {
+	private void actualizarCatalogo() {   ///para boton de enseñar medias
 	    try {
 	        JSONObject jsonData = GestorGeneral.getGestorGeneral().obtenerPeliculasOrdenadasPorPuntuacionMedia();
+	        if (jsonData == null || jsonData.isEmpty())  {
+	        	JOptionPane.showMessageDialog(null,"No existen todavia valoraciones");
+	        }
+	        else {
 	        // Actualizar la interfaz con la lista ordenada
-	        actualizarListaPeliculas(jsonData);
+	        actualizarListaPeliculas(jsonData);}
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        JOptionPane.showMessageDialog(this, "Error al actualizar el catálogo", "Error", JOptionPane.ERROR_MESSAGE);
 	    }
 	}
 	
-	private void actualizarListaPeliculas(JSONObject jsonData) {
+	private void actualizarListaPeliculas(JSONObject jsonData) {   ///para boton de enseñar medias
 	    // Limpia la lista actual de películas
 	    contentPane.removeAll();
 
@@ -318,6 +312,18 @@ public class Catalogo extends JFrame {
 	        JLabel lblPelicula = new JLabel(titulo + " (" + fecha + ")     - Puntuación media: " + puntuacionMedia);
 	        panel.add(lblPelicula);
 	    }
+	 // Botón "volver"
+        JButton btnVolver = new JButton("Volver al Catalogo");
+        btnVolver.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               new Catalogo();
+               dispose();
+            }});
+        JPanel panelBoton = new JPanel();
+        panelBoton.setLayout(new FlowLayout(FlowLayout.LEFT));  // Alinea el botón a la izquierda dentro del panel
+        panelBoton.add(btnVolver);
+        contentPane.add(panelBoton, BorderLayout.SOUTH);
 
 	    contentPane.revalidate();
 	    contentPane.repaint();

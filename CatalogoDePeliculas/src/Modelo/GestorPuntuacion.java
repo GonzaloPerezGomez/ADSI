@@ -27,10 +27,6 @@ public class GestorPuntuacion extends Observable{
 	private GestorPuntuacion() throws SQLException {
 		Puntuaciones = new ArrayList<Puntua>();
 		
-		Usuario p1 = new Usuario("b","b","Hola1234.",false);
-		Pelicula p22 = new Pelicula("rr","ff","2000-01-02");
-		Puntua puntu = new Puntua(p1,p22,"jhfdkdgs",4);
-		Puntuaciones.add(puntu);
 	}
 	
 	
@@ -111,67 +107,93 @@ public class GestorPuntuacion extends Observable{
 
 
 
-	public JSONObject CalcularMedia() {
-		
-	    Map<Pelicula, List<Integer>> peliculaPuntuaciones = new HashMap<>();
-
-	    // Agrupar puntuaciones por película
-	    for (Puntua puntuacion : Puntuaciones) {
-	        Pelicula pelicula = puntuacion.getPelicula();
-	        peliculaPuntuaciones.putIfAbsent(pelicula, new ArrayList<>());
-	        peliculaPuntuaciones.get(pelicula).add(puntuacion.getPuntuacion());
+public JSONObject CalcularMedia() {
+		if (Puntuaciones == null || Puntuaciones.isEmpty()) {
+	        return null;
 	    }
-
-	    // Calcular la media de puntuaciones para cada película
-	    Map<Pelicula, Double> peliculaPuntuacionMedia = new HashMap<>();
-	    for (Map.Entry<Pelicula, List<Integer>> entry : peliculaPuntuaciones.entrySet()) {
-	        List<Integer> puntuaciones = entry.getValue();
-	        double media = puntuaciones.stream().mapToInt(Integer::intValue).average().orElse(0);
-	        peliculaPuntuacionMedia.put(entry.getKey(), media);
-	    }
-
-	    // Ordenar las películas por puntuación media en orden descendente
-	    List<Map.Entry<Pelicula, Double>> listaOrdenada = new ArrayList<>(peliculaPuntuacionMedia.entrySet());
-	    listaOrdenada.sort((e1, e2) -> Double.compare(e2.getValue(), e1.getValue()));
-
-	    // Crear el JSON con la lista ordenada
-	    JSONObject resultado = new JSONObject();
-	    for (Map.Entry<Pelicula, Double> entry : listaOrdenada) {
-	        JSONObject peliculaJson = new JSONObject();
-	        peliculaJson.put("titulo", entry.getKey().getTitulo());
-	        peliculaJson.put("fecha", entry.getKey().getFecha());
-	        peliculaJson.put("puntuacionMedia", entry.getValue());
-	        resultado.append("peliculas", peliculaJson);
-	    }
-
-	    return resultado;
+		else {
+			
+		    Map<String, List<Integer>> peliculaPuntuaciones = new HashMap<>();
+	
+		    // Agrupar puntuaciones por película
+		    for (Puntua puntuacion : Puntuaciones) {
+		    	System.out.println(puntuacion.getComentario());
+		    	System.out.println(puntuacion.getPuntuacion());
+		    	System.out.println(puntuacion.getUsuario());
+		        String pelicula = puntuacion.getPelicula().getTitulo();
+		        peliculaPuntuaciones.putIfAbsent(pelicula, new ArrayList<>());
+		        peliculaPuntuaciones.get(pelicula).add(puntuacion.getPuntuacion());
+		    }
+	
+		    // Calcular la media de puntuaciones para cada película
+		    Map<String, Double> peliculaPuntuacionMedia = new HashMap<>();
+		    for (Map.Entry<String, List<Integer>> entry : peliculaPuntuaciones.entrySet()) {
+		        List<Integer> puntuaciones = entry.getValue();
+		        double media = puntuaciones.stream().mapToInt(Integer::intValue).average().orElse(0);
+		        peliculaPuntuacionMedia.put(entry.getKey(), media);
+		    }
+	
+		    // Ordenar las películas por puntuación media en orden descendente
+		    List<Map.Entry<String, Double>> listaOrdenada = new ArrayList<>(peliculaPuntuacionMedia.entrySet());
+		    listaOrdenada.sort((e1, e2) -> Double.compare(e2.getValue(), e1.getValue()));
+	
+		    // Crear el JSON con la lista ordenada
+		    JSONObject resultado = new JSONObject();
+		    for (Map.Entry<String, Double> entry : listaOrdenada) {
+		        JSONObject peliculaJson = new JSONObject();
+		        peliculaJson.put("titulo", entry.getKey());	        
+		        peliculaJson.put("fecha",GestorPeliculas.getGestorPeliculas().buscarPelicula( entry.getKey()).getFecha());
+		        peliculaJson.put("puntuacionMedia", entry.getValue());
+		        resultado.append("peliculas", peliculaJson);
+		    }
+	
+		    return resultado;
+		}
 	}
 
 
 
-	public JSONObject obtenerComentariosYPuntuaciones(String titulo) {
-		List<Puntua> puntuaciones = obtenerPuntuacionesPorPelicula(titulo);
-	    puntuaciones.sort((p1, p2) -> Integer.compare(p2.getPuntuacion(), p1.getPuntuacion()));
 
-	    JSONObject resultado = new JSONObject();
-	    JSONArray comentariosArray = new JSONArray();
 
-	    for (Puntua puntuacion : puntuaciones) {
-	        JSONObject comentarioJson = new JSONObject();
-	        String usu = GestorUsuarios.getGestorUsuarios().getNombreUsuario(puntuacion.getUsuario());
-	        comentarioJson.put("nombreUsuario", usu);
-	        comentarioJson.put("puntuacion", puntuacion.getPuntuacion());
-	        comentarioJson.put("comentario", puntuacion.getComentario());
-	        comentariosArray.put(comentarioJson);
-	    }
 
-	    resultado.put("comentarios", comentariosArray);
-	    return resultado;
-	}
+public JSONObject obtenerComentariosYPuntuaciones(String titulo) {
+    List<Puntua> puntuaciones = obtenerPuntuacionesPorPelicula(titulo);
+    if (puntuaciones == null || puntuaciones.isEmpty()) {
+        return null;
+    }
+
+    puntuaciones.sort((p1, p2) -> Integer.compare(p2.getPuntuacion(), p1.getPuntuacion()));
+
+    JSONObject resultado = new JSONObject();
+    JSONArray comentariosArray = new JSONArray();
+
+    for (Puntua puntuacion : puntuaciones) {
+        JSONObject comentarioJson = new JSONObject();
+        String usu = GestorUsuarios.getGestorUsuarios().getNombreUsuario(puntuacion.getUsuario());
+        comentarioJson.put("nombreUsuario", usu);
+        comentarioJson.put("puntuacion", puntuacion.getPuntuacion());
+        comentarioJson.put("comentario", puntuacion.getComentario());
+        comentariosArray.put(comentarioJson);
+    }
+
+    resultado.put("comentarios", comentariosArray);
+    return resultado;
+}
 
 	private List<Puntua> obtenerPuntuacionesPorPelicula(String titulo) {
-	    // Implementar la lógica para obtener todas las puntuaciones de una película de la base de datos
-	    return Puntuaciones.stream().filter(p -> p.getPelicula().getTitulo().equals(titulo)).collect(Collectors.toList());
+	    if (Puntuaciones == null || Puntuaciones.isEmpty()) {
+	        return null;
+	    }
+
+	    List<Puntua> puntuaciones = Puntuaciones.stream()
+	        .filter(p -> p.getPelicula() != null && p.getPelicula().getTitulo().equals(titulo))
+	        .collect(Collectors.toList());
+
+	    if (puntuaciones.isEmpty()) {
+	        return null;
+	    } else {
+	        return puntuaciones;
+	    }
 	}
 
 

@@ -3,6 +3,7 @@ package Vista;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 
 import javax.swing.JFrame;
@@ -64,10 +65,25 @@ public class InfoPelicula extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
             	GestorGeneral.getGestorGeneral().alquilarPelicula(GestorGeneral.getGestorGeneral().obtenerUsuarioActual(), GestorGeneral.getGestorGeneral().buscarPelicula(json2.getString("titulo")));
-               // realizarAlquiler(json.getString("titulo"),json.getString("fecha"));
+            	new Catalogo();
+            	dispose();
             }
         });
         panelSuperior.add(btnAlquilar, BorderLayout.EAST);
+    
+        // Botón "volver"
+        JButton btnVolver = new JButton("Volver al Catalogo");
+        btnVolver.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               new Catalogo();
+               dispose();
+            }});
+     
+        panelSuperior.add(btnVolver, BorderLayout.SOUTH);
+
+	   
+	
 
         // Panel inferior con las valoraciones
         panelValoraciones = new JPanel();
@@ -79,16 +95,18 @@ public class InfoPelicula extends JFrame {
         	
         	json=mostrarComentariosYPuntuaciones(json);
         	
-            JSONArray comentarios = json.getJSONArray("comentarios");
-            for (int i = 0; i < comentarios.length(); i++) {
-                JSONObject comentario = comentarios.getJSONObject(i);
-                String NombreUsuario = comentario.getString("nombreUsuario");
-                int puntuacion = comentario.getInt("puntuacion");
-                String textoComentario = comentario.getString("comentario");
-
-                JLabel lblComentario = new JLabel("Usuario: " + NombreUsuario + " - Puntuación: " + puntuacion + " - Comenta lo siguiente: " + textoComentario);
-                panelValoraciones.add(lblComentario);
-            }
+        	  if (json != null) {
+	            JSONArray comentarios = json.getJSONArray("comentarios");
+	            for (int i = 0; i < comentarios.length(); i++) {
+	                JSONObject comentario = comentarios.getJSONObject(i);
+	                String NombreUsuario = comentario.getString("nombreUsuario");
+	                int puntuacion = comentario.getInt("puntuacion");
+	                String textoComentario = comentario.getString("comentario");
+	
+	                JLabel lblComentario = new JLabel("Usuario: " + NombreUsuario + " - Puntuación: " + puntuacion + " - Comenta lo siguiente: " + textoComentario);
+	                panelValoraciones.add(lblComentario);
+	            } }
+        	 
         }
 
         // Añadir el panel de valoraciones al scroll
@@ -96,24 +114,11 @@ public class InfoPelicula extends JFrame {
         scrollPaneValoraciones.setPreferredSize(new Dimension(600, 400));
         contentPane.add(scrollPaneValoraciones, BorderLayout.CENTER);
         setVisible(true);
+        if(json==null) {JOptionPane.showMessageDialog(null,"Película sin valoraciones todavia");}
     }
 
-//    // Método para realizar el alquiler
-//    private void realizarAlquiler(Pelicula pelicula) {
-//        try {
-//            boolean exito = GestorAlquiler.getGestorAlquiler().alquilarPelicula(pelicula);
-//            if (exito) {
-//                JOptionPane.showMessageDialog(this, "Película alquilada con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-//            } else {
-//                JOptionPane.showMessageDialog(this, "No se pudo alquilar la película.", "Error", JOptionPane.ERROR_MESSAGE);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            JOptionPane.showMessageDialog(this, "Error al realizar el alquiler.", "Error", JOptionPane.ERROR_MESSAGE);
-//        }
-//    }
-    
-    
+  
+   
     private JSONObject mostrarComentariosYPuntuaciones(JSONObject json) {
 	    try {
 	    	

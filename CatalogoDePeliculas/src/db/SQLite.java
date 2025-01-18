@@ -5,9 +5,13 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -33,7 +37,6 @@ public class SQLite {
 		}
 		return baseDeDatos;
 	}
-	
     public void build() {
         // Ruta del archivo de base de datos SQLite
         String url = "jdbc:sqlite:src/db/database.db";
@@ -53,6 +56,7 @@ public class SQLite {
 	                        "contraseña TEXT NOT NULL," +
 	                        "administrador BIT NOT NULL," + // 0 == FALSE y 1 == TRUE*/
 	                        "aceptadoPor TEXT," +
+	                        "eliminado BIT NOT NULL," +
 	                        "PRIMARY KEY (nombreUsuario), " +
 	                        "FOREIGN KEY (aceptadoPor) REFERENCES Usuario(nombreUsuario))";
                 stmt.execute(createTable);
@@ -85,7 +89,7 @@ public class SQLite {
                         "nombreUsuario TEXT NOT NULL, " +
                         "titulo TEXT NOT NULL, " +
                         "fechaPelicula DATE NOT NULL," +
-                        "fechaAlquila DATE NOT NULL," +
+                        "fechaAlquila TIMESTAMP WITH TIME ZONE NOT NULL," +
                         "PRIMARY KEY (nombreUsuario, titulo, fechaPelicula, fechaAlquila), " +
                         "FOREIGN KEY (nombreUsuario) REFERENCES Usuario(nombreUsuario)" + 
                         "FOREIGN KEY (titulo) REFERENCES Pelicula(titulo)" +
@@ -128,8 +132,8 @@ public class SQLite {
                  ResultSet rs = stmt.executeQuery(sql1);
                  while(rs.next())
                  {
-                	 listaUsuarios.add(new Usuario(rs.getString("nombre"), rs.getString("nombreUsuario"), rs.getString("contraseña"), 
-                			 						rs.getBoolean("administrador"), rs.getString("aceptadoPor")));
+                	 listaUsuarios.add(new Usuario(rs.getString("nombre"), rs.getString("nombreUsuario"), rs.getString("contraseña"),  
+                			 						rs.getBoolean("administrador"), rs.getBoolean("eliminado"), rs.getString("aceptadoPor")));
                  }
             }
         }
@@ -161,41 +165,37 @@ public class SQLite {
     }
     
     public Collection<Alquila> getAllAlquila() throws SQLException {
-    	System.out.println("Entra");
-    	List<Alquila> listaAlquiladas = new ArrayList<Alquila>();
-    	// Ruta del archivo de base de datos SQLite
+        List<Alquila> listaAlquiladas = new ArrayList<>();
+        // Ruta del archivo de base de datos SQLite
         String url = "jdbc:sqlite:src/db/database.db";
 
         // Conexión y operaciones
         try (Connection conn = DriverManager.getConnection(url)) {
-        	System.out.println("Conecta");
             if (conn != null) {
-            	System.out.println("No esta vacio");
-            	// Crear un Statement para ejecutar SQL
+                // Crear un Statement para ejecutar SQL
                 Statement stmt = conn.createStatement();
-                //List<Pelicula> listaPeliculas =  new ArrayList<Pelicula>();
-                //listaPeliculas.addAll(SQLite.getBaseDeDatos().getAllPeliculas());
-                //List<Usuario> listaUsuarios =  new ArrayList<Usuario>();
-                //listaUsuarios.addAll(SQLite.getBaseDeDatos().getAllUsuarios());
-            	 String sql1 = "SELECT * FROM Alquila";
-                 ResultSet rs = stmt.executeQuery(sql1);
-                 while(rs.next())
-                 {
-                	 System.out.println("Entra al while");
-                	 Usuario u = GestorUsuarios.getGestorUsuarios().buscarUsuario(rs.getString("nombreUsuario"));
-                	 Pelicula p = GestorPeliculas.getGestorPeliculas().buscarPelicula(rs.getString("titulo"));
-                	 //Usuario u = listaPeliculas.
-                			 //Pelicula p = GestorPeliculas.getGestorPeliculas().buscarPelicula(rs.getString("titulo"));
-                	 listaAlquiladas.add(new Alquila(u, p, rs.getDate("fechaAlquila")));
-                 }
+                String sql1 = "SELECT * FROM Alquila";
+                ResultSet rs = stmt.executeQuery(sql1);
+
+                while (rs.next()) {
+                    Usuario u = GestorUsuarios.getGestorUsuarios().buscarUsuario(rs.getString("nombreUsuario"));
+                    Pelicula p = GestorPeliculas.getGestorPeliculas().buscarPelicula(rs.getString("titulo"));
+
+                    // Obtener el campo fechaAlquila como String
+                    String fechaAlquilaStr = rs.getString("fechaAlquila");
+                    // Parsear la fecha y truncar nanosegundos
+                    LocalDateTime fechaAlquila = LocalDateTime.parse(fechaAlquilaStr).truncatedTo(ChronoUnit.SECONDS);
+                    listaAlquiladas.add(new Alquila(u, p, fechaAlquila));
+                }
             }
-            if (listaAlquiladas.isEmpty()) { System.out.println("Vacio");}
-            else {listaAlquiladas.stream().forEach(System.out::println);} 
-        }catch (SQLException e) {
-       	 System.out.println("Error en la conexión con SQLite.");
-         e.printStackTrace();
-	}
-        
+
+            if (listaAlquiladas.isEmpty()) {
+                System.out.println("Vacio");
+            } else {
+                listaAlquiladas.forEach(System.out::println);
+            }
+        }
+
         return listaAlquiladas;
     }
     
@@ -220,6 +220,29 @@ public class SQLite {
              e.printStackTrace();
 		}
     }
+    
+    public void execSQLModificar(String sql) throws SQLException {
+   	 String url = "jdbc:sqlite:src/db/database.db";
+
+        // Conexión y operaciones
+        try (Connection conn = DriverManager.getConnection(url)) {
+            if (conn != null) {
+
+                // Crear un Statement para ejecutar SQL
+                Statement stmt = conn.createStatement();
+                
+                stmt.execute(sql);
+                
+                conn.close();
+                stmt.close();
+            }
+        } catch (SQLException e) {
+       	 System.out.println("Error en la conexión con SQLite.");
+            e.printStackTrace();
+            throw e;
+		}
+   }
+    
     
     public JSONArray getAllSolicitudes() {
     	String url = "jdbc:sqlite:src/db/database.db";
