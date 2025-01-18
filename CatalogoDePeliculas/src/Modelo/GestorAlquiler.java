@@ -84,9 +84,9 @@ public class GestorAlquiler {
 		List<Alquila> peliculasAlquiladas = GestorAlquiler.getGestorAlquiler().getAlquiladasPorUsuario(usuario);
 		for(int i = 0; i < peliculasAlquiladas.size(); i++) {
 			if (pelicula.equals(peliculasAlquiladas.get(i).getPelicula())) {
-				Temporal ahora = Instant.now();
+				LocalDateTime ahora = LocalDateTime.now();
 				ZoneId zona = ZoneId.of("Europe/Madrid");
-				Duration diff = Duration.between(ahora, alquiladas.get(i).getFecha().atZone(zona).toInstant());
+				Duration diff = Duration.between(peliculasAlquiladas.get(i).getFecha().atZone(zona).toInstant(), ahora.atZone(zona).toInstant());
 				if (diff.toHours() < 48) {
 					return true;
 				}
@@ -106,4 +106,14 @@ public class GestorAlquiler {
 	    	else {JOptionPane.showMessageDialog(null,"Película ya alquilada");}
 	    	
 	    }
+	 
+	 	//Para los test
+	 
+		public void reset() {
+			gestorAlquiler = null;
+		}
+		
+		public void addAlquila(Alquila pAlquila) {
+			alquiladas.add(pAlquila);
+		}
 }
