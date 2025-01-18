@@ -287,4 +287,34 @@ public class SQLite {
         
         return listaPuntuaciones;
     }
+    
+    public void deleteAll() {
+    	
+		String url = "jdbc:sqlite:src/db/database.db";
+    	
+    	try (Connection conn = DriverManager.getConnection(url)) {
+    		if (conn != null) {
+
+    			Statement stmt = conn.createStatement();
+                  
+    			String sql = "DELETE FROM Solicitud";
+    			stmt.execute(sql);
+    			
+    			sql = "DELETE FROM Alquila";
+    			stmt.execute(sql);
+    			
+    			sql = "DELETE FROM Puntua";
+    			stmt.execute(sql);
+    			
+    			sql = "DELETE FROM Pelicula";
+    			stmt.execute(sql);
+    			
+    			sql = "DELETE FROM Usuario";
+    			stmt.execute(sql);
+                  
+              }
+    	  } catch (SQLException e) {
+			e.printStackTrace();
+		}
+    }
 }

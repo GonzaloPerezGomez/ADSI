@@ -274,4 +274,8 @@ public class GestorUsuarios{
 		Usuario usuario = buscarUsuario(usuarioSesion);
 		return  usuario.getInfoUsuario();
 	}
+	
+	public void reset() {
+		gestorUsuarios = null;
+	}
 }
