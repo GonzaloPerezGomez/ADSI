@@ -59,7 +59,8 @@ public class GestorAlquiler {
 	            peliculasAlquiladas.add(alquiler.getPelicula());
 	        }
 	    }
-	    
+	    System.out.println("gestoralquiler");
+		System.out.println(peliculasAlquiladas.isEmpty());
 	    // Devolver la lista de películas alquiladas por el usuario
 	    return peliculasAlquiladas;
 	}

@@ -30,7 +30,7 @@ public class Usuario {
 		this.nombre = nombre;
 		this.nombreUsuario = nombreUsuario;
 		this.contraseña = new String(contraseña);
-		this.esAdmin = true;
+		this.esAdmin = false;
 		this.eliminado = false;
 		this.aceptadoPor = null;
 		solicitudes = new ArrayList<Pelicula>();
