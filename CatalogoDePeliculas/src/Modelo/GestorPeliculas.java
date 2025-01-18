@@ -125,6 +125,7 @@ public class GestorPeliculas extends Observable{
 	            	JSONObject jsonPelicula = new JSONObject();
 			        jsonPelicula.put("titulo", pelicula.getTitulo());
 			        jsonPelicula.put("fecha", pelicula.getFecha());
+			        jsonPelicula.put("director", pelicula.getDirector());
 			        peliculas.put(jsonPelicula);
 	            }
 		}

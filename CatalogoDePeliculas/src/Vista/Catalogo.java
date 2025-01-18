@@ -101,11 +101,11 @@ public class Catalogo extends JFrame {
 				List<Pelicula> listaPeliculas = new ArrayList<>();
 		        for (int i = 0; i < p.length(); i++) {
 		            JSONObject peliculaJSON = p.getJSONObject(i); 
-		            String titulo = p.getString("titulo");
-			        String fecha = p.getString("fecha");
-		            listaPeliculas.add(p);
+		            Pelicula pelicula = new Pelicula(peliculaJSON.getString("titulo"), peliculaJSON.getString("director"), peliculaJSON.getString("fecha")); 
+		            listaPeliculas.add(pelicula);
 		        }
-		        this.listaPeliculas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		        listPeliculas = new JList<>(listaPeliculas.toArray(new Pelicula[listaPeliculas.size()]));
+		        listPeliculas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				
 				scrollPane = new JScrollPane(listPeliculas);
 				scrollPane.setBounds(0, 55, 320, 220);
