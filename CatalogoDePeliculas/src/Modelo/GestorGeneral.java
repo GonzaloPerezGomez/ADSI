@@ -111,7 +111,7 @@ public class GestorGeneral {
 	public void aceptarUsuario(String usuario){
 		GestorUsuarios.getGestorUsuarios().aceptarUsuario(usuario);
 	}
-	public ArrayList<Pelicula> buscarPeliculas(String titulo){
+	public JSONArray buscarPeliculas(String titulo){
 		return GestorPeliculas.getGestorPeliculas().buscarPeliculas(titulo);
 	}
 

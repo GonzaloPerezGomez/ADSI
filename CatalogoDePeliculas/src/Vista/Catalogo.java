@@ -95,10 +95,17 @@ public class Catalogo extends JFrame {
 					JOptionPane.showMessageDialog(null, "Introduce un título");
 				}
 				else {
-				ArrayList<Pelicula> p = GestorGeneral.getGestorGeneral().buscarPeliculas(textBuscador.getText());
+				JSONArray p = GestorGeneral.getGestorGeneral().buscarPeliculas(textBuscador.getText());
 				if (p.isEmpty()) {JOptionPane.showMessageDialog(null, "Película no encontrada");}
-				listPeliculas = new JList<>(p.toArray(new Pelicula[0]));
-				listPeliculas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				//listPeliculas = new JList<>(p.toArray(new Pelicula[0]));
+				List<Pelicula> listaPeliculas = new ArrayList<>();
+		        for (int i = 0; i < p.length(); i++) {
+		            JSONObject peliculaJSON = p.getJSONObject(i); 
+		            String titulo = p.getString("titulo");
+			        String fecha = p.getString("fecha");
+		            listaPeliculas.add(p);
+		        }
+		        this.listaPeliculas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				
 				scrollPane = new JScrollPane(listPeliculas);
 				scrollPane.setBounds(0, 55, 320, 220);
