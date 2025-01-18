@@ -81,8 +81,9 @@ public class GestorAlquiler {
 	}
 
 	public boolean estaAlquilada(Usuario usuario, Pelicula pelicula) {
-		for(int i = 0; i < alquiladas.size(); i++) {
-			if (pelicula.equals(alquiladas.get(i).getPelicula())) {
+		List<Alquila> peliculasAlquiladas = GestorAlquiler.getGestorAlquiler().getAlquiladasPorUsuario(usuario);
+		for(int i = 0; i < peliculasAlquiladas.size(); i++) {
+			if (pelicula.equals(peliculasAlquiladas.get(i).getPelicula())) {
 				Temporal ahora = Instant.now();
 				ZoneId zona = ZoneId.of("Europe/Madrid");
 				Duration diff = Duration.between(ahora, alquiladas.get(i).getFecha().atZone(zona).toInstant());
