@@ -48,6 +48,7 @@ public class SQLite {
 
                 // Crear un Statement para ejecutar SQL
                 Statement stmt = conn.createStatement();
+                
                 // Crear la tabla Usuario si no existe
                 String createTable = "CREATE TABLE IF NOT EXISTS Usuario (" +
 	                        "nombreUsuario TEXT NOT NULL, " +
@@ -148,6 +149,7 @@ public class SQLite {
         stmt.execute(sql);
         
     }
+    
     
     public Collection<Usuario> getAllUsuarios() throws SQLException {
     	List<Usuario> listaUsuarios = new ArrayList<Usuario>();

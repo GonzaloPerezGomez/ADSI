@@ -116,13 +116,17 @@ public class GestorPeliculas extends Observable{
 		}
 		return null;
 	}
-		public ArrayList<Pelicula> buscarPeliculas(String titulo) {
-			ArrayList<Pelicula> peliculas = new ArrayList<Pelicula>();
+		public JSONArray buscarPeliculas(String titulo) {
+			JSONArray peliculas = new JSONArray();
 			Iterator<Pelicula> iterador= getIteratorPelicula();
 			while (iterador.hasNext()) {
 	            Pelicula pelicula = iterador.next();            
 	            if (pelicula.getTitulo().toLowerCase().contains(titulo.toLowerCase())) {
-	               peliculas.add(pelicula);
+	            	JSONObject jsonPelicula = new JSONObject();
+			        jsonPelicula.put("titulo", pelicula.getTitulo());
+			        jsonPelicula.put("fecha", pelicula.getFecha());
+			        jsonPelicula.put("director", pelicula.getDirector());
+			        peliculas.put(jsonPelicula);
 	            }
 		}
 	return peliculas;

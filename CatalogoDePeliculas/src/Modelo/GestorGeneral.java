@@ -111,7 +111,7 @@ public class GestorGeneral {
 	public void aceptarUsuario(String usuario){
 		GestorUsuarios.getGestorUsuarios().aceptarUsuario(usuario);
 	}
-	public ArrayList<Pelicula> buscarPeliculas(String titulo){
+	public JSONArray buscarPeliculas(String titulo){
 		return GestorPeliculas.getGestorPeliculas().buscarPeliculas(titulo);
 	}
 
@@ -125,6 +125,8 @@ public class GestorGeneral {
 	public JSONObject getPeliculasAlquiladasPorUsuario() {
 		Usuario usuarioActual = GestorUsuarios.getGestorUsuarios().getUsuarioSesion();
 		List<Pelicula> alquiladasPorEl = GestorAlquiler.getGestorAlquiler().getPeliculasAlquiladasPorUsuario(usuarioActual);
+		 System.out.println("gestorgeneral");
+		System.out.println(alquiladasPorEl.isEmpty());
 		JSONArray jsonPeliculas = GestorPeliculas.getGestorPeliculas().sacarInfo(alquiladasPorEl);
 		JSONObject jsonResultado = new JSONObject();
 		 // Añade el arreglo de películas al objeto JSON
