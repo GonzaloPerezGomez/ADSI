@@ -97,7 +97,8 @@ public class PeliculasAlquiladas extends JFrame {
     	Boolean vacio=false;
     	JSONObject jsonPeliculas = GestorGeneral.getGestorGeneral().getPeliculasAlquiladasPorUsuario();
     	peliculasAlquiladas = jsonPeliculas.getJSONArray("peliculas");
-        
+        System.out.println(peliculasAlquiladas);
+    	
         if (peliculasAlquiladas.length() == 0) {
             JOptionPane.showMessageDialog(this,
                     "No has alquilado ninguna película.", "Información", JOptionPane.INFORMATION_MESSAGE);

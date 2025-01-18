@@ -1,5 +1,6 @@
 package Vista;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.Image;
 
 import javax.swing.JFrame;
@@ -275,18 +276,22 @@ public class Catalogo extends JFrame {
 		return mB;
 	}
 	
-	private void actualizarCatalogo() {
+	private void actualizarCatalogo() {   ///para boton de enseñar medias
 	    try {
 	        JSONObject jsonData = GestorGeneral.getGestorGeneral().obtenerPeliculasOrdenadasPorPuntuacionMedia();
+	        if (jsonData == null || jsonData.isEmpty())  {
+	        	JOptionPane.showMessageDialog(null,"No existen todavia valoraciones");
+	        }
+	        else {
 	        // Actualizar la interfaz con la lista ordenada
-	        actualizarListaPeliculas(jsonData);
+	        actualizarListaPeliculas(jsonData);}
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        JOptionPane.showMessageDialog(this, "Error al actualizar el catálogo", "Error", JOptionPane.ERROR_MESSAGE);
 	    }
 	}
 	
-	private void actualizarListaPeliculas(JSONObject jsonData) {
+	private void actualizarListaPeliculas(JSONObject jsonData) {   ///para boton de enseñar medias
 	    // Limpia la lista actual de películas
 	    contentPane.removeAll();
 
@@ -308,6 +313,18 @@ public class Catalogo extends JFrame {
 	        JLabel lblPelicula = new JLabel(titulo + " (" + fecha + ")     - Puntuación media: " + puntuacionMedia);
 	        panel.add(lblPelicula);
 	    }
+	 // Botón "volver"
+        JButton btnVolver = new JButton("Volver al Catalogo");
+        btnVolver.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               new Catalogo();
+               dispose();
+            }});
+        JPanel panelBoton = new JPanel();
+        panelBoton.setLayout(new FlowLayout(FlowLayout.LEFT));  // Alinea el botón a la izquierda dentro del panel
+        panelBoton.add(btnVolver);
+        contentPane.add(panelBoton, BorderLayout.SOUTH);
 
 	    contentPane.revalidate();
 	    contentPane.repaint();
