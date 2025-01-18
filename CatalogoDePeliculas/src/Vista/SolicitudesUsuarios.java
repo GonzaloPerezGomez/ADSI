@@ -43,25 +43,11 @@ public class SolicitudesUsuarios extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private List<String>listaUsuarios;
+	private String usuarioElegido;
+	private JList<String> listaSolicitudesUsuarios;
+	private JScrollPane scrollPane;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					SolicitudesUsuarios frame = new SolicitudesUsuarios();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public SolicitudesUsuarios() {
 		
 		
@@ -77,41 +63,76 @@ public class SolicitudesUsuarios extends JFrame {
 		lblSolicitudesDeUsuarios.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(lblSolicitudesDeUsuarios, BorderLayout.NORTH);
 		
-		GestorGeneral gestorGeneral = GestorGeneral.getGestorGeneral();
-		List<String> listaUsuarios = gestorGeneral.mostrarUsuariosNoAceptados();
 		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setLayout(null);
 		contentPane.add(panel, BorderLayout.CENTER);
-		for (String usuario : listaUsuarios ) {
-			
-			
-			JLabel lblUsuario = new JLabel(usuario);
-			panel.add(lblUsuario);
-			lblUsuario.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e)  {
-					gestorGeneral.aceptarUsuario(usuario); 
-					SolicitudesUsuarios frame = new SolicitudesUsuarios();
-					dispose();
+		
+		
+		JButton btnAñadir = new JButton("Aceptar");
+		btnAñadir.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(listaSolicitudesUsuarios.getSelectedValue() != null) {
+					GestorGeneral.getGestorGeneral().aceptarUsuario(listaSolicitudesUsuarios.getSelectedValue()); 
+					genPanel(panel);
 				}
-			});			
-			panel.revalidate();
-	        panel.repaint();		
-		}
+			}
+		});
+		btnAñadir.setBounds(323, 81, 105, 27);
+		panel.add(btnAñadir);
 		
-		JPanel panel2 = new JPanel(); 
-		contentPane.add(panel2, BorderLayout.EAST);
 		
-		JButton volver= new JButton("Volver");
-		panel2.add(volver,BorderLayout.EAST);
-		volver.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Catalogo catalogo = new Catalogo();
+		JButton btnRechazar = new JButton("Rechazar");
+		btnRechazar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(listaSolicitudesUsuarios.getSelectedValue() != null) {
+					GestorGeneral.getGestorGeneral().deleteUsuario(listaSolicitudesUsuarios.getSelectedValue()); 
+					genPanel(panel);
+				}
+			}
+		});
+		btnRechazar.setBounds(323, 120, 105, 27);
+		panel.add(btnRechazar);
+		
+		
+		JButton btnVolver = new JButton("Volver");
+		btnVolver.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				new Catalogo();
 				dispose();
 			}
 		});
+		btnVolver.setBounds(323, 157, 105, 27);
+		panel.add(btnVolver);
 		
+		
+		genPanel(panel);
 		setVisible(true);
 	}
+	
+	
+	private void genPanel(JPanel panel) {
+		List<String> u = GestorGeneral.getGestorGeneral().mostrarUsuariosNoAceptados();
+		
+		listaSolicitudesUsuarios = new JList<>(u.toArray(new String[0]));
+		listaSolicitudesUsuarios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		scrollPane = new JScrollPane(listaSolicitudesUsuarios);
+		scrollPane.setBounds(0, 23, 320, 220);
+		
+		for (Component comp : panel.getComponents()) {
+            if (comp instanceof JScrollPane) {
+                panel.remove(comp);
+            }
+        }
+
+        panel.add(scrollPane);
+        
+        panel.revalidate();
+        panel.repaint();
+	}
+	
 	
 }

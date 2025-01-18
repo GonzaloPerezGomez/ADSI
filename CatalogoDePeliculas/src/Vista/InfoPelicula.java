@@ -64,7 +64,7 @@ public class InfoPelicula extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
             	GestorGeneral.getGestorGeneral().alquilarPelicula(GestorGeneral.getGestorGeneral().obtenerUsuarioActual(), GestorGeneral.getGestorGeneral().buscarPelicula(json2.getString("titulo")));
-               // realizarAlquiler(json.getString("titulo"),json.getString("fecha"));
+            	
             }
         });
         panelSuperior.add(btnAlquilar, BorderLayout.EAST);
@@ -98,22 +98,8 @@ public class InfoPelicula extends JFrame {
         setVisible(true);
     }
 
-//    // Método para realizar el alquiler
-//    private void realizarAlquiler(Pelicula pelicula) {
-//        try {
-//            boolean exito = GestorAlquiler.getGestorAlquiler().alquilarPelicula(pelicula);
-//            if (exito) {
-//                JOptionPane.showMessageDialog(this, "Película alquilada con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-//            } else {
-//                JOptionPane.showMessageDialog(this, "No se pudo alquilar la película.", "Error", JOptionPane.ERROR_MESSAGE);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            JOptionPane.showMessageDialog(this, "Error al realizar el alquiler.", "Error", JOptionPane.ERROR_MESSAGE);
-//        }
-//    }
-    
-    
+  
+   
     private JSONObject mostrarComentariosYPuntuaciones(JSONObject json) {
 	    try {
 	    	

@@ -42,25 +42,10 @@ public class CuentasUsuarios extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private JList<String> listaUsuarios;
+	private JScrollPane scrollPane;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					CuentasUsuarios frame = new CuentasUsuarios();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-	/**
-	 * Create the frame.
-	 */
 	public CuentasUsuarios() {
 
 		
@@ -75,65 +60,75 @@ public class CuentasUsuarios extends JFrame {
 		JLabel lblCuentasDeUsuarios = new JLabel("Cuentas de Usuarios");
 		lblCuentasDeUsuarios.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(lblCuentasDeUsuarios, BorderLayout.NORTH);
-		GestorGeneral gestGeneral = GestorGeneral.getGestorGeneral();
-		List<String> listaUsuarios = gestGeneral.mostrarUsuarios();
-		
-		
 		
 		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		contentPane.add(panel, BorderLayout.CENTER);
-		for (String usuario : listaUsuarios ) {
-			JPanel subPanel = new JPanel();
-			subPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-			
-			JLabel lblUsuario = new JLabel(usuario);
-		    JButton btnEditar = new JButton("Editar");
-		    JButton btnEliminar = new JButton("Eliminar");
-		    
-		    subPanel.add(lblUsuario);
-		    subPanel.add(btnEditar);
-		    subPanel.add(btnEliminar);
-		    
-		    
-		    btnEditar.addActionListener(e -> {
-		    	ModificarUsuarioA modificarUsuario = new ModificarUsuarioA(usuario);
-				dispose();
-		    });
-		    
-		    
-		    
-		    btnEliminar.addActionListener(new ActionListener() {
-		    	public void actionPerformed(ActionEvent e) {
-		    		gestGeneral.deleteUsuario(usuario);
-		    		System.out.println("Eliminar " + usuario);
-		    		CuentasUsuarios cuentasUsuarios = new CuentasUsuarios();
+		panel.setLayout(null);
+		
+		JButton btnEditar = new JButton("Editar");
+		btnEditar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(listaUsuarios.getSelectedValue() != null) {
+					ModificarUsuarioA modificarUsuario = new ModificarUsuarioA(listaUsuarios.getSelectedValue());
 					dispose();
-		    	}
-		    	
-		    });
-		    
-		    panel.add(subPanel);
-		    
-			panel.revalidate();
-	        panel.repaint();		
-		}
-		
-		
-		JPanel panel2 = new JPanel(); 
-		contentPane.add(panel2, BorderLayout.EAST);
-		
-		JButton volver= new JButton("Volver");
-		panel2.add(volver,BorderLayout.EAST);
-		volver.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Catalogo catalogo = new Catalogo();
-				dispose();
+				}
 			}
 		});
 		
+		btnEditar.setBounds(323, 81, 105, 27);
+		panel.add(btnEditar);
 		
+		JButton btnBorrar = new JButton("Borrar");
+		btnBorrar.addMouseListener(new MouseAdapter() {
+			@Override
+		    public void mouseClicked(MouseEvent e) {
+		    	GestorGeneral.getGestorGeneral().deleteUsuario(listaUsuarios.getSelectedValue());
+		    	genPanel(panel);
+		    }
+		}); 	
+		
+		btnBorrar.setBounds(323, 120, 105, 27);
+		panel.add(btnBorrar);
+		
+		
+		
+		JButton btnVolver= new JButton("Volver");
+			btnVolver.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				new Catalogo();
+				dispose();
+			}
+		});
+		btnVolver.setBounds(323, 157, 105, 27);
+		panel.add(btnVolver);
+		
+		
+	
+	
+		
+		genPanel(panel);
 		setVisible(true);
 	}
 
+	private void genPanel(JPanel panel) {
+		List<String> u = GestorGeneral.getGestorGeneral().mostrarUsuarios();
+		
+		listaUsuarios = new JList<>(u.toArray(new String[0]));
+		listaUsuarios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		scrollPane = new JScrollPane(listaUsuarios);
+		scrollPane.setBounds(0, 55, 320, 220);
+		
+		for (Component comp : panel.getComponents()) {
+            if (comp instanceof JScrollPane) {
+                panel.remove(comp);
+            }
+        }
+
+        panel.add(scrollPane);
+        
+        panel.revalidate();
+        panel.repaint();
+	}
 }

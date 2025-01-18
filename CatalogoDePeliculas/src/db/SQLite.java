@@ -55,6 +55,7 @@ public class SQLite {
 	                        "contraseña TEXT NOT NULL," +
 	                        "administrador BIT NOT NULL," + // 0 == FALSE y 1 == TRUE*/
 	                        "aceptadoPor TEXT," +
+	                        "eliminado BIT NOT NULL," +
 	                        "PRIMARY KEY (nombreUsuario), " +
 	                        "FOREIGN KEY (aceptadoPor) REFERENCES Usuario(nombreUsuario))";
                 stmt.execute(createTable);
@@ -163,8 +164,8 @@ public class SQLite {
                  ResultSet rs = stmt.executeQuery(sql1);
                  while(rs.next())
                  {
-                	 listaUsuarios.add(new Usuario(rs.getString("nombre"), rs.getString("nombreUsuario"), rs.getString("contraseña"), 
-                			 						rs.getBoolean("administrador"), rs.getString("aceptadoPor")));
+                	 listaUsuarios.add(new Usuario(rs.getString("nombre"), rs.getString("nombreUsuario"), rs.getString("contraseña"),  
+                			 						rs.getBoolean("administrador"), rs.getBoolean("eliminado"), rs.getString("aceptadoPor")));
                  }
             }
         }
@@ -251,6 +252,29 @@ public class SQLite {
              e.printStackTrace();
 		}
     }
+    
+    public void execSQLModificar(String sql) throws SQLException {
+   	 String url = "jdbc:sqlite:src/db/database.db";
+
+        // Conexión y operaciones
+        try (Connection conn = DriverManager.getConnection(url)) {
+            if (conn != null) {
+
+                // Crear un Statement para ejecutar SQL
+                Statement stmt = conn.createStatement();
+                
+                stmt.execute(sql);
+                
+                conn.close();
+                stmt.close();
+            }
+        } catch (SQLException e) {
+       	 System.out.println("Error en la conexión con SQLite.");
+            e.printStackTrace();
+            throw e;
+		}
+   }
+    
     
     public JSONArray getAllSolicitudes() {
     	String url = "jdbc:sqlite:src/db/database.db";

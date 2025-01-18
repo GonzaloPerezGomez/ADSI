@@ -28,12 +28,7 @@ public class GestorPeliculas extends Observable{
 	private GestorPeliculas() throws SQLException {
 		peliculas = new ArrayList<Pelicula>();
 		
-		/////pruebas para punuaciones y demas
-		Pelicula p1 = new Pelicula("ff","ff","2000-01-02");
-		Pelicula p2 = new Pelicula("rr","ff","2000-01-02");
-		Pelicula p3 = new Pelicula("r3","ff","2000-01-02");
-		peliculas.add(p3);peliculas.add(p2);peliculas.add(p1);
-		p1.toString();p2.toString();p3.toString();
+		
 	}
 	
 	public static GestorPeliculas getGestorPeliculas(){
