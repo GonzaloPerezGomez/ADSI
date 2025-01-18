@@ -123,7 +123,6 @@ public class Catalogo extends JFrame {
 						if(e.getValueIsAdjusting()) {
 							int i = listPeliculas.getSelectedIndex();
 							if(i!= -1) {
-								System.out.println("okay");
 								JSONObject json = new JSONObject();	
 						        json.put("titulo", listPeliculas.getModel().getElementAt(i).getTitulo());
 						      

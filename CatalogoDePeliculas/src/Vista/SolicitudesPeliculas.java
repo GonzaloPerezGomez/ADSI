@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.Component;
@@ -130,6 +131,10 @@ public class SolicitudesPeliculas extends JFrame {
 	
 	private void genPanel(JPanel panel) {
 		Pelicula[] p = GestorGeneral.getGestorGeneral().getSolicitudes();
+		
+		if(p.length == 0) {
+			JOptionPane.showMessageDialog(null, "No hay solicitudes nuevas");
+		}
 		
 		listSolicitudesPeliculas = new JList<Pelicula>(p);
 		listSolicitudesPeliculas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

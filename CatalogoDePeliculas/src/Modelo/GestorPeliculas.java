@@ -14,6 +14,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 
+import javax.swing.JOptionPane;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -27,8 +29,7 @@ public class GestorPeliculas extends Observable{
 	
 	private GestorPeliculas() throws SQLException {
 		peliculas = new ArrayList<Pelicula>();
-		
-		
+
 	}
 	
 	public static GestorPeliculas getGestorPeliculas(){
@@ -43,7 +44,9 @@ public class GestorPeliculas extends Observable{
 	}
 	
 	public void cargarPeliculas() throws SQLException {
+		System.out.println(peliculas);
 		peliculas.addAll(SQLite.getBaseDeDatos().getAllPeliculas());
+		System.out.println(peliculas);
 	}
 	
 	public void addPelicula(Pelicula pPelicula) {
@@ -61,6 +64,9 @@ public class GestorPeliculas extends Observable{
 		if(!existe(titulo, fecha)) {
 			Pelicula p = new Pelicula(titulo, director, fecha);
 			GestorUsuarios.getGestorUsuarios().addSolicitud(p);
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "La pelicula solicitada ya está en el catalogo");
 		}
 	}
 	
@@ -91,6 +97,9 @@ public class GestorPeliculas extends Observable{
 		
 			if(info.has("Response") && info.getString("Response").equals("True")) {
 		        return info;
+			}
+			else {
+				JOptionPane.showMessageDialog(null, "Película no encontrada");
 			}
 			
 			
@@ -155,6 +164,10 @@ public class GestorPeliculas extends Observable{
 		        jsonPeliculas.put(jsonPelicula);
 		    }
 			return jsonPeliculas;
+		}
+		
+		public void reset() {
+			gestorPeliculas = null;
 		}
 
 }	
