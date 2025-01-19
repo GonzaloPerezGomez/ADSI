@@ -1,13 +1,10 @@
 package Modelo;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import db.SQLite;
 
 public class GestorGeneral {
 	private static GestorGeneral gestorGeneral;

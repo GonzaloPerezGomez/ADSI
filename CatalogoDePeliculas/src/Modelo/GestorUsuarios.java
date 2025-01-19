@@ -1,16 +1,9 @@
 package Modelo;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Observable;
-
 import javax.swing.JOptionPane;
 
 import org.json.JSONArray;
@@ -18,9 +11,6 @@ import org.json.JSONObject;
 
 import db.SQLite;
 
-import java.util.Iterator;
-
-@SuppressWarnings("deprecation")
 public class GestorUsuarios{
 	
 	private static GestorUsuarios gestorUsuarios;
@@ -41,11 +31,13 @@ public class GestorUsuarios{
 		}
 		return gestorUsuarios;
 	}
-	
+
+	//Carga todos los usuarios de la base de datos
 	public void cargarUsuarios() throws SQLException {
 		usuarios.addAll(SQLite.getBaseDeDatos().getAllUsuarios());
 	}
 	
+	//Carga todas las solicitudes de la base de datos
 	public void cargarSolicitudes() throws SQLException {
 		
 		JSONArray result;
@@ -61,10 +53,12 @@ public class GestorUsuarios{
 		
 	}
 	
+	//Devulve el nombre de usuario de un usuario
 	public String getNombreUsuario(Usuario usu) {
 		return usu.getNombreUsuario();
 	}
 	
+	//Dado un nombre, nombre de usuario y contraseña se añade un usuario al gestor
 	public boolean addUsuario(String nombre, String nombreUsuario, char[] contraseña) {
 		if (nombre.matches("^[a-zA-Z]+$")) {
 			if (buscarUsuario(nombreUsuario) == null) {
@@ -97,6 +91,7 @@ public class GestorUsuarios{
 		}
 	}
 	
+	//Se verifica que la contraseña es valida
 	private boolean esContraseñaValida(String contraseña) {
 		if (contraseña.length() < 8) {
 			System.out.println("Su tamaño tiene que ser minimo de ocho caracteres");
@@ -119,6 +114,7 @@ public class GestorUsuarios{
         return true;
     }
 	
+	//Se comprueban las credenciales de un usuario, si son correctas de inicia la sesión
 	public boolean iniciarSesion(String nombreUsuario, char[] contraseña) {
 		Usuario pUsuario = buscarUsuario(nombreUsuario);
 		if (pUsuario != null) {
@@ -140,6 +136,7 @@ public class GestorUsuarios{
 			return false;}
 	}
 	
+	//Elimina un usuario del gestor
 	public void deleteUsuario(String pUsuario) {
 		if (pUsuario != usuarioSesion){
 			Usuario usu = buscarUsuario(pUsuario);
@@ -151,28 +148,34 @@ public class GestorUsuarios{
 		}
 	}
 	
+	//Dado un nombre de usuario se devuelve el objeto del usuario
 	public Usuario buscarUsuario(String pNombre) {
 		return usuarios.stream().filter(p -> p.equals(pNombre)).findFirst().orElse(null);
 	}
 	
+	//Se devuelve el objeto del usuario que tiene la sesión iniciada
 	public Usuario getUsuarioSesion() {
 		return usuarios.stream().filter(p -> p.equals(usuarioSesion)).findFirst().orElse(null);
 	}
 	
+	//Dada una peli, se añade al usuario con la sesion iniciada dicha peli a la lista de solicitudes
 	public void addSolicitud(Pelicula p) {
 		Usuario u;
 		if((u = buscarUsuario(usuarioSesion)) != null)
 			u.addSolicitud(p);
 	}
 	
+	//Se devuelve el rol del usuario con la sesion iniciada
 	public boolean getRolSesion() {
 		return buscarUsuario(usuarioSesion).isAdmin();
 	}
 	
+	//Se cierra la sesion
 	public void cerrarSesion() {
 		usuarioSesion = null;
 	}
 	
+	//Se recoge entre todos los usuarios todas las peliculas solicitadas
 	public Pelicula[] getSolicitudes() {
 		List<Pelicula> s = new ArrayList<Pelicula>();
 		
@@ -186,6 +189,7 @@ public class GestorUsuarios{
 		return l;
 	}
 
+	//Se añade la pelicula al catalogo y se elimina la solicitud del usuario
 	public void aceptarSolicitud(String titulo, String director, String fecha) {
 		GestorPeliculas.getGestorPeliculas().addPelicula(new Pelicula(titulo, director, fecha, usuarioSesion));
 		deleteSolicitudes(titulo, fecha);
@@ -193,6 +197,7 @@ public class GestorUsuarios{
 		JOptionPane.showMessageDialog(null, "Solicitud aceptada correctamente");
 	}
 	
+	//Se elimina la solitud tanto del usuario como de la base de datos
 	private void deleteSolicitudes(String titulo, String fecha) {
 		for (Usuario u : usuarios) {
 			u.deleteSolicitud(new Pelicula(titulo, null, fecha));
@@ -202,6 +207,7 @@ public class GestorUsuarios{
 		SQLite.getBaseDeDatos().execSQL(sql);
 	}
 
+	//Se elimina la solicitud del usuario
 	public void rechazarSolicitud(String titulo, String fecha) {
 		deleteSolicitudes(titulo, fecha);
 		
@@ -337,6 +343,7 @@ public class GestorUsuarios{
 		return  usuario.getInfoUsuario();
 	}
 	
+	//Para tests
 	public void reset() {
 		gestorUsuarios = null;
 	}

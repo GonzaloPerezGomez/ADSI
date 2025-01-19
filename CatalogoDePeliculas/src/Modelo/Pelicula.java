@@ -1,8 +1,5 @@
 package Modelo;
 
-import java.util.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -53,6 +50,8 @@ public class Pelicula {
 	public String getAceptadoPor() {
 		return aceptadoPor;
 	}
+	
+	//Devuelve true si tanto el titulo como la fecha son iguales
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -69,11 +68,13 @@ public class Pelicula {
 		return (titulo.equals(pTitulo));
 	}
 	
+	//Devuelve la información de la pelicula en formato String
 	@Override
 	public String toString() {
 		return "<html>Titulo: " + titulo + "<br>Director: " + director + "<br>Fecha: " + fecha + "<html>";
 	}
 	
+	//Devulve la informacion de la pelicula en formato JSON
 	public String toJSON() {
 		return "{\"Titulo\":\"" + titulo + "\",\"Director\":\"" + director + "\",\"Fecha\":\"" + fecha + "\"}";
 	}

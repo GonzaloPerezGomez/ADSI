@@ -2,20 +2,9 @@
 package Modelo;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.awt.Component;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.Temporal;
-import java.util.Locale;
-import java.util.Objects;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 

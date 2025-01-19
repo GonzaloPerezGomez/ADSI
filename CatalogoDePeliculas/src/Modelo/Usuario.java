@@ -1,7 +1,6 @@
 package Modelo;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,12 +10,7 @@ import org.json.JSONObject;
 
 import db.SQLite;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class Usuario {
 	
@@ -27,7 +21,6 @@ public class Usuario {
 	private String aceptadoPor;
 	private boolean eliminado;
 	private List<Pelicula> solicitudes;
-	private String url = "jdbc:sqlite:src/db/database.db";
 	
 	public Usuario(String nombre, String nombreUsuario, String contraseña) {
 		this.nombre = nombre;
@@ -52,10 +45,13 @@ public class Usuario {
 		solicitudes = new ArrayList<Pelicula>();
 	}
 	
+	//Dada una pelicula la añade a su lista de solicitudes
 	public void cargarSolicitud(Pelicula pPelicula) {
 		solicitudes.add(pPelicula);
 	}
 	
+	//Dada una pelicula comprueba si ya está en el catalogo, si no lo esta la añade a su lista de solicitudes, la mete en la base de datos y crea
+	//una solicitud en la base de datos para esa pelicula
 	public void addSolicitud(Pelicula pPelicula) {
 		boolean esta = false;
 		
@@ -83,13 +79,15 @@ public class Usuario {
 		}
 	}
 	
+	//Elimina todas la solicitudes de una pelicula
 	public void deleteSolicitud(Pelicula pPelicula) {
 		boolean quedan = true;
 		while(quedan) {
 			quedan = solicitudes.remove(pPelicula);
 		}
 	}
-
+	
+	//Devuelve true si los nombres de usuario coinciden
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

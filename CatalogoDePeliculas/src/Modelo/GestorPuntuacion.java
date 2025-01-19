@@ -6,22 +6,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.stream.Collectors;
-
-import javax.swing.JOptionPane;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import db.SQLite;
 
-public class GestorPuntuacion extends Observable{
+public class GestorPuntuacion{
 
 	private static GestorPuntuacion GestorPuntuacion;
-	private GestorPeliculas gestorPeliculas;
-	private GestorUsuarios gestorUsuario;
 	private List<Puntua> Puntuaciones;
 	
 	private GestorPuntuacion() throws SQLException {
@@ -41,10 +35,6 @@ public class GestorPuntuacion extends Observable{
 		}
 		return GestorPuntuacion;
 	}
-	
-	
-	public void addObserverJuego(Observer observer) {
-        this.addObserver(observer);}
 		
 	public void cargarPuntuaciones() throws SQLException {
 		/////Carga la tabla puntuacion de la base de datos y se guarda todas las puntuaciones existentes
@@ -57,8 +47,8 @@ public class GestorPuntuacion extends Observable{
 	public void  ValorarPelicula(JSONObject json) {
 		///Guarda la puntuacion en base de datos y/o modifica la que ya existia
 		
-		Pelicula pelicula= gestorPeliculas.getGestorPeliculas().buscarPelicula(json.getString("titulo"));
-		Usuario usuario=gestorUsuario.getGestorUsuarios().getUsuarioSesion();
+		Pelicula pelicula= GestorPeliculas.getGestorPeliculas().buscarPelicula(json.getString("titulo"));
+		Usuario usuario=GestorUsuarios.getGestorUsuarios().getUsuarioSesion();
 		
 		////busca si hay alguna puntuacion ya existente de ese usuario en esa peli
 		Puntua puntuacionExistente = getPuntuacionPorUsuarioYPelicula(usuario, pelicula);
