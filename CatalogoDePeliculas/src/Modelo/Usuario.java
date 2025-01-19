@@ -33,13 +33,13 @@ public class Usuario {
 		this.nombre = nombre;
 		this.nombreUsuario = nombreUsuario;
 		this.contraseña = new String(contraseña);
-		this.esAdmin = false;
+		this.esAdmin = true;
 		this.eliminado = false;
 		this.aceptadoPor = null;
 		solicitudes = new ArrayList<Pelicula>();
 		String sql = "INSERT INTO Usuario (nombreUsuario, nombre, contraseña, administrador,eliminado, aceptadoPor) VALUES ('" + nombreUsuario + "', '" + nombre + "', '" + contraseña + "', '" + (esAdmin ? 1 : 0) + "', 0 , NULL) ";
 		SQLite.getBaseDeDatos().execSQL(sql);
-		
+		System.out.println("Registro confirmado");
 	}
 	
 	public Usuario(String nombre, String nombreUsuario, String contraseña, boolean esAdmin, boolean eliminado, String aceptadoPor) {
@@ -133,7 +133,7 @@ public class Usuario {
 		this.aceptadoPor=pUsuario;
 		String sql = "UPDATE Usuario SET aceptadoPor = '" + pUsuario + "' where nombreUsuario = '" + nombreUsuario + "'";
 		SQLite.getBaseDeDatos().execSQL(sql);
-		
+		System.out.println("Solicitud aceptada");
 	}
 	
 	public void setNombreContraseñaAdmin(String pNombre, String pNombreUsuario, String pAdministrador) {
@@ -156,6 +156,7 @@ public class Usuario {
 			this.nombreUsuario = pNombreUsuario;
 			this.nombre = pNombre;
 			this.contraseña = contraseña;
+			System.out.print("Se ha modificado correctamente los datos");
 		} catch (Exception e) {
 			System.out.println("No se pudo actualizar el usuario: " + e.getMessage());
 		}
