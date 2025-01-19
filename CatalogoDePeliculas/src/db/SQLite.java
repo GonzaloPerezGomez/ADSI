@@ -188,12 +188,6 @@ public class SQLite {
                     listaAlquiladas.add(new Alquila(u, p, fechaAlquila));
                 }
             }
-
-            if (listaAlquiladas.isEmpty()) {
-                System.out.println("Vacio");
-            } else {
-                listaAlquiladas.forEach(System.out::println);
-            }
         }
 
         return listaAlquiladas;
