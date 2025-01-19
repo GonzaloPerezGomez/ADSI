@@ -22,7 +22,7 @@ import java.util.Observer;
 public class PeliculasAPuntuar extends JFrame { 
     private JTextField txtTitulo, txtAño, txtComentario, txtPuntuacion;
     private JButton btnValorar;
-   // private Controler miControler;
+   
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -49,9 +49,8 @@ public class PeliculasAPuntuar extends JFrame {
 	 */
 	public PeliculasAPuntuar(JSONObject json) {
 		
-		//GestorPuntuacion.getGestorPuntuacion().addObserver(this);
-		//JSONObject jsonObject = new JSONObject(json);
 		
+		///primero comprueba si este usuario ya tenia una puntuacion ya en esa pelicula
         JSONObject puntu= GestorGeneral.getGestorGeneral().revisarPuntuacionexistente(json);
 		
 		 setTitle("Valorar Película");
@@ -103,7 +102,7 @@ public class PeliculasAPuntuar extends JFrame {
 						String titulo = getTitulo();
 						String fecha = getAño();
 						
-						//Usuario usuario = GestorUsuarios.getUsuarioActual();
+						
 						JSONObject peliculaData = new JSONObject();
 						peliculaData.put("titulo", titulo);
 						peliculaData.put("fecha", fecha);

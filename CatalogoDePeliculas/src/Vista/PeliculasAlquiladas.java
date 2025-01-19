@@ -36,7 +36,7 @@ public class PeliculasAlquiladas extends JFrame {
         JScrollPane scrollPane = new JScrollPane(listaPeliculas);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Cargar las películas alquiladas
+        // Cargar las películas alquiladas de ese usuario
      
         Boolean vacio=cargarPeliculasAlquiladas();
         
@@ -103,7 +103,7 @@ public class PeliculasAlquiladas extends JFrame {
             JOptionPane.showMessageDialog(this,
                     "No has alquilado ninguna película.", "Información", JOptionPane.INFORMATION_MESSAGE);
         } else {
-        	//peliculasAlquiladas = jsonPeliculas.getJSONArray("peliculas");
+        	
             for (int i = 0; i < peliculasAlquiladas.length(); i++) {
             	JSONObject pelicula = peliculasAlquiladas.getJSONObject(i);
                 modeloLista.addElement("Pelicula: "  + pelicula.getString("titulo") + " Fecha : "  + pelicula.getString("fecha") +"");
