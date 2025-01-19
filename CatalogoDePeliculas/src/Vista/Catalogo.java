@@ -227,8 +227,7 @@ public class Catalogo extends JFrame {
 		}else {
 			op1 = new JMenuItem("Modificar Datos");
 	        op2 = new JMenuItem("Reseñas");
-	        op3 = new JMenuItem("Historial");
-	        op4 = new JMenuItem("Cerrar Sesion");
+	        op3 = new JMenuItem("Cerrar Sesion");
 			
 			op1.addActionListener(new ActionListener() {
 	            @Override
@@ -247,14 +246,6 @@ public class Catalogo extends JFrame {
 			});
 			
 			op3.addActionListener(new ActionListener() {
-	            @Override
-	            public void actionPerformed(ActionEvent e) {
-					new ModificarUsuarioA(GestorGeneral.getGestorGeneral().obtenerUsuario());
-					dispose();
-				}
-			});
-			
-			op4.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
 					GestorGeneral.getGestorGeneral().cerrarSesion();;
