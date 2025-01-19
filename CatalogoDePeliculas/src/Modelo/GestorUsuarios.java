@@ -72,7 +72,6 @@ public class GestorUsuarios{
 					if (esContraseñaValida(contraseñaString)) { // se mira si la contraseña es valida
 						Usuario pUsuario = new Usuario(nombre, nombreUsuario, contraseñaString); //creamos un usuario con los valores introducidos
 						usuarios.add(pUsuario); // se añada el nuevo usuario a la lista de usuarios del gestor
-						usuarioSesion = nombreUsuario; // se inicia la sesion 
 						System.out.println("iniciado correctamente");//imprimir que se ha iniciado correctamente
 						return true;}// devuelve el valor true
 					
@@ -118,7 +117,7 @@ public class GestorUsuarios{
 	public boolean iniciarSesion(String nombreUsuario, char[] contraseña) {
 		Usuario pUsuario = buscarUsuario(nombreUsuario);// se busca un usuario que tenga el nombre de usuario qu ese ha introducido
 		if (pUsuario != null) { // si hay usuario con ese nombre de usuario
-			if (!pUsuario.estaEliminado()) {// si no esta eliminado
+			if (!pUsuario.estaEliminado() && pUsuario.estaAceptada()) {// si no esta eliminado
 				if (pUsuario.esCorrectaLaContraseña(new String(contraseña))) {//si es correcta la contraseña introducida
 					usuarioSesion = nombreUsuario;// inisia sesion
 					System.out.println("Sesión iniciada correctamente");// indica el correcto inicio de sesion
@@ -128,7 +127,7 @@ public class GestorUsuarios{
 					return false;}//devuelve false
 			}
 			else {
-				System.out.println("El usuario se ha eliminado");//imprimir el fallo porconsola
+				System.out.println("El usuario no tiene permiso de acceso");//imprimir el fallo porconsola
 				return false;}//devuelve false
 			}
 		else {
