@@ -68,10 +68,10 @@ public class CuentasUsuarios extends JFrame {
 		JButton btnEditar = new JButton("Editar");
 		btnEditar.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(listaUsuarios.getSelectedValue() != null) {
-					ModificarUsuarioA modificarUsuario = new ModificarUsuarioA(listaUsuarios.getSelectedValue());
-					dispose();
+			public void mouseClicked(MouseEvent e) {//si se pulsa el boton
+				if(listaUsuarios.getSelectedValue() != null) {//si se ha seleccionado algo
+					ModificarUsuarioA modificarUsuario = new ModificarUsuarioA(listaUsuarios.getSelectedValue());// crea una nueva instancia de la clase ModificarUsuarioA
+					dispose();// elimina la instancia de la clase CuentasUsuarios
 				}
 			}
 		});
@@ -82,10 +82,10 @@ public class CuentasUsuarios extends JFrame {
 		JButton btnBorrar = new JButton("Borrar");
 		btnBorrar.addMouseListener(new MouseAdapter() {
 			@Override
-		    public void mouseClicked(MouseEvent e) {
-				if (listaUsuarios.getSelectedValue()!=null) {
+		    public void mouseClicked(MouseEvent e) {//si se pulsa el boton
+				if (listaUsuarios.getSelectedValue()!=null) {//si se ha seleccionado algo
 					GestorGeneral.getGestorGeneral().deleteUsuario(listaUsuarios.getSelectedValue());
-					genPanel(panel);}
+					genPanel(panel);}// actualiza el panel
 		    }
 		}); 	
 		
@@ -96,9 +96,9 @@ public class CuentasUsuarios extends JFrame {
 		
 		JButton btnVolver= new JButton("Volver");
 			btnVolver.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				new Catalogo();
-				dispose();
+			public void mouseClicked(MouseEvent e) {//si se pulsa el boton
+				new Catalogo();// crea una nueva instancia de la clase Catalogo
+				dispose();// elimina la instancia de la clase CuentasUsuarios
 			}
 		});
 		btnVolver.setBounds(323, 157, 105, 27);
@@ -108,12 +108,12 @@ public class CuentasUsuarios extends JFrame {
 	
 	
 		
-		genPanel(panel);
+		genPanel(panel);// actualiza el panel
 		setVisible(true);
 	}
 
 	private void genPanel(JPanel panel) {
-		List<String> u = GestorGeneral.getGestorGeneral().mostrarUsuarios();
+		List<String> u = GestorGeneral.getGestorGeneral().mostrarUsuarios();// obtiene una lista con el nombre de usuario de todos los usuario no eliminados
 		
 		listaUsuarios = new JList<>(u.toArray(new String[0]));
 		listaUsuarios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
