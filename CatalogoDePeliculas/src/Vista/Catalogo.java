@@ -234,6 +234,11 @@ public class Catalogo extends JFrame {
 					dispose();
 				}
 			});
+			menu.add(op1);
+     			menu.add(op2);
+        		menu.add(op3);
+       			menu.add(op4);
+			menu.add(op5);
 		}else {
 		op1 = new JMenuItem("Modificar Datos");
 	        op2 = new JMenuItem("Reseñas");
@@ -263,13 +268,10 @@ public class Catalogo extends JFrame {
 					dispose();
 				}
 			});
+			menu.add(op1);
+			menu.add(op2);
+			menu.add(op3);
 		}
-		
-	menu.add(op1);
-        menu.add(op2);
-        menu.add(op3);
-        menu.add(op4);
-	menu.add(op5);
 		
 		mB.add(menu);
 		
