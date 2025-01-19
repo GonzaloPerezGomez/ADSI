@@ -34,11 +34,13 @@ public class GestorGeneral {
 	public boolean getRolSesion() {
 		return GestorUsuarios.getGestorUsuarios().getRolSesion();
 	}
-	
+
+	//cierra la sesion
 	public void cerrarSesion() {
 		GestorUsuarios.getGestorUsuarios().cerrarSesion();
 	}
-	
+
+	//obtiene el nombre del usuario
 	public String obtenerUsuario() {
 		return GestorUsuarios.getGestorUsuarios().getUsuarioSesion().getNombreUsuario();
 	}
@@ -47,36 +49,44 @@ public class GestorGeneral {
 		
 		 return GestorUsuarios.getGestorUsuarios().getUsuarioSesion();
 	}
-	
+
+	// devuelve una lista con los nombres de usuario de los Usuarios que no esten eleiminado
 	public List<String> mostrarUsuarios(){
 		return GestorUsuarios.getGestorUsuarios().mostrarUsuarios();
 	}
-	
+
+	//elimina el usuario cuyo nombre de usuario se ha introducido
 	public void deleteUsuario(String usuario) {
 		GestorUsuarios.getGestorUsuarios().deleteUsuario(usuario);
 	}
-	
+
+	//Comprueba si se pued einiciar la sesion
 	public boolean seInicia(String nombreUsuario, char[] contraseña ) {
 		return GestorUsuarios.getGestorUsuarios().iniciarSesion( nombreUsuario, contraseña);
 	}
-	
+
+	//Obtiene la informacion para la modificacion de los parametros siendo usuario
 	public JSONObject obtenerInfoUsuario() {
 		return GestorUsuarios.getGestorUsuarios().obtenerInfoUsuario();
 	}
 	
+	//modificas los parametros del usuario 
 	public boolean modificarUsuariosUsuario(String nombre, String nombreUsuario, String contraseña) { 
 		 return GestorUsuarios.getGestorUsuarios().modificarUsuariosUsuario( nombre, nombreUsuario, contraseña);
 	}
-	
+
+	//modificas los parametros del usuario
 	public boolean modificarUsuariosAdmin(String nombre, String nombreUsuario, String nombreUsuarioAnt, String esAdmin) { 
 		 return GestorUsuarios.getGestorUsuarios().modificarUsuariosAdmin( nombre, nombreUsuario, nombreUsuarioAnt, esAdmin);
 	}
 	
+	//Obtiene la informacion para la modificacion de los parametros siendo adminsitrador
 	public JSONObject obtenerInfoAdministrador(String pUsuario) {
 		return GestorUsuarios.getGestorUsuarios().obtenerInfoAdministrador(pUsuario);
 		
 	}
-	
+
+	//añade un nuevo usuario
 	public boolean addUsuario(String nombre, String nombreUsuario, char[] contraseña) {
 		return GestorUsuarios.getGestorUsuarios().addUsuario(nombre, nombreUsuario, contraseña);
 	}
@@ -100,11 +110,13 @@ public class GestorGeneral {
 	public Pelicula[] getSolicitudes() {
 		return GestorUsuarios.getGestorUsuarios().getSolicitudes();
 	}
-	
+
+	//obtiene la lista de los nombres de usuario de que no estan eliminados y no estan aceptados
 	public List<String> mostrarUsuariosNoAceptados(){
 		return GestorUsuarios.getGestorUsuarios().mostrarUsuariosNoAceptados();
 	}
-	
+
+	//se acepta el usuario
 	public void aceptarUsuario(String usuario){
 		GestorUsuarios.getGestorUsuarios().aceptarUsuario(usuario);
 	}
