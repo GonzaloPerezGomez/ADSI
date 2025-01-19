@@ -185,12 +185,14 @@ public class Catalogo extends JFrame {
 		JMenuItem op2;
 		JMenuItem op3;
 		JMenuItem op4;
+		JMenuItem op5;
 		
 		if(esAdmin) {
-			op1 = new JMenuItem("Solicitudes de Usuario");
+		op1 = new JMenuItem("Solicitudes de Usuarios");
 	        op2 = new JMenuItem("Solicitudes de Peliculas");
 	        op3 = new JMenuItem("Cuentas de Usuarios");
-	        op4 = new JMenuItem("Cerrar Sesion");
+		op4 = new JMenuItem("Reseñas");
+	        op5 = new JMenuItem("Cerrar Sesion");
 			
 			op1.addActionListener(new ActionListener() {
 	            @Override
@@ -215,8 +217,16 @@ public class Catalogo extends JFrame {
 					dispose();
 				}
 			});
-			
+
 			op4.addActionListener(new ActionListener() {
+	            @Override
+	            public void actionPerformed(ActionEvent e) {
+					new PeliculasAlquiladas(); //para que pueda elegir la pelicula que ya alquilo para reseñar					
+					dispose();
+				}
+			});
+			
+			op5.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
 					GestorGeneral.getGestorGeneral().cerrarSesion();
@@ -225,7 +235,7 @@ public class Catalogo extends JFrame {
 				}
 			});
 		}else {
-			op1 = new JMenuItem("Modificar Datos");
+		op1 = new JMenuItem("Modificar Datos");
 	        op2 = new JMenuItem("Reseñas");
 	        op3 = new JMenuItem("Cerrar Sesion");
 			
@@ -255,10 +265,11 @@ public class Catalogo extends JFrame {
 			});
 		}
 		
-		menu.add(op1);
+	menu.add(op1);
         menu.add(op2);
         menu.add(op3);
         menu.add(op4);
+	menu.add(op5);
 		
 		mB.add(menu);
 		
