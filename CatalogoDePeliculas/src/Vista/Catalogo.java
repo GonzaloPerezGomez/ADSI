@@ -98,7 +98,6 @@ public class Catalogo extends JFrame {
 				else {
 				JSONArray p = GestorGeneral.getGestorGeneral().buscarPeliculas(textBuscador.getText());
 				if (p.isEmpty()) {JOptionPane.showMessageDialog(null, "Película no encontrada");}
-				//listPeliculas = new JList<>(p.toArray(new Pelicula[0]));
 				List<Pelicula> listaPeliculas = new ArrayList<>();
 		        for (int i = 0; i < p.length(); i++) {
 		            JSONObject peliculaJSON = p.getJSONObject(i); 
@@ -123,7 +122,6 @@ public class Catalogo extends JFrame {
 						if(e.getValueIsAdjusting()) {
 							int i = listPeliculas.getSelectedIndex();
 							if(i!= -1) {
-								System.out.println("okay");
 								JSONObject json = new JSONObject();	
 						        json.put("titulo", listPeliculas.getModel().getElementAt(i).getTitulo());
 						      

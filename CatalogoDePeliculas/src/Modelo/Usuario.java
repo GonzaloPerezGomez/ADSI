@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+
+import javax.swing.JOptionPane;
+
 import org.json.JSONObject;
 
 import db.SQLite;
@@ -51,11 +54,20 @@ public class Usuario {
 	
 	public void cargarSolicitud(Pelicula pPelicula) {
 		solicitudes.add(pPelicula);
-		System.out.println(solicitudes);
 	}
 	
 	public void addSolicitud(Pelicula pPelicula) {
-		if(!solicitudes.contains(pPelicula))
+		boolean esta = false;
+		
+		Pelicula[] s = GestorUsuarios.getGestorUsuarios().getSolicitudes();
+		
+		for(Pelicula p : s) {
+			if (p.equals(pPelicula)) {
+				esta = true;
+			}
+		}
+		
+		if(!esta) {
 			solicitudes.add(pPelicula);
 		
 			String sql = "INSERT INTO Pelicula(titulo, director, fecha) VALUES('" + pPelicula.getTitulo() + "', '" + pPelicula.getDirector() + "', '" + pPelicula.getFecha() + "')";
@@ -63,6 +75,12 @@ public class Usuario {
 			
 			sql = "INSERT INTO Solicitud(nombreUsuario, titulo, fecha) VALUES('" + this.getNombreUsuario() + "', '" + pPelicula.getTitulo() + "', '" + pPelicula.getFecha() + "')";
 			SQLite.getBaseDeDatos().execSQL(sql);
+			
+			JOptionPane.showMessageDialog(null, "Película solicitada correctamente");
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "Película ya solicitada por otro usuario");
+		}
 	}
 	
 	public void deleteSolicitud(Pelicula pPelicula) {
