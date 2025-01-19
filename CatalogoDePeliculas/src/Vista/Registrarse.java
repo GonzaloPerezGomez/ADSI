@@ -96,7 +96,7 @@ public class Registrarse extends JFrame {
 			public void actionPerformed(ActionEvent e) {// si se pulsa el boton
 				System.out.println(textNombre.getText());
 				if (GestorGeneral.getGestorGeneral().addUsuario( textNombre.getText(), textUsuario.getText(), textContraseña.getPassword())) {// se hace la llamada para añadir el nuevo usuario
-					InicioDeSesion frame = new InicioDeSesion();// se crea un anueva instancia del la clase Catalogo
+					Catalogo frame = new Catalogo();// se crea un anueva instancia del la clase Catalogo
 					dispose(); // se elimina la instancia de Registrarse
 				};
 				
