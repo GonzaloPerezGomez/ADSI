@@ -48,6 +48,7 @@ public class SolicitudesUsuarios extends JFrame {
 	private JList<String> listaSolicitudesUsuarios;
 	private JScrollPane scrollPane;
 
+	//genera la vista de solicitudes de registro de los usuarios
 	public SolicitudesUsuarios() {
 		
 		
@@ -72,9 +73,9 @@ public class SolicitudesUsuarios extends JFrame {
 		btnAñadir.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if(listaSolicitudesUsuarios.getSelectedValue() != null) {
-					GestorGeneral.getGestorGeneral().aceptarUsuario(listaSolicitudesUsuarios.getSelectedValue()); 
-					genPanel(panel);
+				if(listaSolicitudesUsuarios.getSelectedValue() != null) {// si hay algo seleccionado
+					GestorGeneral.getGestorGeneral().aceptarUsuario(listaSolicitudesUsuarios.getSelectedValue()); // se acepta ek usuario Seleccionado
+					genPanel(panel);// se actualiza el panel con los usuarios
 				}
 			}
 		});
@@ -85,10 +86,10 @@ public class SolicitudesUsuarios extends JFrame {
 		JButton btnRechazar = new JButton("Rechazar");
 		btnRechazar.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(listaSolicitudesUsuarios.getSelectedValue() != null) {
-					GestorGeneral.getGestorGeneral().deleteUsuario(listaSolicitudesUsuarios.getSelectedValue()); 
-					genPanel(panel);
+			public void mouseClicked(MouseEvent e) {// si hacen click en el boton 
+				if(listaSolicitudesUsuarios.getSelectedValue() != null) {// si hay algo seleccionado  
+					GestorGeneral.getGestorGeneral().deleteUsuario(listaSolicitudesUsuarios.getSelectedValue()); // se elimina el usuario que se ha seleccionado
+					genPanel(panel);// se actualiza el panel con los usuarios
 				}
 			}
 		});
@@ -99,22 +100,22 @@ public class SolicitudesUsuarios extends JFrame {
 		JButton btnVolver = new JButton("Volver");
 		btnVolver.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				new Catalogo();
-				dispose();
+			public void mouseClicked(MouseEvent e) {// si hacen click en el boton 
+				new Catalogo();// se crea una nueva instancia de Catalogo
+				dispose();// se elimina la instancia de SolicitudUsuario
 			}
 		});
 		btnVolver.setBounds(323, 157, 105, 27);
 		panel.add(btnVolver);
 		
 		
-		genPanel(panel);
+		genPanel(panel);//forma el panel de los usuarios
 		setVisible(true);
 	}
 	
 	
 	private void genPanel(JPanel panel) {
-		List<String> u = GestorGeneral.getGestorGeneral().mostrarUsuariosNoAceptados();
+		List<String> u = GestorGeneral.getGestorGeneral().mostrarUsuariosNoAceptados();// obtiene los nombres de usuarios de los usuarios no haceptados
 		
 		listaSolicitudesUsuarios = new JList<>(u.toArray(new String[0]));
 		listaSolicitudesUsuarios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
