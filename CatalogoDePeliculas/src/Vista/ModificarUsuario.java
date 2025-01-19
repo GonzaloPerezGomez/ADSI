@@ -92,9 +92,9 @@ public class ModificarUsuario extends JFrame {
 
 	JButton buttonVolver = new JButton("Volver");
 	buttonVolver.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-			Catalogo catalogo = new Catalogo();
-			dispose();
+		public void actionPerformed(ActionEvent e) {//si se pulsa el boton
+			Catalogo catalogo = new Catalogo();// se crea una nueva instancia de la clase Catalogo
+			dispose();// se elimina la iia de la clase ModinstancficarUsuario 
 		}
 	});
 	
@@ -105,10 +105,10 @@ public class ModificarUsuario extends JFrame {
 	
 	JButton buttonCorfirmar = new JButton("Confirmar");
 	buttonCorfirmar.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-			if (GestorGeneral.getGestorGeneral().modificarUsuariosUsuario( textNombre.getText(), textUsuario.getText(), new String(textContraseña.getPassword()))) {
-				ModificarUsuario modificarUsuario = new ModificarUsuario(textUsuario.getText());
-				dispose();
+		public void actionPerformed(ActionEvent e) {// si se pulsa el boton
+			if (GestorGeneral.getGestorGeneral().modificarUsuariosUsuario( textNombre.getText(), textUsuario.getText(), new String(textContraseña.getPassword()))) {// si se modifican los parametros
+				ModificarUsuario modificarUsuario = new ModificarUsuario(textUsuario.getText());// se crea una nueva instancia de la clase ModificarUsuario
+				dispose();// se elimina la iia de la clase ModinstancficarUsuario antigua
 			}
 			
 		}
