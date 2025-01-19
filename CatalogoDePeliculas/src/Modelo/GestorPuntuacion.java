@@ -116,10 +116,7 @@ public JSONObject CalcularMedia() {
 		    Map<String, List<Integer>> peliculaPuntuaciones = new HashMap<>();
 	
 		    // Agrupar puntuaciones por película
-		    for (Puntua puntuacion : Puntuaciones) {
-		    	System.out.println(puntuacion.getComentario());
-		    	System.out.println(puntuacion.getPuntuacion());
-		    	System.out.println(puntuacion.getUsuario());
+		    for (Puntua puntuacion : Puntuaciones) {		    
 		        String pelicula = puntuacion.getPelicula().getTitulo();
 		        peliculaPuntuaciones.putIfAbsent(pelicula, new ArrayList<>());
 		        peliculaPuntuaciones.get(pelicula).add(puntuacion.getPuntuacion());
@@ -195,6 +192,8 @@ public JSONObject obtenerComentariosYPuntuaciones(String titulo) {
 	        return puntuaciones;
 	    }
 	}
-
+	public void reset() {
+		GestorPuntuacion = null;
+	}
 
 }
