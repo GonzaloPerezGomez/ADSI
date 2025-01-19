@@ -91,9 +91,9 @@ public class ModificarUsuarioA extends JFrame {
 
 		JButton buttonVolver = new JButton("Volver");
 		buttonVolver.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				CuentasUsuarios cuentaUsuario = new CuentasUsuarios();
-				dispose();
+			public void actionPerformed(ActionEvent e) {//si se pulsa el boton
+				CuentasUsuarios cuentaUsuario = new CuentasUsuarios();// se crea una nueva instancia de la clase CuentasUsuarios
+				dispose();// se elimina la instancia de ModificarUsuarioA
 			}
 		});
 		buttonVolver.setBounds(261, 158, 82, 27);
@@ -102,10 +102,10 @@ public class ModificarUsuarioA extends JFrame {
 		
 		JButton buttonCorfirmar = new JButton("Confirmar");
 		buttonCorfirmar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (GestorGeneral.getGestorGeneral().modificarUsuariosAdmin( textNombre.getText(), textUsuario.getText(), info.getString("NombreUsuario"), (String) textAdmin.getSelectedItem())) {
-					ModificarUsuarioA modificarUsuarios = new ModificarUsuarioA(textUsuario.getText());
-					dispose();
+			public void actionPerformed(ActionEvent e) {//si se pulsa el boton
+				if (GestorGeneral.getGestorGeneral().modificarUsuariosAdmin( textNombre.getText(), textUsuario.getText(), info.getString("NombreUsuario"), (String) textAdmin.getSelectedItem())) {// si se modifica correctamente los parametros
+					ModificarUsuarioA modificarUsuarios = new ModificarUsuarioA(textUsuario.getText());// se crea una nueva instancia de la clase ModificarUsuariosA
+					dispose();// se crea una nueva instancia de la clase ModificarUsuariosA
 				}
 			}
 		});
