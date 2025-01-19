@@ -83,8 +83,9 @@ public class CuentasUsuarios extends JFrame {
 		btnBorrar.addMouseListener(new MouseAdapter() {
 			@Override
 		    public void mouseClicked(MouseEvent e) {
-		    	GestorGeneral.getGestorGeneral().deleteUsuario(listaUsuarios.getSelectedValue());
-		    	genPanel(panel);
+				if (listaUsuarios.getSelectedValue()!=null) {
+					GestorGeneral.getGestorGeneral().deleteUsuario(listaUsuarios.getSelectedValue());
+					genPanel(panel);}
 		    }
 		}); 	
 		

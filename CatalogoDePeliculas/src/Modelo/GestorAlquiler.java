@@ -4,6 +4,7 @@ package Modelo;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.awt.Component;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -28,7 +29,7 @@ public class GestorAlquiler {
 
     private static GestorAlquiler gestorAlquiler;
     private List<Alquila> alquiladas;
-    
+ 
 	private GestorAlquiler() throws SQLException {
 		alquiladas = new ArrayList<Alquila>();
 			
@@ -100,9 +101,9 @@ public class GestorAlquiler {
 	    		String sql = "INSERT INTO Alquila (nombreUsuario, titulo, fechaPelicula, fechaAlquila) VALUES ('" + usuario.getNombreUsuario() + "', '" + pelicula.getTitulo() + "', '" + pelicula.getFecha() + "','" + nuevo.getFecha() + "' )";
 	    		SQLite.getBaseDeDatos().execSQL(sql);
 	    		JOptionPane.showMessageDialog(null,"Película alquilada correctamente");
-	    		
+	    		System.out.print("Película alquilada correctamente");
 	    	}
-	    	else {JOptionPane.showMessageDialog(null,"Película ya alquilada");}
+	    	else {JOptionPane.showMessageDialog(null,"Película ya alquilada"); System.out.print("Película ya alquilada");}
 	    	
 	    }
 	 
@@ -115,4 +116,5 @@ public class GestorAlquiler {
 		public void addAlquila(Alquila pAlquila) {
 			alquiladas.add(pAlquila);
 		}
+		
 }
