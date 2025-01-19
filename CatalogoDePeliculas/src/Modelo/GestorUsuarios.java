@@ -66,29 +66,35 @@ public class GestorUsuarios{
 	}
 	
 	public boolean addUsuario(String nombre, String nombreUsuario, char[] contraseña) {
-		if (buscarUsuario(nombreUsuario) == null) {
-			if(nombre == " " || nombreUsuario == " " || contraseña.length==0 ) {
-				System.out.println("uno de los campos no esta completado");
-				return false;
-			}
-			
-			else {
-				String contraseñaString =  new String(contraseña);
-				if (esContraseñaValida(contraseñaString)) {
-					Usuario pUsuario = new Usuario(nombre, nombreUsuario, contraseñaString);
-					usuarios.add(pUsuario);
-					usuarioSesion = nombreUsuario;
-					System.out.println("iniciado correctamente");
-					return true;}
+		if (nombre.matches("^[a-zA-Z]+$")) {
+			if (buscarUsuario(nombreUsuario) == null) {
+				if(nombre == " " || nombreUsuario == " " || contraseña.length==0 ) {
+					System.out.println("uno de los campos no esta completado");
+					return false;
+				}
 				
 				else {
-					System.out.println("La contraseña no es valida");
-					return false;}
-			}	
+					String contraseñaString =  new String(contraseña);
+					if (esContraseñaValida(contraseñaString)) {
+						Usuario pUsuario = new Usuario(nombre, nombreUsuario, contraseñaString);
+						usuarios.add(pUsuario);
+						usuarioSesion = nombreUsuario;
+						System.out.println("iniciado correctamente");
+						return true;}
+					
+					else {
+						System.out.println("La contraseña no es valida");
+						return false;}
+				}	
+			}
+			else {
+				System.out.println("Ya existe un usuario con ese nombre de usuario");
+				return false;}
 		}
 		else {
-			System.out.println("Ya existe un usuario con ese nombre de usuario");
-			return false;}
+			System.out.println("el campo nombre solo pueden ser letras");
+			return false;
+		}
 	}
 	
 	private boolean esContraseñaValida(String contraseña) {
@@ -138,6 +144,8 @@ public class GestorUsuarios{
 		if (pUsuario != usuarioSesion){
 			Usuario usu = buscarUsuario(pUsuario);
 			usu.eliminar();
+			this.usuarios.remove(usu);
+			System.out.println("usuario eliminado");
 		} else {
 			System.out.println("no te puedes eliminar a ti mismo");
 		}
@@ -237,70 +245,83 @@ public class GestorUsuarios{
 	}
 	
 	public boolean modificarUsuariosAdmin(String pNombre, String pNombreUsuario, String pNombreUsuarioAnt, String pAdmin) {
-		if (!pNombreUsuario.equals(pNombreUsuarioAnt)) {
-			Usuario usu = buscarUsuario(pNombreUsuario);
-			if (usu==null) {
-				if(!pNombreUsuario.trim().isEmpty() && !pNombre.trim().isEmpty() && !pAdmin.trim().isEmpty()) {
-					usu = buscarUsuario(pNombreUsuarioAnt);
-					usu.setNombreContraseñaAdmin(pNombre, pNombreUsuario, pAdmin);
-					if (usuarioSesion.equals(pNombreUsuarioAnt)){
-						usuarioSesion = pNombreUsuario;
-					}
-					return true;
-				}
-				else {
-					System.out.println("uno de los campos no esta completado");
-					return false;
-				}
-			}
-			else {
-				System.out.println("Ya existe un usuario con ese nombre de usuario");
-				return false;
-			}
-		}	
-		else {
-			Usuario usu=buscarUsuario(pNombreUsuarioAnt);
-			usu.setNombreContraseñaAdmin(pNombre, pNombreUsuario, pAdmin);
-			return true;
-		}
-	}
-	
-	public boolean modificarUsuariosUsuario(String pNombre, String pNombreUsuario,  String pContraseña) {
-		if (!pNombreUsuario.equals(usuarioSesion)) {
-			Usuario usu = buscarUsuario(pNombreUsuario);
-			if (usu == null) {
-				if(!pNombreUsuario.trim().isEmpty() && !pNombre.trim().isEmpty() && !pContraseña.trim().isEmpty() ) {
-					if(this.esContraseñaValida(pContraseña)){
-						usu = buscarUsuario(usuarioSesion);
-						usuarioSesion=pNombreUsuario;
-						usu.setNombreContraseñaUsuario(pNombre, pNombreUsuario, pContraseña);
+		if (pNombre.matches("^[a-zA-Z]+$")) {
+			if (!pNombreUsuario.equals(pNombreUsuarioAnt)) {
+				Usuario usu = buscarUsuario(pNombreUsuario);
+				if (usu==null) {
+					if(!pNombreUsuario.trim().isEmpty() && !pNombre.trim().isEmpty() && !pAdmin.trim().isEmpty()) {
+						usu = buscarUsuario(pNombreUsuarioAnt);
+						usu.setNombreContraseñaAdmin(pNombre, pNombreUsuario, pAdmin);
+						if (usuarioSesion.equals(pNombreUsuarioAnt)){
+							usuarioSesion = pNombreUsuario;
+						}
 						return true;
 					}
 					else {
-						System.out.println("contraseña no valida");
+						System.out.println("uno de los campos no esta completado");
 						return false;
 					}
 				}
 				else {
-					System.out.println("uno de los campos no esta completado");
+					System.out.println("Ya existe un usuario con ese nombre de usuario");
 					return false;
 				}
+		
 			}
-			else{
-				System.out.println("Ya existe un usuario con ese nombre de usuario");
-				return false;
+			else {
+				Usuario usu=buscarUsuario(pNombreUsuarioAnt);
+				usu.setNombreContraseñaAdmin(pNombre, pNombreUsuario, pAdmin);
+				return true;
 			}
 		}
 		else {
-			if(this.esContraseñaValida(pContraseña)){
-				Usuario usu=buscarUsuario(usuarioSesion);
-				usu.setNombreContraseñaUsuario(pNombre, usuarioSesion, pContraseña);
-				return true;
+			System.out.println("el campo nombre solo pueden ser letras");
+			return false;
+		}
+	}
+	
+	public boolean modificarUsuariosUsuario(String pNombre, String pNombreUsuario,  String pContraseña) {
+		if (pNombre.matches("^[a-zA-Z]+$")) {
+			if (!pNombreUsuario.equals(usuarioSesion)) {
+				Usuario usu = buscarUsuario(pNombreUsuario);
+				if (usu == null) {
+					if(!pNombreUsuario.trim().isEmpty() && !pNombre.trim().isEmpty() && !pContraseña.trim().isEmpty() ) {
+						if(this.esContraseñaValida(pContraseña)){
+							usu = buscarUsuario(usuarioSesion);
+							usuarioSesion=pNombreUsuario;
+							usu.setNombreContraseñaUsuario(pNombre, pNombreUsuario, pContraseña);
+							return true;
+						}
+						else {
+							System.out.println("contraseña no valida");
+							return false;
+						}
+					}
+					else {
+						System.out.println("uno de los campos no esta completado");
+						return false;
+					}
+				}
+				else{
+					System.out.println("Ya existe un usuario con ese nombre de usuario");
+					return false;
+				}
 			}
 			else {
-				System.out.println("contraseña no valida");
-				return false;
+				if(this.esContraseñaValida(pContraseña)){
+					Usuario usu=buscarUsuario(usuarioSesion);
+					usu.setNombreContraseñaUsuario(pNombre, usuarioSesion, pContraseña);
+					return true;
+				}
+				else {
+					System.out.println("contraseña no valida");
+					return false;
+				}
 			}
+		}
+		else {
+			System.out.println("el campo nombre solo pueden ser letras");
+			return false;
 		}
 	}	
 	
