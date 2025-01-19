@@ -72,19 +72,19 @@ public class InicioDeSesion extends JFrame {
 		JLabel lblNoRegistro = new JLabel("No tienes cuenta? Registrate");
 		lblNoRegistro.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				Registrarse frame = new Registrarse();
-				dispose();
+			public void mouseClicked(MouseEvent e) {//si se pulsa boton
+				Registrarse frame = new Registrarse();// se crea una nueva instancia de la clase Registrarse
+				dispose();// se elimina la instancia de la clase IniciarSesion
 			}
 		});
 		contentPane.add(lblNoRegistro, BorderLayout.SOUTH);
 		
 		JButton buttonConfirmar = new JButton("Confirmar");
 		buttonConfirmar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if ( GestorGeneral.getGestorGeneral().seInicia(textField.getText(), passwordField.getPassword())) {
-					Catalogo frame = new Catalogo();
-					dispose();
+			public void actionPerformed(ActionEvent e) {//si se pulsa boton
+				if ( GestorGeneral.getGestorGeneral().seInicia(textField.getText(), passwordField.getPassword())) {// si se inicia correctamente
+					Catalogo frame = new Catalogo();// se crea una nueva instancia de la clase Catalogo
+					dispose();// se elimina la instancia de la clase IniciarSesion
 				};
 				
 				
