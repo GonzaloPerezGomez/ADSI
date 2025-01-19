@@ -120,7 +120,7 @@ public class GestorUsuarios{
 	public boolean iniciarSesion(String nombreUsuario, char[] contraseña) {
 		Usuario pUsuario = buscarUsuario(nombreUsuario);// se busca un usuario que tenga el nombre de usuario qu ese ha introducido
 		if (pUsuario != null) { // si hay usuario con ese nombre de usuario
-			if (!pUsuario.estaEliminado() || pUsuario.estaAceptada()) {// si no esta eliminado
+			if (!pUsuario.estaEliminado() && pUsuario.estaAceptada()) {// si no esta eliminado
 				if (pUsuario.esCorrectaLaContraseña(new String(contraseña))) {//si es correcta la contraseña introducida
 					usuarioSesion = nombreUsuario;// inisia sesion
 					System.out.println("Sesión iniciada correctamente");// indica el correcto inicio de sesion
