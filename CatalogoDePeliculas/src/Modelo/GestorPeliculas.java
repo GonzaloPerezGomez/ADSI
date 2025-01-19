@@ -126,11 +126,12 @@ public class GestorPeliculas extends Observable{
 		return null;
 	}
 		public JSONArray buscarPeliculas(String titulo) {
+			//devuelve las peliculas que coincidan con el titulo introucido
 			JSONArray peliculas = new JSONArray();
 			Iterator<Pelicula> iterador= getIteratorPelicula();
 			while (iterador.hasNext()) {
 	            Pelicula pelicula = iterador.next();            
-	            if (pelicula.getTitulo().toLowerCase().contains(titulo.toLowerCase())) {
+	            if (pelicula.getTitulo().toLowerCase().contains(titulo.toLowerCase())) { //comprueba si coincide el nombre con el titulo de la pelicula, si coincide lo añade
 	            	JSONObject jsonPelicula = new JSONObject();
 			        jsonPelicula.put("titulo", pelicula.getTitulo());
 			        jsonPelicula.put("fecha", pelicula.getFecha());
@@ -138,7 +139,7 @@ public class GestorPeliculas extends Observable{
 			        peliculas.put(jsonPelicula);
 	            }
 		}
-	return peliculas;
+	return peliculas; //devuelve las peliculas coincidentes
 }
 
 		public JSONObject recogerInfo(String titulo) {

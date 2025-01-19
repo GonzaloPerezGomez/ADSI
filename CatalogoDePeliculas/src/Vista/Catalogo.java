@@ -92,7 +92,7 @@ public class Catalogo extends JFrame {
 		lblBuscar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (textBuscador.getText().trim().isEmpty()) {
+				if (textBuscador.getText().trim().isEmpty()) { //si no se ha introducido nada o espacios
 					JOptionPane.showMessageDialog(null, "Introduce un título");
 				}
 				else {

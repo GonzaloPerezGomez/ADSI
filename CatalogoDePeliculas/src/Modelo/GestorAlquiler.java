@@ -81,13 +81,14 @@ public class GestorAlquiler {
 	}
 
 	public boolean estaAlquilada(Usuario usuario, Pelicula pelicula) {
-		List<Alquila> peliculasAlquiladas = GestorAlquiler.getGestorAlquiler().getAlquiladasPorUsuario(usuario);
-		for(int i = 0; i < peliculasAlquiladas.size(); i++) {
-			if (pelicula.equals(peliculasAlquiladas.get(i).getPelicula())) {
+		//comprueba si el usuario ya tiene la pelicula alquilada
+		List<Alquila> peliculasAlquiladas = GestorAlquiler.getGestorAlquiler().getAlquiladasPorUsuario(usuario); //obtiene la lista de alquiladas del usuario
+		for(int i = 0; i < peliculasAlquiladas.size(); i++) { 
+			if (pelicula.equals(peliculasAlquiladas.get(i).getPelicula())) { //coincide la pelicula con alguna de la lista de alquiladas
 				LocalDateTime ahora = LocalDateTime.now();
 				ZoneId zona = ZoneId.of("Europe/Madrid");
-				Duration diff = Duration.between(peliculasAlquiladas.get(i).getFecha().atZone(zona).toInstant(), ahora.atZone(zona).toInstant());
-				if (diff.toHours() < 48) {
+				Duration diff = Duration.between(peliculasAlquiladas.get(i).getFecha().atZone(zona).toInstant(), ahora.atZone(zona).toInstant()); //hace una diferencia entre la hora actual y la hora en la que se creo el alquiler
+				if (diff.toHours() < 48) { //si la diferencia es de menos de 48 horas, la pelicula aun esta alquilada y no se puede volver a alquilar
 					return true;
 				}
 			}
@@ -95,15 +96,15 @@ public class GestorAlquiler {
 		return false;
 	}
 	 public void alquilarPelicula(Usuario usuario, Pelicula pelicula) {
-	    	if (estaAlquilada(usuario, pelicula) == false) {
+	    	if (estaAlquilada(usuario, pelicula) == false) { //se comprueba que la pelicula no este alquilada o hayan pasado > 48 horas
 	    		Alquila nuevo = new Alquila(usuario, pelicula, LocalDateTime.now());
-	    		alquiladas.add(nuevo);
+	    		alquiladas.add(nuevo); //se añade a la lista de alquiladas
 	    		String sql = "INSERT INTO Alquila (nombreUsuario, titulo, fechaPelicula, fechaAlquila) VALUES ('" + usuario.getNombreUsuario() + "', '" + pelicula.getTitulo() + "', '" + pelicula.getFecha() + "','" + nuevo.getFecha() + "' )";
-	    		SQLite.getBaseDeDatos().execSQL(sql);
+	    		SQLite.getBaseDeDatos().execSQL(sql); //se añade a la base de datos
 	    		JOptionPane.showMessageDialog(null,"Película alquilada correctamente");
 	    		System.out.print("Película alquilada correctamente");
 	    	}
-	    	else {JOptionPane.showMessageDialog(null,"Película ya alquilada"); System.out.print("Película ya alquilada");}
+	    	else {JOptionPane.showMessageDialog(null,"Película ya alquilada"); System.out.print("Película ya alquilada");} //la pelicula ya estaba alquilada
 	    	
 	    }
 	 
