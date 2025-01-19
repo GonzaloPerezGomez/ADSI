@@ -47,15 +47,20 @@ public class GestorPuntuacion extends Observable{
         this.addObserver(observer);}
 		
 	public void cargarPuntuaciones() throws SQLException {
+		/////Carga la tabla puntuacion de la base de datos y se guarda todas las puntuaciones existentes
 		Puntuaciones.addAll(SQLite.getBaseDeDatos().getAllPuntua());
+		
 	}
 	
 	
 	
 	public void  ValorarPelicula(JSONObject json) {
+		///Guarda la puntuacion en base de datos y/o modifica la que ya existia
+		
 		Pelicula pelicula= gestorPeliculas.getGestorPeliculas().buscarPelicula(json.getString("titulo"));
 		Usuario usuario=gestorUsuario.getGestorUsuarios().getUsuarioSesion();
 		
+		////busca si hay alguna puntuacion ya existente de ese usuario en esa peli
 		Puntua puntuacionExistente = getPuntuacionPorUsuarioYPelicula(usuario, pelicula);
 
 		if (puntuacionExistente != null) {
@@ -63,6 +68,8 @@ public class GestorPuntuacion extends Observable{
 			puntuacionExistente.setComentario(json.getString("comentario"));
 			puntuacionExistente.setPuntuacion(json.getInt("puntuacion"));
 		
+			///actualiza la puntuacion existente
+			
 			String sql = "UPDATE Puntua SET puntuacion = '" + json.getInt("puntuacion") +  "', comentario = '" + json.getString("comentario") + "' WHERE nombreUsuario = '" + usuario.getNombreUsuario() + "' AND titulo = '" + pelicula.getTitulo() + "' AND fecha = '" + pelicula.getFecha() + "'";
     		SQLite.getBaseDeDatos().execSQL(sql);
 			System.out.println("Puntuación actualizada correctamente.");
@@ -107,7 +114,7 @@ public class GestorPuntuacion extends Observable{
 
 
 
-public JSONObject CalcularMedia() {
+public JSONObject CalcularMedia() { ////calcula la media de todas las pelikulas k tienen puntuaciones
 		if (Puntuaciones == null || Puntuaciones.isEmpty()) {
 	        return null;
 	    }
@@ -154,6 +161,7 @@ public JSONObject CalcularMedia() {
 
 
 public JSONObject obtenerComentariosYPuntuaciones(String titulo) {
+	////metodo para obtener todas las puntuaciones de la pelikula escogida
     List<Puntua> puntuaciones = obtenerPuntuacionesPorPelicula(titulo);
     if (puntuaciones == null || puntuaciones.isEmpty()) {
         return null;
@@ -178,6 +186,8 @@ public JSONObject obtenerComentariosYPuntuaciones(String titulo) {
 }
 
 	private List<Puntua> obtenerPuntuacionesPorPelicula(String titulo) {
+		
+		///recoge todas las puntuaciones para calcular la media
 	    if (Puntuaciones == null || Puntuaciones.isEmpty()) {
 	        return null;
 	    }
